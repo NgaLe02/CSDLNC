@@ -93,7 +93,3 @@ CREATE TABLE GiaVe (
     FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen)
 );
 
-CREATE TABLE Mua (
-    maMua INT PRIMARY KEY AUTO_INCREMENT,
-    tenMua VARCHAR(50)
-);
