@@ -1,3 +1,5 @@
+use csdlnc;
+
 CREATE TABLE NhanVien (
     maNhanVien INT PRIMARY KEY AUTO_INCREMENT,
     hoTen VARCHAR(100),
@@ -43,15 +45,6 @@ CREATE TABLE HanhKhach (
     email VARCHAR(100)
 );
 
-CREATE TABLE TuyenDuong (
-    maTuyen VARCHAR(4) PRIMARY KEY,
-    diemKhoiHanh VARCHAR(100),
-    diemDen VARCHAR(100),
-    khoangCach DECIMAL(10,2),
-    thoiGianUocTinh INT,
-    giaVeCoBan DECIMAL(12,2)
-);
-
 CREATE TABLE LuongTuyenDuong (
     maLuongTuyen INT PRIMARY KEY AUTO_INCREMENT,
     doPhucTap VARCHAR(50),
@@ -59,6 +52,17 @@ CREATE TABLE LuongTuyenDuong (
     khoangCachDen DECIMAL(10,2),
     luongCoBan DECIMAL(12,2)
 );
+CREATE TABLE TuyenDuong (
+    maTuyen VARCHAR(4) PRIMARY KEY,
+    diemKhoiHanh VARCHAR(100),
+    diemDen VARCHAR(100),
+    khoangCach DECIMAL(10,2),
+    thoiGianUocTinh INT,
+    giaVeCoBan DECIMAL(12,2),
+	maLuongTuyen INT,
+	FOREIGN KEY (maLuongTuyen) REFERENCES LuongTuyenDuong(maLuongTuyen)
+);
+
 
 CREATE TABLE ChuyenXe (
     maChuyen VARCHAR(4) PRIMARY KEY,
@@ -73,30 +77,30 @@ CREATE TABLE ChuyenXe (
     FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen)
 );
 
+
+CREATE TABLE PhanCong (
+	maNhanVien INT,
+    maChuyen VARCHAR(4),
+    vaiTro varchar(255),
+    PRIMARY KEY (maChuyen, maNhanVien),
+    FOREIGN KEY (maChuyen) REFERENCES ChuyenXe(maChuyen),
+    FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien)
+);
+
 CREATE TABLE Ve (
     maVe INT PRIMARY KEY AUTO_INCREMENT,
     ngayMua DATE,
     gheNgoi VARCHAR(10),
     maHanhKhach INT,
     maChuyen VARCHAR(4),
-	maTuyen VARCHAR(4),
-    maXe VARCHAR(3),
     FOREIGN KEY (maHanhKhach) REFERENCES HanhKhach(maHanhKhach),
     FOREIGN KEY (maChuyen) REFERENCES ChuyenXe(maChuyen),
-	FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
-	FOREIGN KEY (maXe) REFERENCES Xe(maXe),
     UNIQUE (maChuyen, gheNgoi) -- đảm bảo 1 ghế chỉ được bán 1 lần cho 1 chuyến
 );
 
-CREATE TABLE PhanCong (
-	maNhanVien INT,
-    maChuyen VARCHAR(4),
-    maXe VARCHAR(3),
-    vaiTro varchar(255),
-    PRIMARY KEY (maChuyen, maXe, maNhanVien),
-    FOREIGN KEY (maChuyen) REFERENCES ChuyenXe(maChuyen),
-    FOREIGN KEY (maXe) REFERENCES Xe(maXe),
-    FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien)
+CREATE TABLE Mua (
+    maMua INT PRIMARY KEY AUTO_INCREMENT,
+    tenMua DECIMAL(12,2)
 );
 
 CREATE TABLE GiaVe (
@@ -172,6 +176,27 @@ BEGIN
     SET NEW.maChuyen = newCode;
 END$$
 
+DELIMITER ;
+
+-- gen mã vé
+DELIMITER //
+CREATE TRIGGER trg_generate_maVe
+BEFORE INSERT ON Ve
+FOR EACH ROW
+BEGIN
+    DECLARE tuyen VARCHAR(4);
+    DECLARE xe VARCHAR(3);
+    DECLARE newCode VARCHAR(50);
+
+    -- lấy thông tin tuyến + xe từ bảng ChuyenXe
+    SELECT maTuyen, maXe INTO tuyen, xe
+    FROM ChuyenXe WHERE maChuyen = NEW.maChuyen;
+
+    -- ghép thành mã vé (dùng maVe INT AUTO_INCREMENT nếu cần số thứ tự)
+    SET newCode = CONCAT(NEW.maChuyen, '_', tuyen, '_', xe, '_', LPAD(NEW.maHanhKhach,4,'0'));
+
+    SET NEW.maVe = newCode;
+END //
 DELIMITER ;
 
 
