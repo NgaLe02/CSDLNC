@@ -27,7 +27,7 @@
 	</update>
 
 	
-	<delete id="deleteTypeCar" parameterType="string">
+	<delete id="deleteTypeCar" parameterType="int">
 	    DELETE FROM loaixe
 	    WHERE ma_xe = #{maLoaiXe}
 	</delete>
