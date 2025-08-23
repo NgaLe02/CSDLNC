@@ -2,8 +2,11 @@ import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { CarService } from "../../../../services/CarService";
+import { TypeCar } from "../../../../model/TypeCar";
 
 export default function TypeCarForm(props: any) {
+  const [model, setModel] = useState<TypeCar>(props.model);
+
   return (
     <>
       {/* <div className="container-fluid pt-4 px-4"> */}

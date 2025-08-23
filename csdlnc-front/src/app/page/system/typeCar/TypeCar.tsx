@@ -7,7 +7,7 @@ import TypeCarForm from "./component/TypeCarForm";
 export default function TypeCar() {
   const [listCar, setListCar] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingCar, setEditingCar] = useState<any>(null);
+  const [editingModel, setEditingModel] = useState<any>(null);
 
   useEffect(() => {
     getLstCar();
@@ -34,12 +34,12 @@ export default function TypeCar() {
   }
 
   function handleAdd() {
-    setEditingCar(null); // thêm mới
+    setEditingModel(null); // thêm mới
     setShowForm(true);
   }
 
   function handleEdit(car: any) {
-    setEditingCar(car); // sửa xe
+    setEditingModel(car); // sửa xe
     setShowForm(true);
   }
 
@@ -96,14 +96,13 @@ export default function TypeCar() {
         </div>
       </div>
 
-      {/* Popup form */}
       {showForm && (
         <div className="modal fade show d-block" tabIndex={-1}>
           <div className="modal-dialog modal-lg">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingCar ? "Sửa loại xe" : "Thêm loại xe"}
+                  {editingModel ? "Sửa loại xe" : "Thêm loại xe"}
                 </h5>
                 <button
                   type="button"
@@ -112,7 +111,7 @@ export default function TypeCar() {
                 ></button>
               </div>
               <div className="modal-body">
-                <TypeCarForm car={editingCar} />
+                <TypeCarForm TypeCar={editingModel} />
               </div>
             </div>
           </div>
