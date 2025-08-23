@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.typeCar.TypeCarDAO">
+	<resultMap type="com.ptit.csdlnc.model.response.TypeCarResponse"
+		id="typeCarMap">
+		<id property="maLoaiXe" column="ma_xe" />
+		<result property="tenLoaiXe" column="tenLoaiXe" />
+		<result property="soGhe" column="soGhe" />
+	</resultMap>
+
+	<select id="getLstTypeCar" resultMap="typeCarMap">
+	    SELECT ma_xe, ten_loai_xe, so_ghe
+	    FROM loaixe
+	</select>
+
+	
+	<insert id="insertTypeCar" parameterType="com.ptit.csdlnc.model.TypeCar">
+	    INSERT INTO loaixe (ma_xe, ten_loai_xe, so_ghe)
+	    VALUES (#{maLoaiXe}, #{tenLoaiXe}, #{soGhe})
+	</insert>
+	
+	<update id="updateTypeCar" parameterType="com.ptit.csdlnc.model.TypeCar">
+	    UPDATE loaixe
+	    SET ten_loai_xe = #{tenLoaiXe},
+	        so_ghe = #{soGhe}
+	    WHERE ma_xe = #{maLoaiXe}
+	</update>
+
+	
+	<delete id="deleteTypeCar" parameterType="string">
+	    DELETE FROM loaixe
+	    WHERE ma_xe = #{maLoaiXe}
+	</delete>
+
+	
+</mapper>
