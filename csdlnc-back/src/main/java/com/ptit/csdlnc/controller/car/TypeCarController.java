@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,34 +40,54 @@ public class TypeCarController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Tìm kiếm không thành công!");
 		}
 		return ResponseEntity.ok(ajaxResult);
 	}
 
 	@PostMapping("saveTypeCar")
-	public ResponseEntity<AjaxResult> saveTypeCar(@RequestBody TypeCar model) {
+	public ResponseEntity<AjaxResult> saveTypeCar(@Validated @RequestBody TypeCar model, BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
+
+		if (bindingResult.hasErrors()) {
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage(bindingResult.getAllErrors().get(0).getDefaultMessage());
+			return ResponseEntity.badRequest().body(ajaxResult);
+		}
+
 		try {
 			int result = typeCarService.insertTypeCar(model);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
+			ajaxResult.setMessage("Lưu thành công");
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Lưu thất bại");
 		}
 		return ResponseEntity.ok(ajaxResult);
 	}
 
 	@PutMapping("updateTypeCar")
-	public ResponseEntity<AjaxResult> updateTypeCar(@RequestBody TypeCar model) {
+	public ResponseEntity<AjaxResult> updateTypeCar(@Validated @RequestBody TypeCar model,
+			BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
+
+		if (bindingResult.hasErrors()) {
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage(bindingResult.getAllErrors().get(0).getDefaultMessage());
+			return ResponseEntity.badRequest().body(ajaxResult);
+		}
+
 		try {
 			int result = typeCarService.updateTypeCar(model);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
+			ajaxResult.setMessage("Cập nhật thành công");
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Cập nhật thất bại");
 		}
 		return ResponseEntity.ok(ajaxResult);
 	}
@@ -77,9 +99,11 @@ public class TypeCarController {
 			int result = typeCarService.deleteTypeCar(id);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
+			ajaxResult.setMessage("Xoá thành công");
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Xoá thất bại");
 		}
 		return ResponseEntity.ok(ajaxResult);
 	}

@@ -2,6 +2,7 @@ import axios from "axios";
 import { ParamUtil } from "../utils/paramUtil";
 import { HeadersUtil } from "../utils/headersUtil";
 import { ApiUrlUtil } from "../utils/apiUrlUtil";
+import { TypeCarModel } from "../model/TypeCarModel";
 
 export class TypeCarService {
   private static _typeCarService: TypeCarService;
@@ -24,7 +25,7 @@ export class TypeCarService {
     });
   }
 
-  public saveTypeCar(model: any) {
+  public saveTypeCar(model: TypeCarModel) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/typeCar/saveTypeCar"
     );
@@ -33,7 +34,7 @@ export class TypeCarService {
     });
   }
 
-  public updateTypeCar(model: any) {
+  public updateTypeCar(model: TypeCarModel) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/typeCar/updateTypeCar"
     );

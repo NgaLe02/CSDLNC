@@ -10,8 +10,8 @@ CREATE TABLE NhanVien (
 
 CREATE TABLE LoaiXe (
     maLoaiXe INT PRIMARY KEY AUTO_INCREMENT,
-    tenLoaiXe VARCHAR(50),
-    soGhe INT
+    tenLoaiXe VARCHAR(50) NOT NULL,
+    soGhe INT NOT NULL
 );
 
 CREATE TABLE Xe (

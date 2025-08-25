@@ -1,5 +1,10 @@
 package com.ptit.csdlnc.model;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +18,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TypeCar {
-	private String maLoaiXe;
+	private Integer maLoaiXe;
+
+	@NotNull(message = "Tên loại xe không được null")
+	@NotBlank(message = "Tên loại xe không được để trống")
+	@Size(max = 50, message = "Tên loại xe tối đa 50 ký tự")
 	private String tenLoaiXe;
-	private Long soGhe;
+
+	@NotNull(message = "Số ghế không được để trống")
+	@Min(value = 1, message = "Số ghế phải lớn hơn 0")
+	private Integer soGhe;
 }

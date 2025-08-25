@@ -1,14 +1,14 @@
 import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { CarService } from "../../../services/CarService";
-import TypeCarForm from "./component/TypeCarForm";
 import { TypeCarService } from "../../../services/TypeCarService";
+import { TypeCarModel } from "../../../model/TypeCarModel";
+import TypeCarForm from "./component/TypeCarForm";
 
 export default function TypeCar() {
-  const [listCar, setListCar] = useState<any[]>([]);
+  const [listCar, setListCar] = useState<TypeCarModel[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingModel, setEditingModel] = useState<any>(null);
+  const [editingModel, setEditingModel] = useState<TypeCarModel>(new TypeCarModel());
 
   useEffect(() => {
     getLstTypeCar();
@@ -23,24 +23,24 @@ export default function TypeCar() {
             const data = response.data.responseData;
             setListCar(data);
           } else {
-            toast.error("Tìm kiếm không thành công");
+            toast.error(response.data.message);
           }
         } else {
-          toast.error("Tìm kiếm không thành công");
+          toast.error(response.data.message);
         }
       })
       .catch(() => {
-        toast.error("Tìm kiếm không thành công");
+        toast.error("Có lỗi xảy ra");
       });
   }
 
   function handleAdd() {
-    setEditingModel(null);
+    setEditingModel(new TypeCarModel());
     setShowForm(true);
   }
 
-  function handleEdit(car: any) {
-    setEditingModel(car);
+  function handleEdit(typeCar: TypeCarModel) {
+    setEditingModel(typeCar);
     setShowForm(true);
   }
 
@@ -50,19 +50,24 @@ export default function TypeCar() {
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
-            toast.success("Xoá thành công");
+            toast.success(resp.data.message);
+            getLstTypeCar();
           } else {
-            toast.error("Xoá thất bại");
+            toast.error(resp.data.message);
           }
         } else {
-          toast.error("Xoá thất bại");
+          toast.error(resp.data.message);
         }
       })
       .catch((error) => {
-        toast.error('Có lỗi xảy ra!');
+        toast.error("Có lỗi xảy ra");
       });
   }
 
+  function closeModal(status: boolean) {
+    setShowForm(false)
+    getLstTypeCar()
+  }
   return (
     <>
       <div className="container-fluid pt-4 px-4">
@@ -77,7 +82,7 @@ export default function TypeCar() {
             <table className="table text-start align-middle table-bordered table-hover mb-0">
               <thead>
                 <tr className="text-dark">
-                  <th scope="col"></th>
+                  <th scope="col" style={{ width: "5%" }}></th>
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
@@ -88,25 +93,24 @@ export default function TypeCar() {
                 </tr>
               </thead>
               <tbody>
-                {listCar.map((car, index) => (
-                  <tr key={car.id}>
+                {listCar.map((item: TypeCarModel, index: number) => (
+                  <tr key={item.maLoaiXe}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{car.code}</td>
-                    <td>{car.name}</td>
-                    <td>{car.seatNumber}</td>
+                    <td>{item.tenLoaiXe}</td>
+                    <td>{item.soGhe}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-info ms-2"
-                        onClick={() => handleEdit(car)}
+                        onClick={() => handleEdit(item)}
                       >
                         Sửa
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(car)}
+                        onClick={() => handleDelete(item.maLoaiXe!)}
                       >
                         Xóa
                       </button>
@@ -134,7 +138,8 @@ export default function TypeCar() {
                 ></button>
               </div>
               <div className="modal-body">
-                <TypeCarForm TypeCar={editingModel} />
+                <TypeCarForm model={editingModel}
+                  closeModal={(status: boolean) => { closeModal(status) }} />
               </div>
             </div>
           </div>
