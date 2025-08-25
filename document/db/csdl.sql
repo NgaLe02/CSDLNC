@@ -44,10 +44,10 @@ CREATE TABLE HanhKhach (
 
 CREATE TABLE LuongTuyenDuong (
     maLuongTuyen INT PRIMARY KEY AUTO_INCREMENT,
-    doPhucTap VARCHAR(50),
-    khoangCachTu DECIMAL(10,2),
-    khoangCachDen DECIMAL(10,2),
-    luongCoBan DECIMAL(12,2)
+    doPhucTap int not null,
+    khoangCachTu DECIMAL(10,2) not null,
+    khoangCachDen DECIMAL(10,2) not null,
+    luongCoBan DECIMAL(12,2) not null
 );
 CREATE TABLE TuyenDuong (
     maTuyen VARCHAR(4) PRIMARY KEY,
