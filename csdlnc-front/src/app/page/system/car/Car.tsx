@@ -44,12 +44,13 @@ export default function Car() {
   }
 
   function handleEdit(car: CarResponseModel) {
-    setEditingModel({
-      maxe: car.maxe,
-      bienSo: car.bienSo,
-      tinhTrang: car.tinhTrang,
-      maLoaiXe: car.loaiXe?.maLoaiXe
-    });
+    // setEditingModel({
+    //   maxe: car.maxe,
+    //   bienSo: car.bienSo,
+    //   tinhTrang: car.tinhTrang,
+    //   maLoaiXe: car.loaiXe?.maLoaiXe
+    // });
+    setEditingModel(car)
     setShowForm(true);
   }
 

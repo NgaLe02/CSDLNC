@@ -12,10 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CarResponse {
-private String maXe;
-	private String bienSo;	
-	private String tinhTrang;
-	private Integer maLoaiXe;
-	private TypeCarResponse loaiXe;
+public class PassengerResponse {
+	private Integer maHanhKhach;
+	private String hoTen;
+	private String cmnd;
+	private String soDienThoai;
 }

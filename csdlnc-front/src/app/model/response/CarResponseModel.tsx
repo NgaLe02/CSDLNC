@@ -4,6 +4,7 @@ export class CarResponseModel {
   maxe?: string;
   bienSo?: string;
   tinhTrang?: string;
+  maLoaiXe?: number;
   loaiXe?: TypeCarModel
 
   constructor(init?: Partial<CarResponseModel>) {

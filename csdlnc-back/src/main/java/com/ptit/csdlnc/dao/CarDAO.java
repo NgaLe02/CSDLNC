@@ -1,4 +1,4 @@
-package com.ptit.csdlnc.dao.car;
+package com.ptit.csdlnc.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -13,9 +13,11 @@ import com.ptit.csdlnc.model.response.CarResponse;
 public interface CarDAO {
 	List<CarResponse> getLstCar(Map<String, Object> params) throws Exception;
 
-	int insertCar(Car model)throws Exception;
+	int insertCar(Car model) throws Exception;
 
-	int updateCar(Car model)throws Exception;
+	int updateCar(Car model) throws Exception;
 
-	int deleteCar(int id)throws Exception;
+	int deleteCar(int id) throws Exception;
+
+	boolean checkBienSoExist(String bienSo) throws Exception;
 }

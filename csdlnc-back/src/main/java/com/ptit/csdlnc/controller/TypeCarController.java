@@ -1,4 +1,4 @@
-package com.ptit.csdlnc.controller.car;
+package com.ptit.csdlnc.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -18,24 +18,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ptit.csdlnc.model.Car;
 import com.ptit.csdlnc.model.TypeCar;
-import com.ptit.csdlnc.model.response.CarResponse;
-import com.ptit.csdlnc.service.car.CarService;
+import com.ptit.csdlnc.model.response.TypeCarResponse;
+import com.ptit.csdlnc.service.TypeCarService;
 import com.ptit.csdlnc.util.AjaxResult;
 
 @RestController
-@RequestMapping("api/car")
+@RequestMapping("api/typeCar")
 @CrossOrigin(origins = "*")
-public class CarController {
+public class TypeCarController {
 	@Autowired
-	private CarService carService;
+	private TypeCarService typeCarService;
 
-	@GetMapping("getLstCar")
-	public ResponseEntity<AjaxResult> getLstCar(@RequestParam Map<String, Object> params) {
+	@GetMapping("getLstTypeCar")
+	public ResponseEntity<AjaxResult> getLstTypeCar(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			List<CarResponse> result = carService.getLstCar(params);
+			List<TypeCarResponse> result = typeCarService.getLstTypeCar(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 		} catch (Exception e) {
@@ -46,8 +45,8 @@ public class CarController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@PostMapping("saveCar")
-	public ResponseEntity<AjaxResult> saveCar(@Validated @RequestBody Car model, BindingResult bindingResult) {
+	@PostMapping("saveTypeCar")
+	public ResponseEntity<AjaxResult> saveTypeCar(@Validated @RequestBody TypeCar model, BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
 		if (bindingResult.hasErrors()) {
@@ -57,7 +56,7 @@ public class CarController {
 		}
 
 		try {
-			int result = carService.insertCar(model);
+			int result = typeCarService.insertTypeCar(model);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Lưu thành công");
@@ -69,8 +68,9 @@ public class CarController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@PutMapping("updateCar")
-	public ResponseEntity<AjaxResult> updateCar(@Validated @RequestBody Car model, BindingResult bindingResult) {
+	@PutMapping("updateTypeCar")
+	public ResponseEntity<AjaxResult> updateTypeCar(@Validated @RequestBody TypeCar model,
+			BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
 		if (bindingResult.hasErrors()) {
@@ -80,7 +80,7 @@ public class CarController {
 		}
 
 		try {
-			int result = carService.updateCar(model);
+			int result = typeCarService.updateTypeCar(model);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Cập nhật thành công");
@@ -92,11 +92,11 @@ public class CarController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@DeleteMapping("{id}/deleteCar")
-	public ResponseEntity<AjaxResult> deleteCar(@PathVariable("id") int id) {
+	@DeleteMapping("{id}/deleteTypeCar")
+	public ResponseEntity<AjaxResult> deleteTypeCar(@PathVariable("id") int id) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			int result = carService.deleteCar(id);
+			int result = typeCarService.deleteTypeCar(id);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Xoá thành công");

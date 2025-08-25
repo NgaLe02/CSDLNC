@@ -1,4 +1,4 @@
-package com.ptit.csdlnc.service.typeCar;
+package com.ptit.csdlnc.service;
 
 import java.util.List;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ptit.csdlnc.dao.typeCar.TypeCarDAO;
+import com.ptit.csdlnc.dao.TypeCarDAO;
 import com.ptit.csdlnc.model.TypeCar;
 import com.ptit.csdlnc.model.response.TypeCarResponse;
 

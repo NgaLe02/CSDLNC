@@ -1,4 +1,4 @@
-package com.ptit.csdlnc.dao.typeCar;
+package com.ptit.csdlnc.dao;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.ptit.csdlnc.service.car;
+package com.ptit.csdlnc.service;
 
 import java.util.List;
 import java.util.Map;
@@ -6,13 +6,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ptit.csdlnc.dao.car.CarDAO;
+import com.ptit.csdlnc.dao.CarDAO;
 import com.ptit.csdlnc.model.Car;
 import com.ptit.csdlnc.model.TypeCar;
 import com.ptit.csdlnc.model.response.CarResponse;
 
 @Service
-public class CarService {
+public class PassengerService {
 	@Autowired
 	CarDAO carDAO;
 	public List<CarResponse> getLstCar(Map<String, Object> params) throws Exception {
