@@ -5,15 +5,16 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.ptit.csdlnc.model.Passenger;
 import com.ptit.csdlnc.model.response.PassengerResponse;
 
 @Mapper
 public interface PassengerDAO {
-	List<PassengerResponse> Passenger(Map<String, Object> params)throws Exception;
+	List<PassengerResponse> getLstPassenger(Map<String, Object> params)throws Exception;
 
-	int insertPassengerr(PassengerDAO model)throws Exception;
+	int insertPassenger(Passenger model)throws Exception;
 
-	int updateTypeCar(PassengerDAO model)throws Exception;
+	int updatePassenger(Passenger model)throws Exception;
 
 	int deletePassenger(int id)throws Exception;
 

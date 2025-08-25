@@ -56,27 +56,35 @@ function SideBarLeft() {
                 <i className="fa fa-laptop me-2"></i>Hệ thống
               </a>
               <div className="dropdown-menu bg-transparent border-0">
-                <a href="#"
+                <a
+                  href="#"
                   className="dropdown-item "
                   onClick={(e) => {
-                    e.preventDefault()
-                    navigate('/system/xe');
-
+                    e.preventDefault();
+                    navigate("/system/xe");
                   }}
                 >
                   Xe
                 </a>
-                <a href="#"
+                <a
+                  href="#"
                   className="dropdown-item"
                   onClick={(e) => {
-                    e.preventDefault()
-                    navigate('/system/loai-xe');
-
-                  }}>
+                    e.preventDefault();
+                    navigate("/system/loai-xe");
+                  }}
+                >
                   Loại xe
                 </a>
-                <a href="element.html" className="dropdown-item">
-                  Other Elements
+                <a
+                  href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/system/hanh-khach");
+                  }}
+                >
+                  Hành khách
                 </a>
               </div>
             </div>

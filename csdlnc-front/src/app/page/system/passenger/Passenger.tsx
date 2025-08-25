@@ -3,22 +3,28 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { TypeCarService } from "../../../services/TypeCarService";
 import { TypeCarModel } from "../../../model/TypeCarModel";
-import TypeCarForm from "./component/TypeCarForm";
+import TypeCarForm from "../typeCar/component/TypeCarForm";
+import { CarModel } from "../../../model/CarModel";
+import { CarService } from "../../../services/CarService";
+import { CarResponseModel } from "../../../model/response/CarResponseModel";
+import { PassengerModel } from "../../../model/PassengerModel";
+import { PassengerService } from "../../../services/PassengerService";
+import PassengerForm from "./component/PassengerForm";
 
-export default function TypeCar() {
-  const [listData, setListData] = useState<TypeCarModel[]>([]);
+export default function Passenger() {
+  const [listData, setListData] = useState<PassengerModel[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingModel, setEditingModel] = useState<TypeCarModel>(
-    new TypeCarModel()
+  const [editingModel, setEditingModel] = useState<PassengerModel>(
+    new PassengerModel()
   );
 
   useEffect(() => {
-    getLstTypeCar();
+    getLstPassenger();
   }, []);
 
-  function getLstTypeCar() {
-    TypeCarService.getInstance()
-      .getLstTypeCar({})
+  function getLstPassenger() {
+    PassengerService.getInstance()
+      .getLstPassenger({})
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
@@ -37,47 +43,53 @@ export default function TypeCar() {
   }
 
   function handleAdd() {
-    setEditingModel(new TypeCarModel());
+    setEditingModel(new PassengerModel());
     setShowForm(true);
   }
 
-  function handleEdit(typeCar: TypeCarModel) {
-    setEditingModel(typeCar);
+  function handleEdit(model: PassengerModel) {
+    // setEditingModel({
+    //   maxe: car.maxe,
+    //   bienSo: car.bienSo,
+    //   tinhTrang: car.tinhTrang,
+    //   maLoaiXe: car.loaiXe?.maLoaiXe
+    // });
+    setEditingModel(model);
     setShowForm(true);
   }
 
   function handleDelete(id: number) {
-    TypeCarService.getInstance()
-      .deleteTypeCar(id)
+    PassengerService.getInstance()
+      .deletePassenger(id)
       .then((resp) => {
-        if (resp.data.status) {
-          toast.success(resp.data.message);
-          getLstTypeCar();
+        if (resp.status === HttpStatusCode.Ok) {
+          if (resp.data.status) {
+            toast.success(resp.data.message);
+            getLstPassenger();
+          } else {
+            toast.error(resp.data.message);
+          }
         } else {
           toast.error(resp.data.message);
         }
       })
-      .catch((err) => {
-        if (err.response && err.response.data) {
-          toast.error(err.response.data.message);
-        } else {
-          toast.error("Có lỗi xảy ra");
-        }
+      .catch((error) => {
+        toast.error("Có lỗi xảy ra");
       });
   }
 
   function closeModal(status: boolean) {
     setShowForm(false);
-    getLstTypeCar();
+    getLstPassenger();
   }
   return (
     <>
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách loại xe</h6>
+            <h6 className="mb-0">Danh sách hành khách</h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
-              Thêm loại xe
+              Thêm hành khách
             </button>
           </div>
           <div className="table-responsive">
@@ -88,21 +100,24 @@ export default function TypeCar() {
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
-                  <th scope="col">Mã loại xe</th>
-                  <th scope="col">Tên</th>
-                  <th scope="col">Số ghế ngồi</th>
+                  <th scope="col">Mã hành khách</th>
+                  <th scope="col">Họ tên</th>
+                  <th scope="col">CMND</th>
+                  <th scope="col">Số điện thoại</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
-                {listData.map((item: TypeCarModel, index: number) => (
-                  <tr key={item.maLoaiXe}>
+                {listData.map((item: PassengerModel, index: number) => (
+                  <tr key={item.maHanhKhach}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{item.tenLoaiXe}</td>
-                    <td>{item.soGhe}</td>
+                    <td>{item.maHanhKhach}</td>
+                    <td>{item.hoTen}</td>
+                    <td>{item.cmnd}</td>
+                    <td>{item.soDienThoai}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-info ms-2"
@@ -112,7 +127,7 @@ export default function TypeCar() {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maLoaiXe!)}
+                        onClick={() => handleDelete(item.maHanhKhach!)}
                       >
                         Xóa
                       </button>
@@ -140,7 +155,7 @@ export default function TypeCar() {
                 ></button>
               </div>
               <div className="modal-body">
-                <TypeCarForm
+                <PassengerForm
                   model={editingModel}
                   closeModal={(status: boolean) => {
                     closeModal(status);

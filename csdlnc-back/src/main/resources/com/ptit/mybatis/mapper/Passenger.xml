@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.PassengerDAO">
+	<resultMap id="passengerMap" type="com.ptit.csdlnc.model.response.PassengerResponse">
+        <id property="maHanhKhach" column="maHanhKhach"/>
+        <result property="hoTen" column="hoTen"/>
+        <result property="cmnd" column="cmnd"/>
+        <result property="soDienThoai" column="soDienThoai"/>
+    </resultMap>
+
+	<select id="getLstPassenger" resultMap="passengerMap">
+        SELECT maHanhKhach, hoTen, cmnd, soDienThoai
+        FROM HanhKhach
+    </select>
+
+    <select id="getPassengerById" parameterType="int" resultMap="passengerMap">
+        SELECT maHanhKhach, hoTen, cmnd, soDienThoai
+        FROM HanhKhach
+        WHERE maHanhKhach = #{maHanhKhach}
+    </select>
+
+    <insert id="insertPassenger" parameterType="com.ptit.csdlnc.model.Passenger" useGeneratedKeys="true" keyProperty="maHanhKhach">
+        INSERT INTO HanhKhach (hoTen, cmnd, soDienThoai)
+        VALUES (#{hoTen}, #{cmnd}, #{soDienThoai})
+    </insert>
+
+    <update id="updatePassenger" parameterType="com.ptit.csdlnc.model.Passenger">
+        UPDATE HanhKhach
+        SET hoTen = #{hoTen},
+            cmnd = #{cmnd},
+            soDienThoai = #{soDienThoai}
+        WHERE maHanhKhach = #{maHanhKhach}
+    </update>
+
+    <delete id="deletePassenger" parameterType="int">
+        DELETE FROM HanhKhach
+        WHERE maHanhKhach = #{maHanhKhach}
+    </delete>
+	
+</mapper>

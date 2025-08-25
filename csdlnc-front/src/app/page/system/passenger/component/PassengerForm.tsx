@@ -2,37 +2,15 @@ import { useEffect, useState } from "react";
 import { TypeCarService } from "../../../../services/TypeCarService";
 import { toast } from "react-toastify";
 import { HttpStatusCode } from "axios";
-import { TypeCarModel } from "../../../../model/TypeCarModel";
 import { CarModel } from "../../../../model/CarModel";
 import { CarService } from "../../../../services/CarService";
+import { PassengerModel } from "../../../../model/PassengerModel";
+import { PassengerService } from "../../../../services/PassengerService";
 
-export default function CarForm(props: any) {
-  const [model, setModel] = useState<CarModel>(props.model ?? new CarModel());
-  const [listTypeCar, setListTypeCar] = useState<TypeCarModel[]>([]);
-
-  useEffect(() => {
-    getLstTypeCar();
-  }, []);
-
-  function getLstTypeCar() {
-    TypeCarService.getInstance()
-      .getLstTypeCar({})
-      .then((response) => {
-        if (response.data.status) {
-          const data = response.data.responseData;
-          setListTypeCar(data);
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((err: any) => {
-        if (err.response && err.response.data) {
-          toast.error(err.response.data.message);
-        } else {
-          toast.error("Có lỗi xảy ra");
-        }
-      });
-  }
+export default function PassengerForm(props: any) {
+  const [model, setModel] = useState<PassengerModel>(
+    props.model ?? new CarModel()
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,9 +22,9 @@ export default function CarForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (model.maXe) {
-      CarService.getInstance()
-        .updateCar(model)
+    if (model.maHanhKhach) {
+      PassengerService.getInstance()
+        .updatePassenger(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -63,8 +41,8 @@ export default function CarForm(props: any) {
           }
         });
     } else {
-      CarService.getInstance()
-        .saveCar(model)
+      PassengerService.getInstance()
+        .insertPassenger(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -88,54 +66,44 @@ export default function CarForm(props: any) {
       <div className="bg-light rounded h-100 p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="bienSo" className="form-label">
-              Biển số
+            <label htmlFor="hoTen" className="form-label">
+              Họ tên
             </label>
             <input
               type="text"
               className="form-control"
-              id="bienSo"
-              name="bienSo"
-              value={model.bienSo ?? ""}
+              id="hoTen"
+              name="hoTen"
+              value={model.hoTen ?? ""}
               onChange={handleChange}
             />
-            <div id="emailHelp" className="form-text">
-              {" "}
-              We'll never share your email with anyone else.{" "}
-            </div>
           </div>
           <div className="mb-3">
-            <label htmlFor="soGhe" className="form-label">
-              Tình trạng
+            <label htmlFor="cmnd" className="form-label">
+              CMND
             </label>
             <input
               type="text"
               className="form-control"
-              id="tinhTrang"
-              name="tinhTrang"
-              value={model.tinhTrang ?? ""}
+              id="cmnd"
+              name="cmnd"
+              value={model.cmnd ?? ""}
               onChange={handleChange}
             />
           </div>
 
           <div className="mb-3">
-            <label htmlFor="maLoaiXe" className="form-label">
-              Loại xe
+            <label htmlFor="soDienThoai" className="form-label">
+              Số điện thoại
             </label>
-            <select
-              className="form-select"
-              id="maLoaiXe"
-              name="maLoaiXe"
-              value={model.maLoaiXe ?? ""}
-              onChange={(e: any) => handleChange(e)}
-            >
-              <option value="">-- Chọn loại xe --</option>
-              {listTypeCar.map((type) => (
-                <option key={type.maLoaiXe} value={type.maLoaiXe}>
-                  {type.tenLoaiXe}
-                </option>
-              ))}
-            </select>
+            <input
+              type="text"
+              className="form-control"
+              id="soDienThoai"
+              name="soDienThoai"
+              value={model.soDienThoai ?? ""}
+              onChange={handleChange}
+            />
           </div>
 
           <button
@@ -147,7 +115,7 @@ export default function CarForm(props: any) {
           </button>
 
           <button type="submit" className="btn btn-primary ms-2">
-            {model.maLoaiXe ? "Cập nhật" : "Thêm"}
+            {model.maHanhKhach ? "Cập nhật" : "Thêm"}
           </button>
         </form>
       </div>

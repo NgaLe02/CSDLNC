@@ -1,5 +1,5 @@
 export class CarModel {
-  maxe?: string;
+  maXe?: string;
   bienSo?: string;
   tinhTrang?: string;
   maLoaiXe?: number;

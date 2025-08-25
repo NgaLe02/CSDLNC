@@ -17,7 +17,7 @@ public interface CarDAO {
 
 	int updateCar(Car model) throws Exception;
 
-	int deleteCar(int id) throws Exception;
+	int deleteCar(String id) throws Exception;
 
 	boolean checkBienSoExist(String bienSo) throws Exception;
 }

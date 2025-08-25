@@ -61,6 +61,9 @@ public class CarController {
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Lưu thành công");
+		} catch (RuntimeException e) {
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
@@ -84,6 +87,9 @@ public class CarController {
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Cập nhật thành công");
+		} catch (RuntimeException e) {
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
@@ -93,7 +99,7 @@ public class CarController {
 	}
 
 	@DeleteMapping("{id}/deleteCar")
-	public ResponseEntity<AjaxResult> deleteCar(@PathVariable("id") int id) {
+	public ResponseEntity<AjaxResult> deleteCar(@PathVariable("id") String id) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
 			int result = carService.deleteCar(id);

@@ -5,7 +5,9 @@ import { HttpStatusCode } from "axios";
 import { TypeCarModel } from "../../../../model/TypeCarModel";
 
 export default function TypeCarForm(props: any) {
-  const [model, setModel] = useState<TypeCarModel>(props.model ?? new TypeCarModel());
+  const [model, setModel] = useState<TypeCarModel>(
+    props.model ?? new TypeCarModel()
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,35 +25,37 @@ export default function TypeCarForm(props: any) {
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
-            props.closeModal(true)
+            props.closeModal(true);
           } else {
             toast.error(resp.data.message);
           }
         })
         .catch((err) => {
-          toast.error("Có lỗi xảy ra");
+          if (err.response && err.response.data) {
+            toast.error(err.response.data.message);
+          } else {
+            toast.error("Có lỗi xảy ra");
+          }
         });
     } else {
       TypeCarService.getInstance()
         .saveTypeCar(model)
         .then((resp) => {
-          if (resp.status === HttpStatusCode.Ok) {
-            if (resp.data.status) {
-              toast.success(resp.data.message);
-              props.closeModal(true)
-            } else {
-              toast.error(resp.data.message);
-            }
-          }
-          else {
+          if (resp.data.status) {
+            toast.success(resp.data.message);
+            props.closeModal(true);
+          } else {
             toast.error(resp.data.message);
           }
         })
         .catch((err) => {
-          toast.error("Có lỗi xảy ra");
+          if (err.response && err.response.data) {
+            toast.error(err.response.data.message);
+          } else {
+            toast.error("Có lỗi xảy ra");
+          }
         });
     }
-
   };
 
   return (
@@ -70,7 +74,10 @@ export default function TypeCarForm(props: any) {
               value={model.tenLoaiXe ?? ""}
               onChange={handleChange}
             />
-            <div id="emailHelp" className="form-text"> We'll never share your email with anyone else. </div>
+            <div id="emailHelp" className="form-text">
+              {" "}
+              We'll never share your email with anyone else.{" "}
+            </div>
           </div>
           <div className="mb-3">
             <label htmlFor="soGhe" className="form-label">
@@ -97,7 +104,6 @@ export default function TypeCarForm(props: any) {
           <button type="submit" className="btn btn-primary ms-2">
             {model.maLoaiXe ? "Cập nhật" : "Thêm"}
           </button>
-
         </form>
       </div>
     </div>

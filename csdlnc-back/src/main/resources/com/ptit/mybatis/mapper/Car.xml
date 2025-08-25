@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ptit.csdlnc.dao.car.CarDAO">
+<mapper namespace="com.ptit.csdlnc.dao.CarDAO">
 	<resultMap id="carMap" type="com.ptit.csdlnc.model.response.CarResponse">
 	    <id property="maXe" column="maXe"/>
 	    <result property="bienSo" column="bienSo"/>
@@ -11,6 +11,8 @@
 	    <association property="loaiXe" javaType="com.ptit.csdlnc.model.response.TypeCarResponse">
 	        <id property="maLoaiXe" column="maLoaiXe"/>
 	        <result property="tenLoaiXe" column="tenLoaiXe"/>
+	        <result property="soGhe" column="soGhe"/>
+	        
 	    </association>
 	</resultMap>
 
@@ -21,9 +23,10 @@
 	        c.tinhTrang, 
 	        c.maLoaiXe, 
 	        t.maLoaiXe AS maLoaiXe, 
-	        t.tenLoaiXe AS tenLoaiXe
+	        t.tenLoaiXe AS tenLoaiXe,
+	        t.soGhe as soGhe
 	    FROM xe c
-	    LEFT JOIN type_car t ON c.maLoaiXe = t.maLoaiXe
+	    LEFT JOIN loaixe t ON c.maLoaiXe = t.maLoaiXe
 	</select>
 	
 	<select id="checkBienSoExist"

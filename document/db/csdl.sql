@@ -41,7 +41,7 @@ CREATE TABLE HanhKhach (
     maHanhKhach INT PRIMARY KEY AUTO_INCREMENT,
     hoTen VARCHAR(100) NOT NULL,
     cmnd VARCHAR(20) UNIQUE,
-    soDienThoai VARCHAR(20) UNIQUE,
+    soDienThoai VARCHAR(20) UNIQUE
 );
 
 CREATE TABLE LuongTuyenDuong (

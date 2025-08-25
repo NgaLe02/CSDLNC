@@ -50,7 +50,7 @@ export default function Car() {
     //   tinhTrang: car.tinhTrang,
     //   maLoaiXe: car.loaiXe?.maLoaiXe
     // });
-    setEditingModel(car)
+    setEditingModel(car);
     setShowForm(true);
   }
 
@@ -69,14 +69,18 @@ export default function Car() {
           toast.error(resp.data.message);
         }
       })
-      .catch((error) => {
-        toast.error("Có lỗi xảy ra");
+      .catch((err) => {
+        if (err.response && err.response.data) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Có lỗi xảy ra");
+        }
       });
   }
 
   function closeModal(status: boolean) {
-    setShowForm(false)
-    getLstCar()
+    setShowForm(false);
+    getLstCar();
   }
   return (
     <>
@@ -106,11 +110,12 @@ export default function Car() {
               </thead>
               <tbody>
                 {listData.map((item: CarResponseModel, index: number) => (
-                  <tr key={item.maxe}>
+                  <tr key={item.maXe}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
+                    <td>{item.maXe}</td>
                     <td>{item.bienSo}</td>
                     <td>{item.tinhTrang}</td>
                     <td>{item.loaiXe?.tenLoaiXe}</td>
@@ -124,7 +129,7 @@ export default function Car() {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maxe!)}
+                        onClick={() => handleDelete(item.maXe!)}
                       >
                         Xóa
                       </button>
@@ -152,8 +157,12 @@ export default function Car() {
                 ></button>
               </div>
               <div className="modal-body">
-                <CarForm model={editingModel}
-                  closeModal={(status: boolean) => { closeModal(status) }} />
+                <CarForm
+                  model={editingModel}
+                  closeModal={(status: boolean) => {
+                    closeModal(status);
+                  }}
+                />
               </div>
             </div>
           </div>

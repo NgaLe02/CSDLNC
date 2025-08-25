@@ -4,6 +4,8 @@ import SideBarLeft from "./app/page/layout/SideBarLeft";
 import System from "./app/page/system/System";
 import Car from "./app/page/system/car/Car";
 import TypeCar from "./app/page/system/typeCar/TypeCar";
+import { ToastContainer } from "react-toastify";
+import Passenger from "./app/page/system/passenger/Passenger";
 
 function App() {
   return (
@@ -21,13 +23,23 @@ function App() {
               <Route path="/system" element={<System />}>
                 <Route path="xe" element={<Car />} />
                 <Route path="loai-xe" element={<TypeCar />} />
+                <Route path="hanh-khach" element={<Passenger />} />
               </Route>
             </Routes>
-
-
           </div>
         </div>
         {/* <!-- Content End --> */}
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
     </Router>
   );
