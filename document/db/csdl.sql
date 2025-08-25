@@ -97,7 +97,7 @@ CREATE TABLE Ve (
 
 CREATE TABLE Mua (
     maMua INT PRIMARY KEY AUTO_INCREMENT,
-    tenMua DECIMAL(12,2)
+    tenMua VARCHAR(50) not null unique
 );
 
 CREATE TABLE GiaVe (

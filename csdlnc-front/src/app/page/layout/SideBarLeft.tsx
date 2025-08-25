@@ -96,6 +96,16 @@ function SideBarLeft() {
                 >
                   Nhân viên
                 </a>
+                <a
+                  href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/system/mua");
+                  }}
+                >
+                  Mùa
+                </a>
               </div>
             </div>
             <a href="widget.html" className="nav-item nav-link">

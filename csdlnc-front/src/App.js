@@ -7,6 +7,7 @@ import TypeCar from "./app/page/system/typeCar/TypeCar";
 import { ToastContainer } from "react-toastify";
 import Passenger from "./app/page/system/passenger/Passenger";
 import Employee from "./app/page/system/employee/Employee";
+import Season from "./app/page/system/season/Season";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
                 <Route path="loai-xe" element={<TypeCar />} />
                 <Route path="hanh-khach" element={<Passenger />} />
                 <Route path="nhan-vien" element={<Employee />} />
+                <Route path="mua" element={<Season />} />
               </Route>
             </Routes>
           </div>

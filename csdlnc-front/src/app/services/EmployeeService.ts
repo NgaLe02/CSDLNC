@@ -4,6 +4,7 @@ import { HeadersUtil } from "../utils/headersUtil";
 import { ApiUrlUtil } from "../utils/apiUrlUtil";
 import { CarModel } from "../model/CarModel";
 import { PassengerModel } from "../model/PassengerModel";
+import { EmployeeModel } from "../model/EmployeeModel";
 
 export class EmployeeService {
   private static _employeeService: EmployeeService;
@@ -26,7 +27,7 @@ export class EmployeeService {
     });
   }
 
-  public insertEmployee(model: PassengerModel) {
+  public insertEmployee(model: EmployeeModel) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/employee/insertEmployee"
     );
@@ -35,7 +36,7 @@ export class EmployeeService {
     });
   }
 
-  public updateEmployee(model: PassengerModel) {
+  public updateEmployee(model: EmployeeModel) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/employee/updateEmployee"
     );
