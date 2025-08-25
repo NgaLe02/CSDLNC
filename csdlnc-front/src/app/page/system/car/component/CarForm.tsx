@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { TypeCarService } from "../../../../services/TypeCarService";
 import { toast } from "react-toastify";
-import { HttpStatusCode } from "axios";
 import { TypeCarModel } from "../../../../model/TypeCarModel";
 import { CarModel } from "../../../../model/CarModel";
 import { CarService } from "../../../../services/CarService";

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { TypeCarService } from "../../../../services/TypeCarService";
 import { toast } from "react-toastify";
-import { HttpStatusCode } from "axios";
 import { TypeCarModel } from "../../../../model/TypeCarModel";
 
 export default function TypeCarForm(props: any) {

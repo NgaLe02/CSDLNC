@@ -6,6 +6,7 @@ import Car from "./app/page/system/car/Car";
 import TypeCar from "./app/page/system/typeCar/TypeCar";
 import { ToastContainer } from "react-toastify";
 import Passenger from "./app/page/system/passenger/Passenger";
+import Employee from "./app/page/system/employee/Employee";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="xe" element={<Car />} />
                 <Route path="loai-xe" element={<TypeCar />} />
                 <Route path="hanh-khach" element={<Passenger />} />
+                <Route path="nhan-vien" element={<Employee />} />
               </Route>
             </Routes>
           </div>

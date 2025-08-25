@@ -86,6 +86,16 @@ function SideBarLeft() {
                 >
                   Hành khách
                 </a>
+                <a
+                  href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/system/nhan-vien");
+                  }}
+                >
+                  Nhân viên
+                </a>
               </div>
             </div>
             <a href="widget.html" className="nav-item nav-link">

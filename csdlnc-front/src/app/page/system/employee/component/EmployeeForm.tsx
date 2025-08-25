@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { PassengerModel } from "../../../../model/PassengerModel";
-import { PassengerService } from "../../../../services/PassengerService";
+import { EmployeeModel } from "../../../../model/EmployeeModel";
+import { EmployeeService } from "../../../../services/EmployeeService";
 
-export default function PassengerForm(props: any) {
-  const [model, setModel] = useState<PassengerModel>(
-    props.model ?? new PassengerModel()
+export default function EmployeeForm(props: any) {
+  const [model, setModel] = useState<EmployeeModel>(
+    props.model ?? new EmployeeModel()
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,9 +29,9 @@ export default function PassengerForm(props: any) {
     if (!check()) {
       return;
     }
-    if (model.maHanhKhach) {
-      PassengerService.getInstance()
-        .updatePassenger(model)
+    if (model.maNhanVien) {
+      EmployeeService.getInstance()
+        .updateEmployee(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -48,8 +48,8 @@ export default function PassengerForm(props: any) {
           }
         });
     } else {
-      PassengerService.getInstance()
-        .insertPassenger(model)
+      EmployeeService.getInstance()
+        .insertEmployee(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -99,20 +99,6 @@ export default function PassengerForm(props: any) {
             />
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="soDienThoai" className="form-label">
-              Số điện thoại
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="soDienThoai"
-              name="soDienThoai"
-              value={model.soDienThoai ?? ""}
-              onChange={handleChange}
-            />
-          </div>
-
           <button
             type="button"
             className="btn btn-secondary"
@@ -122,7 +108,7 @@ export default function PassengerForm(props: any) {
           </button>
 
           <button type="submit" className="btn btn-primary ms-2">
-            {model.maHanhKhach ? "Cập nhật" : "Thêm"}
+            {model.maNhanVien ? "Cập nhật" : "Thêm"}
           </button>
         </form>
       </div>

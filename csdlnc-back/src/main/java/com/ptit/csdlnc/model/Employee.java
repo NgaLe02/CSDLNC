@@ -15,8 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Passenger {
-	private Integer maHanhKhach;
+public class Employee {
+	private Integer maNhanVien;
 
 	@NotNull(message = "Họ tên không được null")
 	@NotBlank(message = "Họ tên không được để trống")
@@ -25,7 +25,5 @@ public class Passenger {
 	
 	@Size(max = 12, message = "Chứng minh nhân dân tối đa 20 ký tự")
 	private String cmnd;
-	
-	@Size(max = 20, message = "Số điện thoại tối đa 20 ký tự")
-	private String soDienThoai;
+
 }

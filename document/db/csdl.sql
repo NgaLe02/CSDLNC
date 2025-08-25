@@ -3,9 +3,7 @@ use csdlnc;
 CREATE TABLE NhanVien (
     maNhanVien INT PRIMARY KEY AUTO_INCREMENT,
     hoTen VARCHAR(100),
-    ngaySinh DATE,
-    cmnd VARCHAR(20) UNIQUE,
-    kinhNghiem INT
+    cmnd VARCHAR(20) UNIQUE
 );
 
 CREATE TABLE LoaiXe (
@@ -40,7 +38,7 @@ CREATE TABLE LichBaoDuong (
 CREATE TABLE HanhKhach (
     maHanhKhach INT PRIMARY KEY AUTO_INCREMENT,
     hoTen VARCHAR(100) NOT NULL,
-    cmnd VARCHAR(20) UNIQUE,
+    cmnd VARCHAR(12) UNIQUE,
     soDienThoai VARCHAR(20) UNIQUE
 );
 

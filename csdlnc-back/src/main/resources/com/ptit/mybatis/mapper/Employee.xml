@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.EmployeeDAO">
+	<resultMap id="employeeMap" type="com.ptit.csdlnc.model.response.EmployeeResponse">
+        <id property="maNhanVien" column="maNhanVien"/>
+        <result property="hoTen" column="hoTen"/>
+        <result property="cmnd" column="cmnd"/>
+    </resultMap>
+
+	<select id="getLstEmployee" resultMap="employeeMap">
+        SELECT maNhanVien, hoTen, cmnd
+        FROM nhanvien
+    </select>
+
+    <select id="getEmployeeById" parameterType="int" resultMap="employeeMap">
+        SELECT maNhanVien, hoTen, cmnd
+        FROM nhanvien
+        WHERE maNhanVien = #{maNhanVien}
+    </select>
+
+    <insert id="insertEmployee" parameterType="com.ptit.csdlnc.model.Employee" useGeneratedKeys="true" keyProperty="maNhanVien">
+        INSERT INTO nhanvien (hoTen, cmnd)
+        VALUES (#{hoTen}, #{cmnd})
+    </insert>
+
+    <update id="updateEmployee" parameterType="com.ptit.csdlnc.model.Employee">
+        UPDATE nhanvien
+        SET hoTen = #{hoTen},
+            cmnd = #{cmnd}
+        WHERE maNhanVien = #{maNhanVien}
+    </update>
+
+    <delete id="deleteEmployee" parameterType="int">
+        DELETE FROM nhanvien
+        WHERE maNhanVien = #{maNhanVien}
+    </delete>
+	
+</mapper>

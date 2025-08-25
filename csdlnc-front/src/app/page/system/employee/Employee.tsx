@@ -1,23 +1,25 @@
 import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { CarModel } from "../../../model/CarModel";
-import { CarService } from "../../../services/CarService";
-import { CarResponseModel } from "../../../model/response/CarResponseModel";
-import CarForm from "./component/CarForm";
+import { PassengerModel } from "../../../model/PassengerModel";
+import { EmployeeModel } from "../../../model/EmployeeModel";
+import EmployeeForm from "./component/EmployeeForm";
+import { EmployeeService } from "../../../services/EmployeeService";
 
-export default function Car() {
-  const [listData, setListData] = useState<CarResponseModel[]>([]);
+export default function Employee() {
+  const [listData, setListData] = useState<EmployeeModel[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingModel, setEditingModel] = useState<CarModel>(new CarModel());
+  const [editingModel, setEditingModel] = useState<EmployeeModel>(
+    new EmployeeModel()
+  );
 
   useEffect(() => {
-    getLstCar();
+    getLstEmployee();
   }, []);
 
-  function getLstCar() {
-    CarService.getInstance()
-      .getLstCar({})
+  function getLstEmployee() {
+    EmployeeService.getInstance()
+      .getLstEmployee({})
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
@@ -36,29 +38,29 @@ export default function Car() {
   }
 
   function handleAdd() {
-    setEditingModel(new CarModel());
+    setEditingModel(new PassengerModel());
     setShowForm(true);
   }
 
-  function handleEdit(car: CarResponseModel) {
+  function handleEdit(model: PassengerModel) {
     // setEditingModel({
     //   maxe: car.maxe,
     //   bienSo: car.bienSo,
     //   tinhTrang: car.tinhTrang,
     //   maLoaiXe: car.loaiXe?.maLoaiXe
     // });
-    setEditingModel(car);
+    setEditingModel(model);
     setShowForm(true);
   }
 
-  function handleDelete(id: string) {
-    CarService.getInstance()
-      .deleteCar(id)
+  function handleDelete(id: number) {
+    EmployeeService.getInstance()
+      .deleteEmployee(id)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
             toast.success(resp.data.message);
-            getLstCar();
+            getLstEmployee();
           } else {
             toast.error(resp.data.message);
           }
@@ -66,27 +68,23 @@ export default function Car() {
           toast.error(resp.data.message);
         }
       })
-      .catch((err) => {
-        if (err.response && err.response.data) {
-          toast.error(err.response.data.message);
-        } else {
-          toast.error("Có lỗi xảy ra");
-        }
+      .catch((error) => {
+        toast.error("Có lỗi xảy ra");
       });
   }
 
   function closeModal(status: boolean) {
     setShowForm(false);
-    getLstCar();
+    getLstEmployee();
   }
   return (
     <>
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách xe</h6>
+            <h6 className="mb-0">Danh sách nhân viên</h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
-              Thêm xe
+              Thêm nhân viên
             </button>
           </div>
           <div className="table-responsive">
@@ -97,26 +95,22 @@ export default function Car() {
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
-                  <th scope="col">Mã xe</th>
-                  <th scope="col">Biển số xe</th>
-                  <th scope="col">Tình trạng</th>
-                  <th scope="col">Loại xe</th>
-                  <th scope="col">Số ghế ngồi</th>
+                  <th scope="col">Mã nhân viên</th>
+                  <th scope="col">Họ tên</th>
+                  <th scope="col">CMND</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
-                {listData.map((item: CarResponseModel, index: number) => (
-                  <tr key={item.maXe}>
+                {listData.map((item: EmployeeModel, index: number) => (
+                  <tr key={item.maNhanVien}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{item.maXe}</td>
-                    <td>{item.bienSo}</td>
-                    <td>{item.tinhTrang}</td>
-                    <td>{item.loaiXe?.tenLoaiXe}</td>
-                    <td>{item.loaiXe?.soGhe}</td>
+                    <td>{item.maNhanVien}</td>
+                    <td>{item.hoTen}</td>
+                    <td>{item.cmnd}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-info ms-2"
@@ -126,7 +120,7 @@ export default function Car() {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maXe!)}
+                        onClick={() => handleDelete(item.maNhanVien!)}
                       >
                         Xóa
                       </button>
@@ -154,7 +148,7 @@ export default function Car() {
                 ></button>
               </div>
               <div className="modal-body">
-                <CarForm
+                <EmployeeForm
                   model={editingModel}
                   closeModal={(status: boolean) => {
                     closeModal(status);
