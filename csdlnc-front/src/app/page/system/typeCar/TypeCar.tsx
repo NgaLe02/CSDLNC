@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { CarService } from "../../../services/CarService";
 import TypeCarForm from "./component/TypeCarForm";
+import { TypeCarService } from "../../../services/TypeCarService";
 
 export default function TypeCar() {
   const [listCar, setListCar] = useState<any[]>([]);
@@ -10,12 +11,12 @@ export default function TypeCar() {
   const [editingModel, setEditingModel] = useState<any>(null);
 
   useEffect(() => {
-    getLstCar();
+    getLstTypeCar();
   }, []);
 
-  function getLstCar() {
-    CarService.getInstance()
-      .getLstCar({})
+  function getLstTypeCar() {
+    TypeCarService.getInstance()
+      .getLstTypeCar({})
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
@@ -34,13 +35,32 @@ export default function TypeCar() {
   }
 
   function handleAdd() {
-    setEditingModel(null); // thêm mới
+    setEditingModel(null);
     setShowForm(true);
   }
 
   function handleEdit(car: any) {
-    setEditingModel(car); // sửa xe
+    setEditingModel(car);
     setShowForm(true);
+  }
+
+  function handleDelete(id: number) {
+    TypeCarService.getInstance()
+      .deleteTypeCar(id)
+      .then((resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          if (resp.data.status) {
+            toast.success("Xoá thành công");
+          } else {
+            toast.error("Xoá thất bại");
+          }
+        } else {
+          toast.error("Xoá thất bại");
+        }
+      })
+      .catch((error) => {
+        toast.error('Có lỗi xảy ra!');
+      });
   }
 
   return (
@@ -84,7 +104,10 @@ export default function TypeCar() {
                       >
                         Sửa
                       </button>
-                      <button className="btn btn-sm btn-danger ms-2">
+                      <button
+                        className="btn btn-sm btn-danger ms-2"
+                        onClick={() => handleDelete(car)}
+                      >
                         Xóa
                       </button>
                     </td>
