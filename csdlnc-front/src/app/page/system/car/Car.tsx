@@ -7,6 +7,7 @@ import TypeCarForm from "../typeCar/component/TypeCarForm";
 import { CarModel } from "../../../model/CarModel";
 import { CarService } from "../../../services/CarService";
 import { CarResponseModel } from "../../../model/response/CarResponseModel";
+import CarForm from "./component/CarForm";
 
 export default function Car() {
   const [listData, setListData] = useState<CarResponseModel[]>([]);
@@ -150,7 +151,7 @@ export default function Car() {
                 ></button>
               </div>
               <div className="modal-body">
-                <TypeCarForm model={editingModel}
+                <CarForm model={editingModel}
                   closeModal={(status: boolean) => { closeModal(status) }} />
               </div>
             </div>

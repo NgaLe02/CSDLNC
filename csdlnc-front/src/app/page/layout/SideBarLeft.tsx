@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function SideBarLeft() {
+  const navigate = useNavigate();
+
   return (
     <div className="container-xxl position-relative bg-white d-flex p-0">
       {/* <!-- Spinner Start --> */}
@@ -48,17 +50,30 @@ function SideBarLeft() {
             <div className="nav-item dropdown">
               <a
                 href="#"
-                className="nav-link dropdown-toggle"
+                className="nav-link dropdown-toggle "
                 data-bs-toggle="dropdown"
               >
                 <i className="fa fa-laptop me-2"></i>Hệ thống
               </a>
               <div className="dropdown-menu bg-transparent border-0">
-                <a href="/system" className="dropdown-item">
+                <a href="#"
+                  className="dropdown-item "
+                  onClick={(e) => {
+                    e.preventDefault()
+                    navigate('/system/xe');
+
+                  }}
+                >
                   Xe
                 </a>
-                <a href="typography.html" className="dropdown-item">
-                  Typography
+                <a href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    navigate('/system/loai-xe');
+
+                  }}>
+                  Loại xe
                 </a>
                 <a href="element.html" className="dropdown-item">
                   Other Elements

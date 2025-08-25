@@ -3,6 +3,7 @@ import "./App.css";
 import SideBarLeft from "./app/page/layout/SideBarLeft";
 import System from "./app/page/system/System";
 import Car from "./app/page/system/car/Car";
+import TypeCar from "./app/page/system/typeCar/TypeCar";
 
 function App() {
   return (
@@ -17,9 +18,13 @@ function App() {
           {/* <!-- Blank Start --> */}
           <div className="container-fluid pt-4 px-4">
             <Routes>
-              <Route path="/system" element={<System />} />
-              {/* bạn có thể thêm Route cho Revenue ở đây */}
+              <Route path="/system" element={<System />}>
+                <Route path="xe" element={<Car />} />
+                <Route path="loai-xe" element={<TypeCar />} />
+              </Route>
             </Routes>
+
+
           </div>
         </div>
         {/* <!-- Content End --> */}
