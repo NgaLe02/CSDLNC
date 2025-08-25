@@ -16,9 +16,9 @@ CREATE TABLE LoaiXe (
 
 CREATE TABLE Xe (
 	maXe CHAR(3) PRIMARY KEY,
-    bienSo VARCHAR(20) UNIQUE,
+    bienSo VARCHAR(20) NOT NULL UNIQUE,
     tinhTrang VARCHAR(50),
-    maLoaiXe INT,
+    maLoaiXe INT NOT NULL,
     FOREIGN KEY (maLoaiXe) REFERENCES LoaiXe(maLoaiXe)
 );
 

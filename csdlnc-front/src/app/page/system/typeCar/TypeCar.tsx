@@ -6,7 +6,7 @@ import { TypeCarModel } from "../../../model/TypeCarModel";
 import TypeCarForm from "./component/TypeCarForm";
 
 export default function TypeCar() {
-  const [listCar, setListCar] = useState<TypeCarModel[]>([]);
+  const [listData, setListData] = useState<TypeCarModel[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingModel, setEditingModel] = useState<TypeCarModel>(new TypeCarModel());
 
@@ -21,7 +21,7 @@ export default function TypeCar() {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
             const data = response.data.responseData;
-            setListCar(data);
+            setListData(data);
           } else {
             toast.error(response.data.message);
           }
@@ -93,7 +93,7 @@ export default function TypeCar() {
                 </tr>
               </thead>
               <tbody>
-                {listCar.map((item: TypeCarModel, index: number) => (
+                {listData.map((item: TypeCarModel, index: number) => (
                   <tr key={item.maLoaiXe}>
                     <td>
                       <input className="form-check-input" type="checkbox" />

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import SideBarLeft from "./app/page/layout/SideBarLeft";
 import System from "./app/page/system/System";
+import Car from "./app/page/system/car/Car";
 
 function App() {
   return (
