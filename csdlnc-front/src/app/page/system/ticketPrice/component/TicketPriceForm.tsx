@@ -3,11 +3,63 @@ import { toast } from "react-toastify";
 
 import { TicketPriceModel } from "../../../../model/TicketPriceModel";
 import { TicketPriceService } from "../../../../services/TicketPriceService";
+import { RouteResponseModel } from "../../../../model/response/RouteResponseModel";
+import { RouteService } from "../../../../services/RouteService";
+import { HttpStatusCode } from "axios";
+import { SeasonModel } from "../../../../model/Season";
+import { SeasonService } from "../../../../services/SeasonService";
 
 export default function TicketPriceForm(props: any) {
   const [model, setModel] = useState<TicketPriceModel>(
     props.model ?? new TicketPriceModel()
   );
+  const [listRoute, setListRoute] = useState<RouteResponseModel[]>([]);
+  const [listSeason, setListSeason] = useState<SeasonModel[]>([]);
+
+  useEffect(() => {
+    getLstRoute();
+    getLstSeason();
+  }, []);
+
+  function getLstRoute() {
+    RouteService.getInstance()
+      .getLstRoute({})
+      .then((response) => {
+        if (response.status === HttpStatusCode.Ok) {
+          if (response.data.status) {
+            const data = response.data.responseData;
+            setListRoute(data);
+          } else {
+            toast.error(response.data.message);
+          }
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch(() => {
+        toast.error("Có lỗi xảy ra");
+      });
+  }
+
+  function getLstSeason() {
+    SeasonService.getInstance()
+      .getLstSeason({})
+      .then((response) => {
+        if (response.status === HttpStatusCode.Ok) {
+          if (response.data.status) {
+            const data = response.data.responseData;
+            setListSeason(data);
+          } else {
+            toast.error(response.data.message);
+          }
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch(() => {
+        toast.error("Có lỗi xảy ra");
+      });
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -70,23 +122,57 @@ export default function TicketPriceForm(props: any) {
       <div className="bg-light rounded h-100 p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="tenMua" className="form-label">
+            <label htmlFor="maTuyen" className="form-label">
               Tuyến đường
             </label>
             <select
               className="form-select"
-              id="maLoaiXe"
-              name="maLoaiXe"
+              id="maTuyen"
+              name="maTuyen"
               value={model.maTuyen ?? ""}
               onChange={(e: any) => handleChange(e)}
             >
-              <option value="">-- Chọn loại xe --</option>
-              {listTypeCar.map((type) => (
-                <option key={type.maLoaiXe} value={type.maLoaiXe}>
-                  {type.tenLoaiXe}
+              <option value="">-- Chọn tuyến đường --</option>
+              {listRoute.map((item) => (
+                <option key={item.maTuyen} value={item.maTuyen}>
+                  {item.diemKhoiHanh} - {item.diemDen}
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="maMua" className="form-label">
+              Mùa lễ
+            </label>
+            <select
+              className="form-select"
+              id="maMua"
+              name="maMua"
+              value={model.maMua ?? ""}
+              onChange={(e: any) => handleChange(e)}
+            >
+              <option value="">-- Chọn mùa lễ --</option>
+              {listSeason.map((item) => (
+                <option key={item.maMua} value={item.maMua}>
+                  {item.tenMua}
+                </option>
+              ))}
+            </select>
+
+            <div className="mb-3">
+              <label htmlFor="giaVe" className="form-label">
+                Giá vé
+              </label>
+              <input
+                type="number"
+                className="form-control"
+                id="giaVe"
+                name="giaVe"
+                value={model.giaVe ?? ""}
+                onChange={handleChange}
+              />
+            </div>
           </div>
           <button
             type="button"

@@ -113,7 +113,7 @@ export default function TicketPrice() {
                       <td>{item.maGiaVe}</td>
                       <td>{item.mua?.tenMua}</td>
                       <td>
-                        {item.tuyenDuong?.diemKhoiHanh} + "-" +{" "}
+                        {item.tuyenDuong?.diemKhoiHanh} -
                         {item.tuyenDuong?.diemDen}
                       </td>
                       <td>{item.giaVe}</td>

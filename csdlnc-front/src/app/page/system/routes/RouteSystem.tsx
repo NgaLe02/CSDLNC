@@ -15,10 +15,10 @@ export default function RouteSystem() {
   );
 
   useEffect(() => {
-    getLstSeason();
+    getLstRoute();
   }, []);
 
-  function getLstSeason() {
+  function getLstRoute() {
     RouteService.getInstance()
       .getLstRoute({})
       .then((response) => {
@@ -61,7 +61,7 @@ export default function RouteSystem() {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
             toast.success(resp.data.message);
-            getLstSeason();
+            getLstRoute();
           } else {
             toast.error(resp.data.message);
           }
@@ -76,7 +76,7 @@ export default function RouteSystem() {
 
   function closeModal(status: boolean) {
     setShowForm(false);
-    getLstSeason();
+    getLstRoute();
   }
   return (
     <>

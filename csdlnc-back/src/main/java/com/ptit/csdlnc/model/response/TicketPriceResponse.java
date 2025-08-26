@@ -18,6 +18,7 @@ public class TicketPriceResponse {
 	private String maTuyen;
 	private Integer maMua;
 
+	private RouteResponse tuyenDuong;
 	private SeasonResponse mua;
 
 }

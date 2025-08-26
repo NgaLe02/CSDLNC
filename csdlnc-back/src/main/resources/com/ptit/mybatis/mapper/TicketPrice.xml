@@ -7,11 +7,28 @@
         <result property="giaVe" column="giaVe"/>
         <result property="maTuyen" column="maTuyen"/>
         <result property="maMua" column="maMua"/>
+         <association property="mua" javaType="com.ptit.csdlnc.model.response.SeasonResponse">
+	        <id property="maMua" column="maMua"/>
+	        <result property="tenMua" column="tenMua"/>
+	    </association>
+	     <association property="tuyenDuong" javaType="com.ptit.csdlnc.model.response.RouteResponse">
+	        <id property="maTuyen" column="maTuyen"/>
+	        <result property="diemDen" column="diemDen"/>
+	        <result property="diemKhoiHanh" column="diemKhoiHanh"/>
+	    </association>
     </resultMap>
 
     <select id="getLstTicketPrice" resultMap="ticketPriceMap">
-        SELECT maGiaVe, giaVe, maTuyen, maMua
-        FROM GiaVe
+        SELECT G.maGiaVe, 
+        G.giaVe, 
+        G.maTuyen, 
+        G.maMua,
+        M.tenMua,
+        TD.diemDen,
+        TD.diemKhoiHanh
+        FROM GiaVe G
+        LEFT JOIN mua M on G.maMua = M.maMua
+        LEFT JOIN tuyenduong TD on TD.maTuyen = G.maTuyen
     </select>
 
     <select id="getTicketPriceById" parameterType="int" resultMap="ticketPriceMap">
