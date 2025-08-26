@@ -1,16 +1,16 @@
 import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import dayjs from "dayjs";
-import { RouteSalaryService } from "../../../services/RouteSalaryService";
-import RouteSalaryForm from "./component/RouteSalaryForm";
-import { RouteSalaryModel } from "../../../model/RouteSalaryModel";
+import { TicketPriceModel } from "../../../model/TicketPriceModel";
+import { TicketPriceResponseModel } from "../../../model/response/TicketPriceResponseModel";
+import { TicketPriceService } from "../../../services/TicketPriceService";
+import TicketPriceForm from "./component/TicketPriceForm";
 
-export default function RouteSalary() {
-  const [listData, setListData] = useState<RouteSalaryModel[]>([]);
+export default function TicketPrice() {
+  const [listData, setListData] = useState<TicketPriceResponseModel[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingModel, setEditingModel] = useState<RouteSalaryModel>(
-    new RouteSalaryModel()
+  const [editingModel, setEditingModel] = useState<TicketPriceModel>(
+    new TicketPriceModel()
   );
 
   useEffect(() => {
@@ -18,8 +18,8 @@ export default function RouteSalary() {
   }, []);
 
   function getLstSeason() {
-    RouteSalaryService.getInstance()
-      .getLstRouteSalary({})
+    TicketPriceService.getInstance()
+      .getLstTicketPrice({})
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
@@ -38,11 +38,11 @@ export default function RouteSalary() {
   }
 
   function handleAdd() {
-    setEditingModel(new RouteSalaryModel());
+    setEditingModel(new TicketPriceModel());
     setShowForm(true);
   }
 
-  function handleEdit(model: RouteSalaryModel) {
+  function handleEdit(model: TicketPriceModel) {
     // setEditingModel({
     //   maxe: car.maxe,
     //   bienSo: car.bienSo,
@@ -54,8 +54,8 @@ export default function RouteSalary() {
   }
 
   function handleDelete(id: number) {
-    RouteSalaryService.getInstance()
-      .deleteRouteSalary(id)
+    TicketPriceService.getInstance()
+      .deleteTicketPrice(id)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
@@ -82,9 +82,9 @@ export default function RouteSalary() {
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách lương tuyến đường</h6>
+            <h6 className="mb-0">Danh sách mùa</h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
-              Thêm
+              Thêm mùa
             </button>
           </div>
           <div className="table-responsive">
@@ -95,46 +95,45 @@ export default function RouteSalary() {
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
-                  <th scope="col">Mã lương tuyến đường</th>
-                  <th scope="col">Độ phức tạp</th>
-                  <th scope="col">Khoảng cách từ</th>
-                  <th scope="col">Khoảng cách đến</th>
-                  <th scope="col">Lương cơ bản</th>
-
-                  {/* <th scope="col">Ngày bắt đầu</th>
-                  <th scope="col">Ngày kết thúc</th> */}
+                  <th scope="col">Mã giá vé</th>
+                  <th scope="col">Tên mùa</th>
+                  <th scope="col">Tên tuyến đường</th>
+                  <th scope="col">Giá vé</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
-                {listData.map((item: RouteSalaryModel, index: number) => (
-                  <tr key={item.maLuongTuyen}>
-                    <td>
-                      <input className="form-check-input" type="checkbox" />
-                    </td>
-                    <td>{index + 1}</td>
-                    <td>{item.doPhucTap}</td>
-                    <td>{item.khoangCachTu}</td>
-                    <td>{item.khoangCachDen}</td>
-                    <td>{item.luongCoBan}</td>
-                    {/* <td>{dayjs(item.ngayBatDau).format("YYYY-MM-DD")}</td> */}
-                    {/* <td>{item.ngayKetThuc ? dayjs(item.ngayKetThuc).format("YYYY-MM-DD") : ''}</td> */}
-                    <td>
-                      <button
-                        className="btn btn-sm btn-info ms-2"
-                        onClick={() => handleEdit(item)}
-                      >
-                        Sửa
-                      </button>
-                      <button
-                        className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maLuongTuyen!)}
-                      >
-                        Xóa
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {listData.map(
+                  (item: TicketPriceResponseModel, index: number) => (
+                    <tr key={item.maMua}>
+                      <td>
+                        <input className="form-check-input" type="checkbox" />
+                      </td>
+                      <td>{index + 1}</td>
+                      <td>{item.maGiaVe}</td>
+                      <td>{item.mua?.tenMua}</td>
+                      <td>
+                        {item.tuyenDuong?.diemKhoiHanh} + "-" +{" "}
+                        {item.tuyenDuong?.diemDen}
+                      </td>
+                      <td>{item.giaVe}</td>
+                      <td>
+                        <button
+                          className="btn btn-sm btn-info ms-2"
+                          onClick={() => handleEdit(item)}
+                        >
+                          Sửa
+                        </button>
+                        <button
+                          className="btn btn-sm btn-danger ms-2"
+                          onClick={() => handleDelete(item.maMua!)}
+                        >
+                          Xóa
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                )}
               </tbody>
             </table>
           </div>
@@ -156,7 +155,7 @@ export default function RouteSalary() {
                 ></button>
               </div>
               <div className="modal-body">
-                <RouteSalaryForm
+                <TicketPriceForm
                   model={editingModel}
                   closeModal={(status: boolean) => {
                     closeModal(status);

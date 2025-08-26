@@ -29,10 +29,10 @@ public class RouthSalaryService {
 					|| !(model.getDoPhucTap() == 1 || model.getDoPhucTap() == 2 || model.getDoPhucTap() == 3)) {
 				throw new RuntimeException("Độ phức tạp chỉ được phép là 1, 2 hoặc 3!");
 			}
-//			Double luongCoBan = model.getLuongCoBan();
-//			if (luongCoBan == null) {
-//				throw new RuntimeException("Không thể tính lương cơ bản vì dữ liệu không hợp lệ!");
-//			}
+			Double luongCoBan = model.getLuongCoBan();
+			if (luongCoBan == null) {
+				throw new RuntimeException("Không thể tính lương cơ bản vì dữ liệu không hợp lệ!");
+			}
 			result = routeSalaryDAO.insertRouteSalary(model);
 
 		} catch (DataIntegrityViolationException e) {
@@ -56,10 +56,10 @@ public class RouthSalaryService {
 					|| !(model.getDoPhucTap() == 1 || model.getDoPhucTap() == 2 || model.getDoPhucTap() == 3)) {
 				throw new RuntimeException("Độ phức tạp chỉ được phép là 1, 2 hoặc 3!");
 			}
-//			Double luongCoBan = model.getLuongCoBan();
-//			if (luongCoBan == null) {
-//				throw new RuntimeException("Không thể tính lương cơ bản vì dữ liệu không hợp lệ!");
-//			}
+			Double luongCoBan = model.getLuongCoBan();
+			if (luongCoBan == null) {
+				throw new RuntimeException("Không thể tính lương cơ bản vì dữ liệu không hợp lệ!");
+			}
 			result = routeSalaryDAO.updateRouteSalary(model);
 
 		} catch (DataIntegrityViolationException e) {

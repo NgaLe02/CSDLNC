@@ -18,4 +18,6 @@ public interface RouteSalaryDAO {
 
 	int deleteRouteSalary(int id) throws Exception;
 
+	Integer findMaLuongTuyen(Integer doPhucTap, Double khoangCach) throws Exception;
+
 }

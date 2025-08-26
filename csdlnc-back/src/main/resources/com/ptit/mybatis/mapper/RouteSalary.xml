@@ -7,20 +7,20 @@
         <result property="doPhucTap" column="doPhucTap"/>
         <result property="khoangCachTu" column="khoangCachTu"/>
         <result property="khoangCachDen" column="khoangCachDen"/>
-        <!--<result property="luongCoBan" column="luongCoBan"/>
-        <result property="ngayBatDau" column="ngayBatDau"/>
+        <result property="luongCoBan" column="luongCoBan"/>
+        <!--<result property="ngayBatDau" column="ngayBatDau"/>
         <result property="ngayKetThuc" column="ngayKetThuc"/>-->
     </resultMap>
 
 
     <select id="getLstRouteSalary" resultMap="routeSalaryMap">
-        SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen
+        SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen, luongCoBan
         FROM LuongTuyenDuong
     </select>
 
 
     <select id="getRouteSalaryById" parameterType="int" resultMap="routeSalaryMap">
-        SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen
+        SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen, luongCoBan
         FROM LuongTuyenDuong
         WHERE maLuongTuyen = #{maLuongTuyen}
     </select>
@@ -28,16 +28,17 @@
 
     <insert id="insertRouteSalary" parameterType="com.ptit.csdlnc.model.RouteSalary"
             useGeneratedKeys="true" keyProperty="maLuongTuyen">
-        INSERT INTO LuongTuyenDuong (doPhucTap, khoangCachTu, khoangCachDen)
-        VALUES (#{doPhucTap}, #{khoangCachTu}, #{khoangCachDen})
+        INSERT INTO LuongTuyenDuong (doPhucTap, khoangCachTu, khoangCachDen, luongCoBan)
+        VALUES (#{doPhucTap}, #{khoangCachTu}, #{khoangCachDen}, #{luongCoBan})
     </insert>
 
 
     <update id="updateRouteSalary" parameterType="com.ptit.csdlnc.model.RouteSalary">
-        UPDATE LuongTuyenDuongRouteSalary
+        UPDATE LuongTuyenDuong
         SET doPhucTap = #{doPhucTap},
             khoangCachTu = #{khoangCachTu},
-            khoangCachDen = #{khoangCachDen}
+            khoangCachDen = #{khoangCachDen},
+            luongCoBan = #{luongCoBan}
          
         WHERE maLuongTuyen = #{maLuongTuyen}
     </update>
@@ -47,5 +48,12 @@
         DELETE FROM LuongTuyenDuong
         WHERE maLuongTuyen = #{maLuongTuyen}
     </delete>
-
+    
+    <select id="findMaLuongTuyen" resultType="int">
+        SELECT maLuongTuyen
+        FROM LuongTuyenDuong
+        WHERE doPhucTap = #{doPhucTap}
+        AND khoangCachDen >= #{khoangCach}
+        AND #{khoangCach} >= khoangCachTu
+    </select>
 </mapper>

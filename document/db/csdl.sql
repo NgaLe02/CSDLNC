@@ -47,6 +47,7 @@ CREATE TABLE LuongTuyenDuong (
     doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),
     khoangCachTu DECIMAL(10,2) not null,
     khoangCachDen DECIMAL(10,2) not null,
+    luongCoBan DECIMAL(10,2) not null
 );
 
 CREATE TABLE TuyenDuong (
@@ -55,18 +56,8 @@ CREATE TABLE TuyenDuong (
     doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),
     diemDen VARCHAR(100) not null,
     khoangCach DECIMAL(10,2) not null,
-    thoiGianUocTinh INT not null
-);
-
-CREATE TABLE TuyenDuong_Luong (
-    maTuyenLuong INT PRIMARY KEY AUTO_INCREMENT,
-    maTuyen VARCHAR(4) NOT NULL,
-    maLuongTuyen INT NOT NULL,
-    ngayBatDau DATE NOT NULL,
-    ngayKetThuc DATE NULL,
-    luongCoBan DECIMAL(12,2) not null,
-    CONSTRAINT chk_ngay CHECK (ngayKetThuc IS NULL OR ngayBatDau <= ngayKetThuc),
-    FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
+    thoiGianUocTinh INT not null,
+    maLuongTuyen INT not null,
     FOREIGN KEY (maLuongTuyen) REFERENCES LuongTuyenDuong(maLuongTuyen)
 );
 

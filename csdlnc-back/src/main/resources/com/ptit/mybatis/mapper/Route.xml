@@ -8,27 +8,27 @@
         <result property="diemDen" column="diemDen"/>
         <result property="khoangCach" column="khoangCach"/>
         <result property="thoiGianUocTinh" column="thoiGianUocTinh"/>
-        <result property="maTuyenLuong" column="maTuyenLuong"/>
+        <result property="maLuongTuyen" column="maLuongTuyen"/>
         <result property="doPhucTap" column="doPhucTap"/>
     </resultMap>
 	
 
     <select id="getLstRoute" resultMap="routeMap">
-        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap
+        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap, maLuongTuyen
         FROM tuyenduong
         ORDER BY maTuyen
     </select>
     
     <select id="getRouteById" parameterType="java.lang.String" resultType="com.ptit.csdlnc.model.Route">
-        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap
+        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap, maLuongTuyen
         FROM tuyenduong
         WHERE maTuyen = #{maTuyen}
     </select>
     
 
     <insert id="insertRoute" parameterType="com.ptit.csdlnc.model.Route" useGeneratedKeys="true" keyProperty="maTuyen">
-        INSERT INTO tuyenduong (diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap)
-        VALUES (#{diemKhoiHanh}, #{diemDen}, #{khoangCach}, #{thoiGianUocTinh}, #{doPhucTap})
+        INSERT INTO tuyenduong (diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap,maLuongTuyen)
+        VALUES (#{diemKhoiHanh}, #{diemDen}, #{khoangCach}, #{thoiGianUocTinh}, #{doPhucTap}, #{maLuongTuyen})
     </insert>
 
     <update id="updateRoute" parameterType="com.ptit.csdlnc.model.Route">
@@ -38,7 +38,8 @@
             diemDen = #{diemDen},
             khoangCach = #{khoangCach},
             thoiGianUocTinh = #{thoiGianUocTinh},
-            doPhucTap = #{doPhucTap}
+            doPhucTap = #{doPhucTap},
+            maLuongTuyen = #{maLuongTuyen}
         WHERE maTuyen = #{maTuyen}
     </update>
 

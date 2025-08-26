@@ -1,7 +1,5 @@
 package com.ptit.csdlnc.model.response;
 
-import java.sql.Date;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -17,8 +15,6 @@ import lombok.Setter;
 public class TicketPriceResponse {
 	private Integer maGiaVe;
 	private Double giaVe;
-	private Date ngayHieuLuc;
-	private Date ngayKetThuc;
 	private String maTuyen;
 	private Integer maMua;
 

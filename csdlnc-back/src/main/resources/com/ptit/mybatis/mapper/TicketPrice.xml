@@ -5,27 +5,25 @@
     <resultMap id="ticketPriceMap" type="com.ptit.csdlnc.model.response.TicketPriceResponse">
         <id property="maGiaVe" column="maGiaVe"/>
         <result property="giaVe" column="giaVe"/>
-        <result property="ngayHieuLuc" column="ngayHieuLuc"/>
-        <result property="ngayKetThuc" column="ngayKetThuc"/>
         <result property="maTuyen" column="maTuyen"/>
         <result property="maMua" column="maMua"/>
     </resultMap>
 
     <select id="getLstTicketPrice" resultMap="ticketPriceMap">
-        SELECT maGiaVe, giaVe, ngayHieuLuc, ngayKetThuc, maTuyen, maMua
+        SELECT maGiaVe, giaVe, maTuyen, maMua
         FROM GiaVe
     </select>
 
     <select id="getTicketPriceById" parameterType="int" resultMap="ticketPriceMap">
-        SELECT maGiaVe, giaVe, ngayHieuLuc, ngayKetThuc, maTuyen, maMua
+        SELECT maGiaVe, giaVe, maTuyen, maMua
         FROM GiaVe
         WHERE maGiaVe = #{maGiaVe}
     </select>
 
     <insert id="insertTicketPrice" parameterType="com.ptit.csdlnc.model.TicketPrice"
             useGeneratedKeys="true" keyProperty="maGiaVe">
-        INSERT INTO GiaVe (giaVe, ngayHieuLuc, ngayKetThuc, maTuyen, maMua)
-        VALUES (#{giaVe}, #{ngayHieuLuc}, #{ngayKetThuc}, #{maTuyen}, #{maMua})
+        INSERT INTO GiaVe (giaVe, maTuyen, maMua)
+        VALUES (#{giaVe}, #{maTuyen}, #{maMua})
     </insert>
 
     <update id="updateTicketPrice" parameterType="com.ptit.csdlnc.model.TicketPrice">

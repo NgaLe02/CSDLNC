@@ -3,7 +3,7 @@ export class RouteSalaryModel {
   doPhucTap?: number;
   khoangCachTu?: number;
   khoangCachDen?: number;
-  // luongCoBan?: number;
+  luongCoBan?: number;
   // ngayBatDau?: string;
   // ngayKetThuc?: string;
 

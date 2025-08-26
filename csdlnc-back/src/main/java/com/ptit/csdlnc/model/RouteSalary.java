@@ -37,13 +37,13 @@ public class RouteSalary {
 	@Positive(message = "Khoảng cách đến phải lớn hơn 0")
 	private Double khoangCachDen;
 
-//	private Double luongCoBan;
-//
+	private Double luongCoBan;
+
 //	@NotNull(message = "Ngày bắt đầu không được null")
 //	private Date ngayBatDau;
 //	
 //	private Date ngayKetThuc;
-	
+
 	@AssertTrue(message = "Khoảng cách từ phải nhỏ hơn hoặc bằng khoảng cách đến")
 	private boolean isKhoangCachHopLe() {
 		if (khoangCachTu == null || khoangCachDen == null)
@@ -58,30 +58,30 @@ public class RouteSalary {
 //		return !ngayBatDau.after(ngayKetThuc);
 //	}
 //	
-//	// Lương thực tế chỉ phụ thuộc vào chiều dài & độ phức tạp
-//	public Double getLuongCoBan() {
-//		if (khoangCachTu == null || khoangCachDen == null || doPhucTap == null) {
-//			return null;
-//		}
-//
-//		double chieuDai = khoangCachDen - khoangCachTu;
-//
-//		double heSoPhucTap;
-//		switch (doPhucTap) {
-//		case 1:
-//			heSoPhucTap = 1.0;
-//			break; // dễ
-//		case 2:
-//			heSoPhucTap = 1.5;
-//			break; // trung bình
-//		case 3:
-//			heSoPhucTap = 2.0;
-//			break; // khó
-//		default:
-//			heSoPhucTap = 1.0;
-//		}
-//
-//		// Ví dụ công thức: lương = chiều dài * hệ số phức tạp * 1000
-//		return chieuDai * heSoPhucTap * 1000;
-//	}
+	// Lương thực tế chỉ phụ thuộc vào chiều dài & độ phức tạp
+	public Double getLuongCoBan() {
+		if (khoangCachTu == null || khoangCachDen == null || doPhucTap == null) {
+			return null;
+		}
+
+		double chieuDai = khoangCachDen - khoangCachTu;
+
+		double heSoPhucTap;
+		switch (doPhucTap) {
+		case 1:
+			heSoPhucTap = 1.0;
+			break; // dễ
+		case 2:
+			heSoPhucTap = 1.5;
+			break; // trung bình
+		case 3:
+			heSoPhucTap = 2.0;
+			break; // khó
+		default:
+			heSoPhucTap = 1.0;
+		}
+
+		// Ví dụ công thức: lương = chiều dài * hệ số phức tạp * 1000
+		return chieuDai * heSoPhucTap * 1000;
+	}
 }

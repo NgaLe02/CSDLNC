@@ -19,5 +19,6 @@ public class RouteResponse {
 	private Double khoangCach;
 	private Integer thoiGianUocTinh;
 	private Integer doPhucTap;
+	private Integer maLuongTuyen;
 
 }

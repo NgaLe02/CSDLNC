@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.ptit.csdlnc.dao.RouteDAO;
+import com.ptit.csdlnc.dao.RouteSalaryDAO;
 import com.ptit.csdlnc.model.Route;
 import com.ptit.csdlnc.model.response.RouteResponse;
 
@@ -16,6 +17,9 @@ import com.ptit.csdlnc.model.response.RouteResponse;
 public class RouthService {
 	@Autowired
 	RouteDAO routeDAO;
+
+	@Autowired
+	RouteSalaryDAO routeSalaryDAO;
 
 	public List<RouteResponse> getLstRoute(Map<String, Object> params) throws Exception {
 		List<RouteResponse> result = routeDAO.getLstRoute(params);
@@ -25,14 +29,20 @@ public class RouthService {
 	public int insertRoute(Route model) throws Exception {
 		int result = 0;
 		try {
+			// Validate độ phức tạp
 			if (model.getDoPhucTap() == null
 					|| !(model.getDoPhucTap() == 1 || model.getDoPhucTap() == 2 || model.getDoPhucTap() == 3)) {
 				throw new RuntimeException("Độ phức tạp chỉ được phép là 1, 2 hoặc 3!");
 			}
-//			Double luongCoBan = model.getLuongCoBan();
-//			if (luongCoBan == null) {
-//				throw new RuntimeException("Không thể tính lương cơ bản vì dữ liệu không hợp lệ!");
-//			}
+
+			// Lấy maLuongTuyen tương ứng dựa trên doPhucTap và khoangCach
+			Integer maLuongTuyen = routeSalaryDAO.findMaLuongTuyen(model.getDoPhucTap(), model.getKhoangCach());
+			if (maLuongTuyen == null) {
+				throw new RuntimeException("Không tìm thấy lương tuyến phù hợp với độ phức tạp và khoảng cách!");
+			}
+			model.setMaLuongTuyen(maLuongTuyen);
+
+			// Thêm tuyến đường
 			result = routeDAO.insertRoute(model);
 
 		} catch (DataIntegrityViolationException e) {
@@ -43,8 +53,6 @@ public class RouthService {
 				errorMessage = ex.getRootCause().getMessage();
 			}
 			throw new RuntimeException(errorMessage);
-		} catch (Exception e) {
-			throw new RuntimeException("Có lỗi xảy ra khi thêm lương tuyến đường!", e);
 		}
 		return result;
 	}
@@ -56,16 +64,17 @@ public class RouthService {
 					|| !(model.getDoPhucTap() == 1 || model.getDoPhucTap() == 2 || model.getDoPhucTap() == 3)) {
 				throw new RuntimeException("Độ phức tạp chỉ được phép là 1, 2 hoặc 3!");
 			}
-//			Double luongCoBan = model.getLuongCoBan();
-//			if (luongCoBan == null) {
-//				throw new RuntimeException("Không thể tính lương cơ bản vì dữ liệu không hợp lệ!");
-//			}
+			// Lấy maLuongTuyen tương ứng dựa trên doPhucTap và khoangCach
+			Integer maLuongTuyen = routeSalaryDAO.findMaLuongTuyen(model.getDoPhucTap(), model.getKhoangCach());
+			if (maLuongTuyen == null) {
+				throw new RuntimeException("Không tìm thấy lương tuyến phù hợp với độ phức tạp và khoảng cách!");
+			}
+			model.setMaLuongTuyen(maLuongTuyen);
+
 			result = routeDAO.updateRoute(model);
 
 		} catch (DataIntegrityViolationException e) {
 			throw new RuntimeException("Dữ liệu đầu vào không hợp lệ hoặc vi phạm ràng buộc DB!", e);
-		} catch (Exception e) {
-			throw new RuntimeException("Có lỗi xảy ra khi thêm lương tuyến đường!", e);
 		}
 		return result;
 	}

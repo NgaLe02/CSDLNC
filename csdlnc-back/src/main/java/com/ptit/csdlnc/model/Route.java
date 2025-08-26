@@ -44,6 +44,8 @@ public class Route {
 	@Min(value = 1, message = "Độ phức tạp tối thiểu là 1")
 	@Max(value = 3, message = "Độ phức tạp tối đa là 3")
 	private Integer doPhucTap;
+	
+	private Integer maLuongTuyen;
 
 
 }

@@ -10,6 +10,7 @@ import Employee from "./app/page/system/employee/Employee";
 import Season from "./app/page/system/season/Season";
 import RouteSalary from "./app/page/system/routhSalary/RouteSalary";
 import RouteSystem from "./app/page/system/routes/RouteSystem";
+import TicketPrice from "./app/page/system/ticketPrice/TicketPrice";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
                 <Route path="mua" element={<Season />} />
                 <Route path="luong-tuyen-duong" element={<RouteSalary />} />
                 <Route path="tuyen-duong" element={<RouteSystem />} />
+                <Route path="gia-ve" element={<TicketPrice />} />
               </Route>
             </Routes>
           </div>
