@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { TypeCarService } from "../../../../services/TypeCarService";
 import { toast } from "react-toastify";
-import { TypeCarModel } from "../../../../model/TypeCarModel";
 import { CarModel } from "../../../../model/CarModel";
 import { CarService } from "../../../../services/CarService";
+import { TypeCarModel } from "../../../../model/TypeCarModel";
 
 export default function CarForm(props: any) {
   const [model, setModel] = useState<CarModel>(props.model ?? new CarModel());

@@ -1,12 +1,6 @@
 import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { TypeCarService } from "../../../services/TypeCarService";
-import { TypeCarModel } from "../../../model/TypeCarModel";
-import TypeCarForm from "../typeCar/component/TypeCarForm";
-import { CarModel } from "../../../model/CarModel";
-import { CarService } from "../../../services/CarService";
-import { CarResponseModel } from "../../../model/response/CarResponseModel";
 import { PassengerModel } from "../../../model/PassengerModel";
 import { PassengerService } from "../../../services/PassengerService";
 import PassengerForm from "./component/PassengerForm";

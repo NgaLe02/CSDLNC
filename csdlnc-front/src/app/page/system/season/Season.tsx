@@ -1,10 +1,9 @@
 import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import EmployeeForm from "./component/SeasonForm";
-import { EmployeeService } from "../../../services/EmployeeService";
 import { SeasonModel } from "../../../model/Season";
 import { SeasonService } from "../../../services/SeasonService";
+import SeasonForm from "./component/SeasonForm";
 
 export default function Season() {
   const [listData, setListData] = useState<SeasonModel[]>([]);
@@ -54,8 +53,8 @@ export default function Season() {
   }
 
   function handleDelete(id: number) {
-    EmployeeService.getInstance()
-      .deleteEmployee(id)
+    SeasonService.getInstance()
+      .deleteSeason(id)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
@@ -145,7 +144,7 @@ export default function Season() {
                 ></button>
               </div>
               <div className="modal-body">
-                <EmployeeForm
+                <SeasonForm
                   model={editingModel}
                   closeModal={(status: boolean) => {
                     closeModal(status);

@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import Passenger from "./app/page/system/passenger/Passenger";
 import Employee from "./app/page/system/employee/Employee";
 import Season from "./app/page/system/season/Season";
+import RouthSalary from "./app/page/system/routhSalary/RouthSalary";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
                 <Route path="hanh-khach" element={<Passenger />} />
                 <Route path="nhan-vien" element={<Employee />} />
                 <Route path="mua" element={<Season />} />
+                <Route path="luong-tuyen-duong" element={<RouthSalary />} />
               </Route>
             </Routes>
           </div>

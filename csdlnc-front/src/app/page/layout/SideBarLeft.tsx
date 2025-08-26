@@ -106,6 +106,16 @@ function SideBarLeft() {
                 >
                   Mùa
                 </a>
+                <a
+                  href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/system/luong-tuyen-duong");
+                  }}
+                >
+                  Lương tuyến đường
+                </a>
               </div>
             </div>
             <a href="widget.html" className="nav-item nav-link">

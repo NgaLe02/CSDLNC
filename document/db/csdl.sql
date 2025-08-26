@@ -44,10 +44,12 @@ CREATE TABLE HanhKhach (
 
 CREATE TABLE LuongTuyenDuong (
     maLuongTuyen INT PRIMARY KEY AUTO_INCREMENT,
-    doPhucTap int not null,
+    doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),,
     khoangCachTu DECIMAL(10,2) not null,
     khoangCachDen DECIMAL(10,2) not null,
-    luongCoBan DECIMAL(12,2) not null
+    luongCoBan DECIMAL(12,2) not null,
+    ngayBatDau DATE NOT NULL,
+    ngayKetThuc DATE NULL
 );
 CREATE TABLE TuyenDuong (
     maTuyen VARCHAR(4) PRIMARY KEY,
@@ -198,3 +200,49 @@ DELIMITER ;
 
 
 
+DELIMITER $$
+
+CREATE TRIGGER trg_check_overlap
+BEFORE INSERT ON luongtuyenduong
+FOR EACH ROW
+BEGIN
+    -- Kiểm tra trùng khi INSERT
+    IF EXISTS (
+        SELECT 1
+        FROM luongtuyenduong r
+        WHERE r.doPhucTap = NEW.doPhucTap
+          -- khoảng cách giao nhau (không tính tiếp giáp)
+          AND NOT (NEW.khoangCachDen <= r.khoangCachTu OR NEW.khoangCachTu >= r.khoangCachDen)
+          -- thời gian giao nhau (không tính tiếp giáp)
+          AND NOT (NEW.ngayKetThuc < r.ngayBatDau OR NEW.ngayBatDau > r.ngayKetThuc)
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian bị chồng chéo!';
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_check_overlap_update
+BEFORE UPDATE ON luongtuyenduong
+FOR EACH ROW
+BEGIN
+    -- Kiểm tra trùng khi UPDATE (loại bỏ chính nó bằng id)
+    IF EXISTS (
+        SELECT 1
+        FROM luongtuyenduong r
+        WHERE r.doPhucTap = NEW.doPhucTap
+          AND r.maLuongTuyen <> OLD.maLuongTuyen
+          -- khoảng cách giao nhau (không tính tiếp giáp)
+          AND NOT (NEW.khoangCachDen <= r.khoangCachTu OR NEW.khoangCachTu >= r.khoangCachDen)
+          -- thời gian giao nhau (không tính tiếp giáp)
+          AND NOT (NEW.ngayKetThuc < r.ngayBatDau OR NEW.ngayBatDau > r.ngayKetThuc)
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian bị chồng chéo!';
+    END IF;
+END$$
+
+DELIMITER ;

@@ -1,24 +1,25 @@
 import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { EmployeeModel } from "../../../model/EmployeeModel";
-import EmployeeForm from "./component/EmployeeForm";
-import { EmployeeService } from "../../../services/EmployeeService";
+import { RouthSalaryModel } from "../../../model/RouthSalary";
+import { RouthSalaryService } from "../../../services/RouthSalaryService";
+import RouthSalaryForm from "./component/RouthSalaryForm";
+import dayjs from 'dayjs';
 
-export default function Employee() {
-  const [listData, setListData] = useState<EmployeeModel[]>([]);
+export default function RouthSalary() {
+  const [listData, setListData] = useState<RouthSalaryModel[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingModel, setEditingModel] = useState<EmployeeModel>(
-    new EmployeeModel()
+  const [editingModel, setEditingModel] = useState<RouthSalaryModel>(
+    new RouthSalaryModel()
   );
 
   useEffect(() => {
-    getLstEmployee();
+    getLstSeason();
   }, []);
 
-  function getLstEmployee() {
-    EmployeeService.getInstance()
-      .getLstEmployee({})
+  function getLstSeason() {
+    RouthSalaryService.getInstance()
+      .getLstRouthSalary({})
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
@@ -37,11 +38,11 @@ export default function Employee() {
   }
 
   function handleAdd() {
-    setEditingModel(new EmployeeModel());
+    setEditingModel(new RouthSalaryModel());
     setShowForm(true);
   }
 
-  function handleEdit(model: EmployeeModel) {
+  function handleEdit(model: RouthSalaryModel) {
     // setEditingModel({
     //   maxe: car.maxe,
     //   bienSo: car.bienSo,
@@ -53,13 +54,13 @@ export default function Employee() {
   }
 
   function handleDelete(id: number) {
-    EmployeeService.getInstance()
-      .deleteEmployee(id)
+    RouthSalaryService.getInstance()
+      .deleteRouthSalary(id)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
             toast.success(resp.data.message);
-            getLstEmployee();
+            getLstSeason();
           } else {
             toast.error(resp.data.message);
           }
@@ -74,16 +75,16 @@ export default function Employee() {
 
   function closeModal(status: boolean) {
     setShowForm(false);
-    getLstEmployee();
+    getLstSeason();
   }
   return (
     <>
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách nhân viên</h6>
+            <h6 className="mb-0">Danh sách lương tuyến đường</h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
-              Thêm nhân viên
+              Thêm
             </button>
           </div>
           <div className="table-responsive">
@@ -94,22 +95,27 @@ export default function Employee() {
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
-                  <th scope="col">Mã nhân viên</th>
-                  <th scope="col">Họ tên</th>
-                  <th scope="col">CMND</th>
+                  <th scope="col">Mã lương tuyến đường</th>
+                  <th scope="col">Độ phức tạp</th>
+                  <th scope="col">Khoảng cách từ</th>
+                  <th scope="col">Khoảng cách đến</th>
+                  <th scope="col">Ngày bắt đầu</th>
+                  <th scope="col">Ngày kết thúc</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
-                {listData.map((item: EmployeeModel, index: number) => (
-                  <tr key={item.maNhanVien}>
+                {listData.map((item: RouthSalaryModel, index: number) => (
+                  <tr key={item.maLuongTuyen}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{item.maNhanVien}</td>
-                    <td>{item.hoTen}</td>
-                    <td>{item.cmnd}</td>
+                    <td>{item.doPhucTap}</td>
+                    <td>{item.khoangCachTu}</td>
+                    <td>{item.khoangCachDen}</td>
+                    <td>{dayjs(item.ngayBatDau).format("YYYY-MM-DD")}</td>
+                    <td>{item.ngayKetThuc ? dayjs(item.ngayKetThuc).format("YYYY-MM-DD") : ''}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-info ms-2"
@@ -119,7 +125,7 @@ export default function Employee() {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maNhanVien!)}
+                        onClick={() => handleDelete(item.maLuongTuyen!)}
                       >
                         Xóa
                       </button>
@@ -147,7 +153,7 @@ export default function Employee() {
                 ></button>
               </div>
               <div className="modal-body">
-                <EmployeeForm
+                <RouthSalaryForm
                   model={editingModel}
                   closeModal={(status: boolean) => {
                     closeModal(status);
