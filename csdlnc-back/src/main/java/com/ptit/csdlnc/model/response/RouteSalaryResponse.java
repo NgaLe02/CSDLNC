@@ -19,8 +19,8 @@ public class RouteSalaryResponse {
 	private Integer doPhucTap;
 	private Double khoangCachTu;
 	private Double khoangCachDen;
-	private Double luongCoBan;
-	private Date ngayBatDau;
-	
-	private Date ngayKetThuc;
+//	private Double luongCoBan;
+//	private Date ngayBatDau;
+//	
+//	private Date ngayKetThuc;
 }

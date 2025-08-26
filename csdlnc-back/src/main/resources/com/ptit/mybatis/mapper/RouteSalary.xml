@@ -7,20 +7,20 @@
         <result property="doPhucTap" column="doPhucTap"/>
         <result property="khoangCachTu" column="khoangCachTu"/>
         <result property="khoangCachDen" column="khoangCachDen"/>
-        <result property="luongCoBan" column="luongCoBan"/>
+        <!--<result property="luongCoBan" column="luongCoBan"/>
         <result property="ngayBatDau" column="ngayBatDau"/>
-        <result property="ngayKetThuc" column="ngayKetThuc"/>
+        <result property="ngayKetThuc" column="ngayKetThuc"/>-->
     </resultMap>
 
 
     <select id="getLstRouteSalary" resultMap="routeSalaryMap">
-        SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen, luongCoBan, ngayKetThuc, ngayBatDau
+        SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen
         FROM LuongTuyenDuong
     </select>
 
 
     <select id="getRouteSalaryById" parameterType="int" resultMap="routeSalaryMap">
-        SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen, luongCoBan, ngayKetThuc, ngayBatDau
+        SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen
         FROM LuongTuyenDuong
         WHERE maLuongTuyen = #{maLuongTuyen}
     </select>
@@ -28,19 +28,17 @@
 
     <insert id="insertRouteSalary" parameterType="com.ptit.csdlnc.model.RouteSalary"
             useGeneratedKeys="true" keyProperty="maLuongTuyen">
-        INSERT INTO LuongTuyenDuong (doPhucTap, khoangCachTu, khoangCachDen, luongCoBan, ngayKetThuc, ngayBatDau)
-        VALUES (#{doPhucTap}, #{khoangCachTu}, #{khoangCachDen}, #{luongCoBan}, #{ngayKetThuc}, #{ngayBatDau})
+        INSERT INTO LuongTuyenDuong (doPhucTap, khoangCachTu, khoangCachDen)
+        VALUES (#{doPhucTap}, #{khoangCachTu}, #{khoangCachDen})
     </insert>
 
 
     <update id="updateRouteSalary" parameterType="com.ptit.csdlnc.model.RouteSalary">
-        UPDATE LuongTuyenDuong
+        UPDATE LuongTuyenDuongRouteSalary
         SET doPhucTap = #{doPhucTap},
             khoangCachTu = #{khoangCachTu},
-            khoangCachDen = #{khoangCachDen},
-            luongCoBan = #{luongCoBan},
-            ngayKetThuc = #{ngayKetThuc},
-            ngayBatDau = #{ngayBatDau}
+            khoangCachDen = #{khoangCachDen}
+         
         WHERE maLuongTuyen = #{maLuongTuyen}
     </update>
 

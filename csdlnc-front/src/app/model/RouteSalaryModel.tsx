@@ -3,9 +3,9 @@ export class RouteSalaryModel {
   doPhucTap?: number;
   khoangCachTu?: number;
   khoangCachDen?: number;
-  luongCoBan?: number;
-  ngayBatDau?: string;
-  ngayKetThuc?: string;
+  // luongCoBan?: number;
+  // ngayBatDau?: string;
+  // ngayKetThuc?: string;
 
   constructor(init?: Partial<RouteSalaryModel>) {
     Object.assign(this, init);

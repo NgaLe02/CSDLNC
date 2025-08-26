@@ -18,5 +18,6 @@ public class RouteResponse {
 	private String diemDen;
 	private Double khoangCach;
 	private Integer thoiGianUocTinh;
-	private Integer maLuongTuyen;
+	private Integer doPhucTap;
+
 }

@@ -2,15 +2,14 @@ package com.ptit.csdlnc.model;
 
 import java.sql.Date;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,12 +37,12 @@ public class RouteSalary {
 	@Positive(message = "Khoảng cách đến phải lớn hơn 0")
 	private Double khoangCachDen;
 
-	private Double luongCoBan;
-
-	@NotNull(message = "Ngày bắt đầu không được null")
-	private Date ngayBatDau;
-	
-	private Date ngayKetThuc;
+//	private Double luongCoBan;
+//
+//	@NotNull(message = "Ngày bắt đầu không được null")
+//	private Date ngayBatDau;
+//	
+//	private Date ngayKetThuc;
 	
 	@AssertTrue(message = "Khoảng cách từ phải nhỏ hơn hoặc bằng khoảng cách đến")
 	private boolean isKhoangCachHopLe() {
@@ -52,37 +51,37 @@ public class RouteSalary {
 		return khoangCachTu <= khoangCachDen;
 	}
 
-	public boolean isNgayHopLe() {
-		if (ngayBatDau == null || ngayKetThuc == null) {
-			return true;
-		}
-		return !ngayBatDau.after(ngayKetThuc);
-	}
-	
-	// Lương thực tế chỉ phụ thuộc vào chiều dài & độ phức tạp
-	public Double getLuongCoBan() {
-		if (khoangCachTu == null || khoangCachDen == null || doPhucTap == null) {
-			return null;
-		}
-
-		double chieuDai = khoangCachDen - khoangCachTu;
-
-		double heSoPhucTap;
-		switch (doPhucTap) {
-		case 1:
-			heSoPhucTap = 1.0;
-			break; // dễ
-		case 2:
-			heSoPhucTap = 1.5;
-			break; // trung bình
-		case 3:
-			heSoPhucTap = 2.0;
-			break; // khó
-		default:
-			heSoPhucTap = 1.0;
-		}
-
-		// Ví dụ công thức: lương = chiều dài * hệ số phức tạp * 1000
-		return chieuDai * heSoPhucTap * 1000;
-	}
+//	public boolean isNgayHopLe() {
+//		if (ngayBatDau == null || ngayKetThuc == null) {
+//			return true;
+//		}
+//		return !ngayBatDau.after(ngayKetThuc);
+//	}
+//	
+//	// Lương thực tế chỉ phụ thuộc vào chiều dài & độ phức tạp
+//	public Double getLuongCoBan() {
+//		if (khoangCachTu == null || khoangCachDen == null || doPhucTap == null) {
+//			return null;
+//		}
+//
+//		double chieuDai = khoangCachDen - khoangCachTu;
+//
+//		double heSoPhucTap;
+//		switch (doPhucTap) {
+//		case 1:
+//			heSoPhucTap = 1.0;
+//			break; // dễ
+//		case 2:
+//			heSoPhucTap = 1.5;
+//			break; // trung bình
+//		case 3:
+//			heSoPhucTap = 2.0;
+//			break; // khó
+//		default:
+//			heSoPhucTap = 1.0;
+//		}
+//
+//		// Ví dụ công thức: lương = chiều dài * hệ số phức tạp * 1000
+//		return chieuDai * heSoPhucTap * 1000;
+//	}
 }

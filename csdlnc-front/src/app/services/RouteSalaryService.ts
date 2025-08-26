@@ -2,7 +2,7 @@ import axios from "axios";
 import { ParamUtil } from "../utils/paramUtil";
 import { HeadersUtil } from "../utils/headersUtil";
 import { ApiUrlUtil } from "../utils/apiUrlUtil";
-import { RouteSalaryModel } from "../model/RouthSalary";
+import { RouteSalaryModel } from "../model/RouteSalaryModel";
 
 export class RouteSalaryService {
   private static _routeSalaryService: RouteSalaryService;
@@ -45,7 +45,10 @@ export class RouteSalaryService {
 
   public deleteRouteSalary(id: number) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/routeSalary/" + id + "/deleteRoutehSalary"
+      process.env.REACT_APP_API_URL +
+        "/routeSalary/" +
+        id +
+        "/deleteRoutehSalary"
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

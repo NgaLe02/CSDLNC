@@ -47,27 +47,25 @@ CREATE TABLE LuongTuyenDuong (
     doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),
     khoangCachTu DECIMAL(10,2) not null,
     khoangCachDen DECIMAL(10,2) not null,
-    CONSTRAINT chk_khoangCach CHECK (khoangCachTu < khoangCachDen)
 );
 
 CREATE TABLE TuyenDuong (
     maTuyen VARCHAR(4) PRIMARY KEY,
     diemKhoiHanh VARCHAR(100) not null,
+    doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),
     diemDen VARCHAR(100) not null,
     khoangCach DECIMAL(10,2) not null,
-    thoiGianUocTinh INT not null,
-	maTuyenLuong INT not null,
-    FOREIGN KEY (maTuyenLuong) REFERENCES TuyenLuong(maTuyenLuong)
+    thoiGianUocTinh INT not null
 );
 
-CREATE TABLE TuyenLuong (
+CREATE TABLE TuyenDuong_Luong (
     maTuyenLuong INT PRIMARY KEY AUTO_INCREMENT,
     maTuyen VARCHAR(4) NOT NULL,
     maLuongTuyen INT NOT NULL,
     ngayBatDau DATE NOT NULL,
     ngayKetThuc DATE NULL,
     luongCoBan DECIMAL(12,2) not null,
-    CONSTRAINT chk_ngay CHECK (ngayKetThuc IS NULL OR ngayBatDau <= ngayKetThuc)
+    CONSTRAINT chk_ngay CHECK (ngayKetThuc IS NULL OR ngayBatDau <= ngayKetThuc),
     FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
     FOREIGN KEY (maLuongTuyen) REFERENCES LuongTuyenDuong(maLuongTuyen)
 );
@@ -274,3 +272,62 @@ DELIMITER ;
 -- END$$
 
 -- DELIMITER ;
+DELIMITER $$
+
+CREATE TRIGGER trg_check_khoangCach
+BEFORE INSERT ON LuongTuyenDuong
+FOR EACH ROW
+BEGIN
+    IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'KhoangCachTu phai nho hon KhoangCachDen';
+    END IF;
+END$$
+
+CREATE TRIGGER trg_check_khoangCach_update
+BEFORE UPDATE ON LuongTuyenDuong
+FOR EACH ROW
+BEGIN
+    IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'KhoangCachTu phai nho hon KhoangCachDen';
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER trg_check_trung_luong
+BEFORE INSERT ON LuongTuyenDuong
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 
+        FROM LuongTuyenDuong
+        WHERE doPhucTap = NEW.doPhucTap
+          AND NOT (NEW.khoangCachDen <= khoangCachTu OR NEW.khoangCachTu >= khoangCachDen)
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'KhoangCach trung voi mot muc luong da ton tai';
+    END IF;
+END$$
+
+CREATE TRIGGER trg_check_trung_luong_update
+BEFORE UPDATE ON LuongTuyenDuong
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 
+        FROM LuongTuyenDuong
+        WHERE doPhucTap = NEW.doPhucTap
+          AND maLuongTuyen <> NEW.maLuongTuyen
+          AND NOT (NEW.khoangCachDen <= khoangCachTu OR NEW.khoangCachTu >= khoangCachDen)
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'KhoangCach trung voi mot muc luong da ton tai';
+    END IF;
+END$$
+
+DELIMITER ;

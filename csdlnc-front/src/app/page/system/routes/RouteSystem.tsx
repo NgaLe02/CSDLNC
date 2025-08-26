@@ -2,15 +2,16 @@ import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
-import { RouteSalaryService } from "../../../services/RouteSalaryService";
-import RouteSalaryForm from "./component/RouteSalaryForm";
-import { RouteSalaryModel } from "../../../model/RouteSalaryModel";
+import { RouteResponseModel } from "../../../model/response/RouteResponseModel";
+import { RouteModel } from "../../../model/RouteModel";
+import { RouteService } from "../../../services/RouteService";
+import RouteForm from "./component/RouteForm";
 
-export default function RouteSalary() {
-  const [listData, setListData] = useState<RouteSalaryModel[]>([]);
+export default function RouteSystem() {
+  const [listData, setListData] = useState<RouteResponseModel[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingModel, setEditingModel] = useState<RouteSalaryModel>(
-    new RouteSalaryModel()
+  const [editingModel, setEditingModel] = useState<RouteModel>(
+    new RouteModel()
   );
 
   useEffect(() => {
@@ -18,8 +19,8 @@ export default function RouteSalary() {
   }, []);
 
   function getLstSeason() {
-    RouteSalaryService.getInstance()
-      .getLstRouteSalary({})
+    RouteService.getInstance()
+      .getLstRoute({})
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
@@ -38,11 +39,11 @@ export default function RouteSalary() {
   }
 
   function handleAdd() {
-    setEditingModel(new RouteSalaryModel());
+    setEditingModel(new RouteModel());
     setShowForm(true);
   }
 
-  function handleEdit(model: RouteSalaryModel) {
+  function handleEdit(model: RouteModel) {
     // setEditingModel({
     //   maxe: car.maxe,
     //   bienSo: car.bienSo,
@@ -54,8 +55,8 @@ export default function RouteSalary() {
   }
 
   function handleDelete(id: number) {
-    RouteSalaryService.getInstance()
-      .deleteRouteSalary(id)
+    RouteService.getInstance()
+      .deleteRoute(id)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
@@ -105,15 +106,15 @@ export default function RouteSalary() {
                 </tr>
               </thead>
               <tbody>
-                {listData.map((item: RouteSalaryModel, index: number) => (
-                  <tr key={item.maLuongTuyen}>
+                {listData.map((item: RouteModel, index: number) => (
+                  <tr key={item.maTuyen}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
                     <td>{item.doPhucTap}</td>
-                    <td>{item.khoangCachTu}</td>
-                    <td>{item.khoangCachDen}</td>
+                    <td>{item.diemDen}</td>
+                    <td>{item.diemKhoiHanh}</td>
                     {/* <td>{dayjs(item.ngayBatDau).format("YYYY-MM-DD")}</td> */}
                     {/* <td>{item.ngayKetThuc ? dayjs(item.ngayKetThuc).format("YYYY-MM-DD") : ''}</td> */}
                     <td>
@@ -125,7 +126,7 @@ export default function RouteSalary() {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maLuongTuyen!)}
+                        onClick={() => handleDelete(item.maTuyen!)}
                       >
                         Xóa
                       </button>
@@ -153,7 +154,7 @@ export default function RouteSalary() {
                 ></button>
               </div>
               <div className="modal-body">
-                <RouteSalaryForm
+                <RouteForm
                   model={editingModel}
                   closeModal={(status: boolean) => {
                     closeModal(status);

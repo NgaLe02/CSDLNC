@@ -8,21 +8,21 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.ptit.csdlnc.dao.RouteSalaryDAO;
-import com.ptit.csdlnc.model.RouteSalary;
-import com.ptit.csdlnc.model.response.RouteSalaryResponse;
+import com.ptit.csdlnc.dao.RouteDAO;
+import com.ptit.csdlnc.model.Route;
+import com.ptit.csdlnc.model.response.RouteResponse;
 
 @Service
-public class RouthSalaryService {
+public class RouthService {
 	@Autowired
-	RouteSalaryDAO routeSalaryDAO;
+	RouteDAO routeDAO;
 
-	public List<RouteSalaryResponse> getLstRouteSalary(Map<String, Object> params) throws Exception {
-		List<RouteSalaryResponse> result = routeSalaryDAO.getLstRouteSalary(params);
+	public List<RouteResponse> getLstRoute(Map<String, Object> params) throws Exception {
+		List<RouteResponse> result = routeDAO.getLstRoute(params);
 		return result;
 	}
 
-	public int insertRouteSalary(RouteSalary model) throws Exception {
+	public int insertRoute(Route model) throws Exception {
 		int result = 0;
 		try {
 			if (model.getDoPhucTap() == null
@@ -33,7 +33,7 @@ public class RouthSalaryService {
 //			if (luongCoBan == null) {
 //				throw new RuntimeException("Không thể tính lương cơ bản vì dữ liệu không hợp lệ!");
 //			}
-			result = routeSalaryDAO.insertRouteSalary(model);
+			result = routeDAO.insertRoute(model);
 
 		} catch (DataIntegrityViolationException e) {
 			throw new RuntimeException("Dữ liệu đầu vào không hợp lệ hoặc vi phạm ràng buộc DB!", e);
@@ -49,7 +49,7 @@ public class RouthSalaryService {
 		return result;
 	}
 
-	public int updateRouteSalary(RouteSalary model) throws Exception {
+	public int updateRoute(Route model) throws Exception {
 		int result = 0;
 		try {
 			if (model.getDoPhucTap() == null
@@ -60,7 +60,7 @@ public class RouthSalaryService {
 //			if (luongCoBan == null) {
 //				throw new RuntimeException("Không thể tính lương cơ bản vì dữ liệu không hợp lệ!");
 //			}
-			result = routeSalaryDAO.updateRouteSalary(model);
+			result = routeDAO.updateRoute(model);
 
 		} catch (DataIntegrityViolationException e) {
 			throw new RuntimeException("Dữ liệu đầu vào không hợp lệ hoặc vi phạm ràng buộc DB!", e);
@@ -70,7 +70,7 @@ public class RouthSalaryService {
 		return result;
 	}
 
-	public int deleteRouteSalary(int id) throws Exception {
-		return routeSalaryDAO.deleteRouteSalary(id);
+	public int deleteRoute(int id) throws Exception {
+		return routeDAO.deleteRoute(id);
 	}
 }

@@ -8,26 +8,27 @@
         <result property="diemDen" column="diemDen"/>
         <result property="khoangCach" column="khoangCach"/>
         <result property="thoiGianUocTinh" column="thoiGianUocTinh"/>
-        <result property="maLuongTuyen" column="maLuongTuyen"/>
+        <result property="maTuyenLuong" column="maTuyenLuong"/>
+        <result property="doPhucTap" column="doPhucTap"/>
     </resultMap>
 	
 
     <select id="getLstRoute" resultMap="routeMap">
-        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, maLuongTuyen
+        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap
         FROM tuyenduong
         ORDER BY maTuyen
     </select>
     
     <select id="getRouteById" parameterType="java.lang.String" resultType="com.ptit.csdlnc.model.Route">
-        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, maLuongTuyen
+        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap
         FROM tuyenduong
         WHERE maTuyen = #{maTuyen}
     </select>
     
 
     <insert id="insertRoute" parameterType="com.ptit.csdlnc.model.Route" useGeneratedKeys="true" keyProperty="maTuyen">
-        INSERT INTO tuyenduong (diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, maLuongTuyen)
-        VALUES (#{diemKhoiHanh}, #{diemDen}, #{khoangCach}, #{thoiGianUocTinh}, #{maLuongTuyen})
+        INSERT INTO tuyenduong (diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap)
+        VALUES (#{diemKhoiHanh}, #{diemDen}, #{khoangCach}, #{thoiGianUocTinh}, #{doPhucTap})
     </insert>
 
     <update id="updateRoute" parameterType="com.ptit.csdlnc.model.Route">
@@ -37,7 +38,7 @@
             diemDen = #{diemDen},
             khoangCach = #{khoangCach},
             thoiGianUocTinh = #{thoiGianUocTinh},
-            maLuongTuyen = #{maLuongTuyen}
+            doPhucTap = #{doPhucTap}
         WHERE maTuyen = #{maTuyen}
     </update>
 

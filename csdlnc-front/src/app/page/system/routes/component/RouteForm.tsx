@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { RouteSalaryService } from "../../../../services/RouteSalaryService";
-import { RouteSalaryModel } from "../../../../model/RouteSalaryModel";
+import { RouteService } from "../../../../services/RouteService";
+import { RouteModel } from "../../../../model/RouteModel";
 
-export default function RouteSalaryForm(props: any) {
-  const [model, setModel] = useState<RouteSalaryModel>(
-    props.model ?? new RouteSalaryModel()
+export default function RouteForm(props: any) {
+  const [model, setModel] = useState<RouteModel>(
+    props.model ?? new RouteModel()
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,9 +25,9 @@ export default function RouteSalaryForm(props: any) {
     if (!check()) {
       return;
     }
-    if (model.maLuongTuyen) {
-      RouteSalaryService.getInstance()
-        .updateRouteSalary(model)
+    if (model.maTuyen) {
+      RouteService.getInstance()
+        .updateRoute(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -44,8 +44,8 @@ export default function RouteSalaryForm(props: any) {
           }
         });
     } else {
-      RouteSalaryService.getInstance()
-        .insertRouteSalary(model)
+      RouteService.getInstance()
+        .insertRoute(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -69,6 +69,59 @@ export default function RouteSalaryForm(props: any) {
       <div className="bg-light rounded h-100 p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
+            <label htmlFor="diemKhoiHanh" className="form-label">
+              Điểm khởi hành
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="diemKhoiHanh"
+              name="diemKhoiHanh"
+              value={model.diemKhoiHanh ?? ""}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="diemDen" className="form-label">
+              Điểm đến
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="diemDen"
+              name="diemDen"
+              value={model.diemDen ?? ""}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="khoangCach" className="form-label">
+              Khoảng cách (km)
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              id="khoangCach"
+              name="khoangCach"
+              value={model.khoangCach ?? ""}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="thoiGianUocTinh" className="form-label">
+              Thòi gian ước tính (phút)
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              id="thoiGianUocTinh"
+              name="thoiGianUocTinh"
+              value={model.thoiGianUocTinh ?? ""}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="mb-3">
             <label htmlFor="doPhucTap" className="form-label">
               Độ phức tạp
             </label>
@@ -87,60 +140,6 @@ export default function RouteSalaryForm(props: any) {
               onChange={handleChange}
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="khoangCachTu" className="form-label">
-              Khoảng cách từ
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              id="khoangCachTu"
-              name="khoangCachTu"
-              value={model.khoangCachTu ?? ""}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="khoangCachDen" className="form-label">
-              Khoảng cách đến
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              id="khoangCachDen"
-              name="khoangCachDen"
-              value={model.khoangCachDen ?? ""}
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* <div className="mb-3">
-            <label htmlFor="ngayBatDau" className="form-label">
-              Ngày bắt đầu
-            </label>
-            <input
-              type="date"
-              className="form-control"
-              id="ngayBatDau"
-              name="ngayBatDau"
-              value={model.ngayBatDau ?? ""}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="ngayKetThuc" className="form-label">
-              Ngày kết thúc
-            </label>
-            <input
-              type="date"
-              className="form-control"
-              id="ngayKetThuc"
-              name="ngayKetThuc"
-              value={model.ngayKetThuc ?? ""}
-              onChange={handleChange}
-            />
-          </div> */}
 
           <button
             type="button"
@@ -151,7 +150,7 @@ export default function RouteSalaryForm(props: any) {
           </button>
 
           <button type="submit" className="btn btn-primary ms-2">
-            {model.maLuongTuyen ? "Cập nhật" : "Thêm"}
+            {model.maTuyen ? "Cập nhật" : "Thêm"}
           </button>
         </form>
       </div>
