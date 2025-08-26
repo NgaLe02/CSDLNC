@@ -44,21 +44,23 @@ CREATE TABLE HanhKhach (
 
 CREATE TABLE LuongTuyenDuong (
     maLuongTuyen INT PRIMARY KEY AUTO_INCREMENT,
-    doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),,
+    doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),
     khoangCachTu DECIMAL(10,2) not null,
     khoangCachDen DECIMAL(10,2) not null,
     luongCoBan DECIMAL(12,2) not null,
     ngayBatDau DATE NOT NULL,
-    ngayKetThuc DATE NULL
+    ngayKetThuc DATE NULL,
+    CONSTRAINT chk_khoangCach CHECK (khoangCachTu < khoangCachDen),
+    CONSTRAINT chk_ngay CHECK (ngayKetThuc IS NULL OR ngayBatDau <= ngayKetThuc)
 );
+
 CREATE TABLE TuyenDuong (
     maTuyen VARCHAR(4) PRIMARY KEY,
-    diemKhoiHanh VARCHAR(100),
-    diemDen VARCHAR(100),
-    khoangCach DECIMAL(10,2),
-    thoiGianUocTinh INT,
-    giaVeCoBan DECIMAL(12,2),
-	maLuongTuyen INT,
+    diemKhoiHanh VARCHAR(100) not null,
+    diemDen VARCHAR(100) not null,
+    khoangCach DECIMAL(10,2) not null,
+    thoiGianUocTinh INT not null,
+	maLuongTuyen INT not null,
 	FOREIGN KEY (maLuongTuyen) REFERENCES LuongTuyenDuong(maLuongTuyen)
 );
 
