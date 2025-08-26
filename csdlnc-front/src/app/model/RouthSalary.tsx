@@ -1,4 +1,4 @@
-export class RouthSalaryModel {
+export class RouteSalaryModel {
   maLuongTuyen?: number;
   doPhucTap?: number;
   khoangCachTu?: number;
@@ -7,7 +7,7 @@ export class RouthSalaryModel {
   ngayBatDau?: string;
   ngayKetThuc?: string;
 
-  constructor(init?: Partial<RouthSalaryModel>) {
+  constructor(init?: Partial<RouteSalaryModel>) {
     Object.assign(this, init);
   }
 }

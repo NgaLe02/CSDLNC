@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { RouthSalaryModel } from "../../../../model/RouthSalary";
-import { RouthSalaryService } from "../../../../services/RouthSalaryService";
+import { RouteSalaryService } from "../../../../services/RouteSalaryService";
+import { RouteSalaryModel } from "../../../../model/RouthSalary";
 
-export default function RouthSalaryForm(props: any) {
-  const [model, setModel] = useState<RouthSalaryModel>(
-    props.model ?? new RouthSalaryModel()
+export default function RouteSalaryForm(props: any) {
+  const [model, setModel] = useState<RouteSalaryModel>(
+    props.model ?? new RouteSalaryModel()
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,8 +26,8 @@ export default function RouthSalaryForm(props: any) {
       return;
     }
     if (model.maLuongTuyen) {
-      RouthSalaryService.getInstance()
-        .updateRouthSalary(model)
+      RouteSalaryService.getInstance()
+        .updateRouteSalary(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -44,8 +44,8 @@ export default function RouthSalaryForm(props: any) {
           }
         });
     } else {
-      RouthSalaryService.getInstance()
-        .insertRouthSalary(model)
+      RouteSalaryService.getInstance()
+        .insertRouteSalary(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);

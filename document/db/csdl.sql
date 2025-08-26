@@ -104,12 +104,11 @@ CREATE TABLE Mua (
 
 CREATE TABLE GiaVe (
     maGiaVe INT PRIMARY KEY AUTO_INCREMENT,
-    giaVe DECIMAL(12,2),
-    doUuTien VARCHAR(50),
-    ngayHieuLuc DATE,
+    giaVe DECIMAL(12,2) not null,
+    ngayHieuLuc DATE not null,
     ngayKetThuc DATE,
-    maTuyen VARCHAR(4),
-    maMua INT,
+    maTuyen VARCHAR(4) not null,
+    maMua INT not null,
     FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
     FOREIGN KEY (maMua) REFERENCES Mua(maMua)
 );
@@ -202,46 +201,67 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE TRIGGER trg_check_overlap
-BEFORE INSERT ON luongtuyenduong
+CREATE TRIGGER trg_luongTuyenDuong_checkOverlap_insert
+BEFORE INSERT ON LuongTuyenDuong
 FOR EACH ROW
 BEGIN
-    -- Kiểm tra trùng khi INSERT
+    -- Kiểm tra khoangCachTu < khoangCachDen
+    IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
+    END IF;
+
+    -- Kiểm tra chồng lấp về khoảng cách và thời gian cho cùng độ phức tạp
     IF EXISTS (
         SELECT 1
-        FROM luongtuyenduong r
-        WHERE r.doPhucTap = NEW.doPhucTap
-          -- khoảng cách giao nhau (không tính tiếp giáp)
-          AND NOT (NEW.khoangCachDen <= r.khoangCachTu OR NEW.khoangCachTu >= r.khoangCachDen)
-          -- thời gian giao nhau (không tính tiếp giáp)
-          AND NOT (NEW.ngayKetThuc < r.ngayBatDau OR NEW.ngayBatDau > r.ngayKetThuc)
+        FROM LuongTuyenDuong
+        WHERE doPhucTap = NEW.doPhucTap
+          AND NOT (NEW.khoangCachDen < khoangCachTu OR NEW.khoangCachTu > khoangCachDen)
+          AND (
+                (NEW.ngayKetThuc IS NULL AND NEW.ngayBatDau <= IFNULL(ngayKetThuc, NEW.ngayBatDau))
+                OR
+                (ngayKetThuc IS NULL AND ngayBatDau <= NEW.ngayKetThuc)
+                OR
+                (NEW.ngayBatDau <= ngayKetThuc AND NEW.ngayKetThuc >= ngayBatDau)
+              )
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian bị chồng chéo!';
+            SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian chồng lấp với bản ghi hiện có cho độ phức tạp này';
     END IF;
 END$$
 
 DELIMITER ;
 
+
 DELIMITER $$
 
-CREATE TRIGGER trg_check_overlap_update
-BEFORE UPDATE ON luongtuyenduong
+CREATE TRIGGER trg_luongTuyenDuong_checkOverlap_update
+BEFORE UPDATE ON LuongTuyenDuong
 FOR EACH ROW
 BEGIN
-    -- Kiểm tra trùng khi UPDATE (loại bỏ chính nó bằng id)
+    -- Kiểm tra khoangCachTu < khoangCachDen
+    IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
+    END IF;
+
+    -- Kiểm tra chồng lấp về khoảng cách và thời gian cho cùng độ phức tạp
     IF EXISTS (
         SELECT 1
-        FROM luongtuyenduong r
-        WHERE r.doPhucTap = NEW.doPhucTap
-          AND r.maLuongTuyen <> OLD.maLuongTuyen
-          -- khoảng cách giao nhau (không tính tiếp giáp)
-          AND NOT (NEW.khoangCachDen <= r.khoangCachTu OR NEW.khoangCachTu >= r.khoangCachDen)
-          -- thời gian giao nhau (không tính tiếp giáp)
-          AND NOT (NEW.ngayKetThuc < r.ngayBatDau OR NEW.ngayBatDau > r.ngayKetThuc)
+        FROM LuongTuyenDuong
+        WHERE doPhucTap = NEW.doPhucTap
+          AND maLuongTuyen <> NEW.maLuongTuyen
+          AND NOT (NEW.khoangCachDen < khoangCachTu OR NEW.khoangCachTu > khoangCachDen)
+          AND (
+                (NEW.ngayKetThuc IS NULL AND NEW.ngayBatDau <= IFNULL(ngayKetThuc, NEW.ngayBatDau))
+                OR
+                (ngayKetThuc IS NULL AND ngayBatDau <= NEW.ngayKetThuc)
+                OR
+                (NEW.ngayBatDau <= ngayKetThuc AND NEW.ngayKetThuc >= ngayBatDau)
+              )
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian bị chồng chéo!';
+            SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian chồng lấp với bản ghi hiện có cho độ phức tạp này';
     END IF;
 END$$
 

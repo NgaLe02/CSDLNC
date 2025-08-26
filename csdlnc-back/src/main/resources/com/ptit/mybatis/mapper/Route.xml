@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.RouteDAO">
+    
+    <resultMap id="routeMap" type="com.ptit.csdlnc.model.response.RouteResponse">
+        <id property="maTuyen" column="maTuyen"/>
+        <result property="diemKhoiHanh" column="diemKhoiHanh"/>
+        <result property="diemDen" column="diemDen"/>
+        <result property="khoangCach" column="khoangCach"/>
+        <result property="thoiGianUocTinh" column="thoiGianUocTinh"/>
+        <result property="maLuongTuyen" column="maLuongTuyen"/>
+    </resultMap>
+	
+
+    <select id="getLstRoute" resultMap="routeMap">
+        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, maLuongTuyen
+        FROM tuyenduong
+        ORDER BY maTuyen
+    </select>
+    
+    <select id="getRouteById" parameterType="java.lang.String" resultType="com.ptit.csdlnc.model.Route">
+        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, maLuongTuyen
+        FROM tuyenduong
+        WHERE maTuyen = #{maTuyen}
+    </select>
+    
+
+    <insert id="insertRoute" parameterType="com.ptit.csdlnc.model.Route" useGeneratedKeys="true" keyProperty="maTuyen">
+        INSERT INTO tuyenduong (diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, maLuongTuyen)
+        VALUES (#{diemKhoiHanh}, #{diemDen}, #{khoangCach}, #{thoiGianUocTinh}, #{maLuongTuyen})
+    </insert>
+
+    <update id="updateRoute" parameterType="com.ptit.csdlnc.model.Route">
+        UPDATE tuyenduong
+        SET
+            diemKhoiHanh = #{diemKhoiHanh},
+            diemDen = #{diemDen},
+            khoangCach = #{khoangCach},
+            thoiGianUocTinh = #{thoiGianUocTinh},
+            maLuongTuyen = #{maLuongTuyen}
+        WHERE maTuyen = #{maTuyen}
+    </update>
+
+    <delete id="deleteRoute" parameterType="java.lang.String">
+        DELETE FROM Route WHERE maTuyen = #{maTuyen}
+    </delete>
+
+</mapper>

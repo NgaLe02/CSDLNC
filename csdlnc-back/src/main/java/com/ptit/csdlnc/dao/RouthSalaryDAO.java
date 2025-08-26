@@ -5,17 +5,17 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.ptit.csdlnc.model.RouthSalary;
-import com.ptit.csdlnc.model.response.RouthSalaryResponse;
+import com.ptit.csdlnc.model.RouteSalary;
+import com.ptit.csdlnc.model.response.RouteSalaryResponse;
 
 @Mapper
 public interface RouthSalaryDAO {
-	List<RouthSalaryResponse> getLstRouthSalary(Map<String, Object> params) throws Exception;
+	List<RouteSalaryResponse> getLstRouteSalary(Map<String, Object> params) throws Exception;
 
-	int insertRouthSalary(RouthSalary model) throws Exception;
+	int insertRouteSalary(RouteSalary model) throws Exception;
 
-	int updateRouthSalary(RouthSalary model) throws Exception;
+	int updateRouteSalary(RouteSalary model) throws Exception;
 
-	int deleteRouthSalary(int id) throws Exception;
+	int deleteRouteSalary(int id) throws Exception;
 
 }

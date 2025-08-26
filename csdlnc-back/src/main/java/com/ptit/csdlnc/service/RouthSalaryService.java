@@ -4,25 +4,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.ptit.csdlnc.dao.RouthSalaryDAO;
-import com.ptit.csdlnc.model.RouthSalary;
-import com.ptit.csdlnc.model.response.RouthSalaryResponse;
+import com.ptit.csdlnc.model.RouteSalary;
+import com.ptit.csdlnc.model.response.RouteSalaryResponse;
 
 @Service
 public class RouthSalaryService {
 	@Autowired
 	RouthSalaryDAO routhSalaryDAO;
 
-	public List<RouthSalaryResponse> getLstRouthSalary(Map<String, Object> params) throws Exception {
-		List<RouthSalaryResponse> result = routhSalaryDAO.getLstRouthSalary(params);
+	public List<RouteSalaryResponse> getLstRouteSalary(Map<String, Object> params) throws Exception {
+		List<RouteSalaryResponse> result = routhSalaryDAO.getLstRouteSalary(params);
 		return result;
 	}
 
-	public int insertRouthSalary(RouthSalary model) throws Exception {
+	public int insertRouteSalary(RouteSalary model) throws Exception {
 		int result = 0;
 		try {
 			if (model.getDoPhucTap() == null
@@ -33,17 +33,23 @@ public class RouthSalaryService {
 			if (luongCoBan == null) {
 				throw new RuntimeException("Không thể tính lương cơ bản vì dữ liệu không hợp lệ!");
 			}
-			result = routhSalaryDAO.insertRouthSalary(model);
+			result = routhSalaryDAO.insertRouteSalary(model);
 
 		} catch (DataIntegrityViolationException e) {
 			throw new RuntimeException("Dữ liệu đầu vào không hợp lệ hoặc vi phạm ràng buộc DB!", e);
+		} catch (DataAccessException ex) {
+			String errorMessage = "Lỗi không xác định";
+			if (ex.getRootCause() != null) {
+				errorMessage = ex.getRootCause().getMessage();
+			}
+			throw new RuntimeException(errorMessage);
 		} catch (Exception e) {
 			throw new RuntimeException("Có lỗi xảy ra khi thêm lương tuyến đường!", e);
 		}
 		return result;
 	}
 
-	public int updateRouthSalary(RouthSalary model) throws Exception {
+	public int updateRouteSalary(RouteSalary model) throws Exception {
 		int result = 0;
 		try {
 			if (model.getDoPhucTap() == null
@@ -54,7 +60,7 @@ public class RouthSalaryService {
 			if (luongCoBan == null) {
 				throw new RuntimeException("Không thể tính lương cơ bản vì dữ liệu không hợp lệ!");
 			}
-			result = routhSalaryDAO.updateRouthSalary(model);
+			result = routhSalaryDAO.updateRouteSalary(model);
 
 		} catch (DataIntegrityViolationException e) {
 			throw new RuntimeException("Dữ liệu đầu vào không hợp lệ hoặc vi phạm ràng buộc DB!", e);
@@ -64,7 +70,7 @@ public class RouthSalaryService {
 		return result;
 	}
 
-	public int deleteRouthSalary(int id) throws Exception {
-		return routhSalaryDAO.deleteRouthSalary(id);
+	public int deleteRouteSalary(int id) throws Exception {
+		return routhSalaryDAO.deleteRouteSalary(id);
 	}
 }

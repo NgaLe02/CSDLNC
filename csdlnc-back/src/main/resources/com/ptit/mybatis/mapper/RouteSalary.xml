@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ptit.csdlnc.dao.RouthSalaryDAO">
+<mapper namespace="com.ptit.csdlnc.dao.RouteSalaryDAO">
     
-    <resultMap id="routhSalaryMap" type="com.ptit.csdlnc.model.response.RouthSalaryResponse">
+    <resultMap id="routeSalaryMap" type="com.ptit.csdlnc.model.response.RouteSalaryResponse">
         <id property="maLuongTuyen" column="maLuongTuyen"/>
         <result property="doPhucTap" column="doPhucTap"/>
         <result property="khoangCachTu" column="khoangCachTu"/>
@@ -13,27 +13,27 @@
     </resultMap>
 
 
-    <select id="getLstRouthSalary" resultMap="routhSalaryMap">
+    <select id="getLstRouteSalary" resultMap="routeSalaryMap">
         SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen, luongCoBan, ngayKetThuc, ngayBatDau
         FROM LuongTuyenDuong
     </select>
 
 
-    <select id="getRouthSalaryById" parameterType="int" resultMap="routhSalaryMap">
+    <select id="getRouteSalaryById" parameterType="int" resultMap="routeSalaryMap">
         SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen, luongCoBan, ngayKetThuc, ngayBatDau
         FROM LuongTuyenDuong
         WHERE maLuongTuyen = #{maLuongTuyen}
     </select>
 
 
-    <insert id="insertRouthSalary" parameterType="com.ptit.csdlnc.model.RouthSalary"
+    <insert id="insertRouteSalary" parameterType="com.ptit.csdlnc.model.RouteSalary"
             useGeneratedKeys="true" keyProperty="maLuongTuyen">
         INSERT INTO LuongTuyenDuong (doPhucTap, khoangCachTu, khoangCachDen, luongCoBan, ngayKetThuc, ngayBatDau)
         VALUES (#{doPhucTap}, #{khoangCachTu}, #{khoangCachDen}, #{luongCoBan}, #{ngayKetThuc}, #{ngayBatDau})
     </insert>
 
 
-    <update id="updateRouthSalary" parameterType="com.ptit.csdlnc.model.RouthSalary">
+    <update id="updateRouteSalary" parameterType="com.ptit.csdlnc.model.RouteSalary">
         UPDATE LuongTuyenDuong
         SET doPhucTap = #{doPhucTap},
             khoangCachTu = #{khoangCachTu},
@@ -45,7 +45,7 @@
     </update>
 
 
-    <delete id="deleteRouthSalary" parameterType="int">
+    <delete id="deleteRouteSalary" parameterType="int">
         DELETE FROM LuongTuyenDuong
         WHERE maLuongTuyen = #{maLuongTuyen}
     </delete>

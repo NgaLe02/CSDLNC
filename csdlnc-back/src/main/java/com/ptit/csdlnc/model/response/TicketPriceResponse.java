@@ -14,13 +14,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RouthSalaryResponse {
-	private Integer maLuongTuyen;
-	private Integer doPhucTap;
-	private Double khoangCachTu;
-	private Double khoangCachDen;
-	private Double luongCoBan;
-	private Date ngayBatDau;
-	
+public class TicketPriceResponse {
+	private Integer maGiaVe;
+	private Double giaVe;
+	private Date ngayHieuLuc;
 	private Date ngayKetThuc;
+	private String maTuyen;
+	private Integer maMua;
+
+	private SeasonResponse mua;
+
 }

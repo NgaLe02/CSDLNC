@@ -21,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RouthSalary {
+public class RouteSalary {
 	private Integer maLuongTuyen;
 
 	@NotNull(message = "Độ phức tạp không được null")
@@ -52,6 +52,13 @@ public class RouthSalary {
 		return khoangCachTu <= khoangCachDen;
 	}
 
+	public boolean isNgayHopLe() {
+		if (ngayBatDau == null || ngayKetThuc == null) {
+			return true;
+		}
+		return !ngayBatDau.after(ngayKetThuc);
+	}
+	
 	// Lương thực tế chỉ phụ thuộc vào chiều dài & độ phức tạp
 	public Double getLuongCoBan() {
 		if (khoangCachTu == null || khoangCachDen == null || doPhucTap == null) {
