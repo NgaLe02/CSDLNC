@@ -9,7 +9,7 @@ import com.ptit.csdlnc.model.RouteSalary;
 import com.ptit.csdlnc.model.response.RouteSalaryResponse;
 
 @Mapper
-public interface RouthSalaryDAO {
+public interface RouteSalaryDAO {
 	List<RouteSalaryResponse> getLstRouteSalary(Map<String, Object> params) throws Exception;
 
 	int insertRouteSalary(RouteSalary model) throws Exception;

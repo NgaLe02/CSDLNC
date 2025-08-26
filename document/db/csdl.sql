@@ -47,11 +47,7 @@ CREATE TABLE LuongTuyenDuong (
     doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),
     khoangCachTu DECIMAL(10,2) not null,
     khoangCachDen DECIMAL(10,2) not null,
-    luongCoBan DECIMAL(12,2) not null,
-    ngayBatDau DATE NOT NULL,
-    ngayKetThuc DATE NULL,
-    CONSTRAINT chk_khoangCach CHECK (khoangCachTu < khoangCachDen),
-    CONSTRAINT chk_ngay CHECK (ngayKetThuc IS NULL OR ngayBatDau <= ngayKetThuc)
+    CONSTRAINT chk_khoangCach CHECK (khoangCachTu < khoangCachDen)
 );
 
 CREATE TABLE TuyenDuong (
@@ -60,10 +56,21 @@ CREATE TABLE TuyenDuong (
     diemDen VARCHAR(100) not null,
     khoangCach DECIMAL(10,2) not null,
     thoiGianUocTinh INT not null,
-	maLuongTuyen INT not null,
-	FOREIGN KEY (maLuongTuyen) REFERENCES LuongTuyenDuong(maLuongTuyen)
+	maTuyenLuong INT not null,
+    FOREIGN KEY (maTuyenLuong) REFERENCES TuyenLuong(maTuyenLuong)
 );
 
+CREATE TABLE TuyenLuong (
+    maTuyenLuong INT PRIMARY KEY AUTO_INCREMENT,
+    maTuyen VARCHAR(4) NOT NULL,
+    maLuongTuyen INT NOT NULL,
+    ngayBatDau DATE NOT NULL,
+    ngayKetThuc DATE NULL,
+    luongCoBan DECIMAL(12,2) not null,
+    CONSTRAINT chk_ngay CHECK (ngayKetThuc IS NULL OR ngayBatDau <= ngayKetThuc)
+    FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
+    FOREIGN KEY (maLuongTuyen) REFERENCES LuongTuyenDuong(maLuongTuyen)
+);
 
 CREATE TABLE ChuyenXe (
     maChuyen VARCHAR(4) PRIMARY KEY,
@@ -200,71 +207,70 @@ END //
 DELIMITER ;
 
 
+-- DELIMITER $$
 
-DELIMITER $$
+-- CREATE TRIGGER trg_luongTuyenDuong_checkOverlap_insert
+-- BEFORE INSERT ON LuongTuyenDuong
+-- FOR EACH ROW
+-- BEGIN
+--     -- Kiểm tra khoangCachTu < khoangCachDen
+--     IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
+--         SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
+--     END IF;
 
-CREATE TRIGGER trg_luongTuyenDuong_checkOverlap_insert
-BEFORE INSERT ON LuongTuyenDuong
-FOR EACH ROW
-BEGIN
-    -- Kiểm tra khoangCachTu < khoangCachDen
-    IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
-    END IF;
+--     -- Kiểm tra chồng lấp về khoảng cách và thời gian cho cùng độ phức tạp
+--     IF EXISTS (
+--         SELECT 1
+--         FROM LuongTuyenDuong
+--         WHERE doPhucTap = NEW.doPhucTap
+--           AND NOT (NEW.khoangCachDen < khoangCachTu OR NEW.khoangCachTu > khoangCachDen)
+--           AND (
+--                 (NEW.ngayKetThuc IS NULL AND NEW.ngayBatDau <= IFNULL(ngayKetThuc, NEW.ngayBatDau))
+--                 OR
+--                 (ngayKetThuc IS NULL AND ngayBatDau <= NEW.ngayKetThuc)
+--                 OR
+--                 (NEW.ngayBatDau <= ngayKetThuc AND NEW.ngayKetThuc >= ngayBatDau)
+--               )
+--     ) THEN
+--         SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian chồng lấp với bản ghi hiện có cho độ phức tạp này';
+--     END IF;
+-- END$$
 
-    -- Kiểm tra chồng lấp về khoảng cách và thời gian cho cùng độ phức tạp
-    IF EXISTS (
-        SELECT 1
-        FROM LuongTuyenDuong
-        WHERE doPhucTap = NEW.doPhucTap
-          AND NOT (NEW.khoangCachDen < khoangCachTu OR NEW.khoangCachTu > khoangCachDen)
-          AND (
-                (NEW.ngayKetThuc IS NULL AND NEW.ngayBatDau <= IFNULL(ngayKetThuc, NEW.ngayBatDau))
-                OR
-                (ngayKetThuc IS NULL AND ngayBatDau <= NEW.ngayKetThuc)
-                OR
-                (NEW.ngayBatDau <= ngayKetThuc AND NEW.ngayKetThuc >= ngayBatDau)
-              )
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian chồng lấp với bản ghi hiện có cho độ phức tạp này';
-    END IF;
-END$$
-
-DELIMITER ;
+-- DELIMITER ;
 
 
-DELIMITER $$
+-- DELIMITER $$
 
-CREATE TRIGGER trg_luongTuyenDuong_checkOverlap_update
-BEFORE UPDATE ON LuongTuyenDuong
-FOR EACH ROW
-BEGIN
-    -- Kiểm tra khoangCachTu < khoangCachDen
-    IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
-    END IF;
+-- CREATE TRIGGER trg_luongTuyenDuong_checkOverlap_update
+-- BEFORE UPDATE ON LuongTuyenDuong
+-- FOR EACH ROW
+-- BEGIN
+--     -- Kiểm tra khoangCachTu < khoangCachDen
+--     IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
+--         SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
+--     END IF;
 
-    -- Kiểm tra chồng lấp về khoảng cách và thời gian cho cùng độ phức tạp
-    IF EXISTS (
-        SELECT 1
-        FROM LuongTuyenDuong
-        WHERE doPhucTap = NEW.doPhucTap
-          AND maLuongTuyen <> NEW.maLuongTuyen
-          AND NOT (NEW.khoangCachDen < khoangCachTu OR NEW.khoangCachTu > khoangCachDen)
-          AND (
-                (NEW.ngayKetThuc IS NULL AND NEW.ngayBatDau <= IFNULL(ngayKetThuc, NEW.ngayBatDau))
-                OR
-                (ngayKetThuc IS NULL AND ngayBatDau <= NEW.ngayKetThuc)
-                OR
-                (NEW.ngayBatDau <= ngayKetThuc AND NEW.ngayKetThuc >= ngayBatDau)
-              )
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian chồng lấp với bản ghi hiện có cho độ phức tạp này';
-    END IF;
-END$$
+--     -- Kiểm tra chồng lấp về khoảng cách và thời gian cho cùng độ phức tạp
+--     IF EXISTS (
+--         SELECT 1
+--         FROM LuongTuyenDuong
+--         WHERE doPhucTap = NEW.doPhucTap
+--           AND maLuongTuyen <> NEW.maLuongTuyen
+--           AND NOT (NEW.khoangCachDen < khoangCachTu OR NEW.khoangCachTu > khoangCachDen)
+--           AND (
+--                 (NEW.ngayKetThuc IS NULL AND NEW.ngayBatDau <= IFNULL(ngayKetThuc, NEW.ngayBatDau))
+--                 OR
+--                 (ngayKetThuc IS NULL AND ngayBatDau <= NEW.ngayKetThuc)
+--                 OR
+--                 (NEW.ngayBatDau <= ngayKetThuc AND NEW.ngayKetThuc >= ngayBatDau)
+--               )
+--     ) THEN
+--         SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian chồng lấp với bản ghi hiện có cho độ phức tạp này';
+--     END IF;
+-- END$$
 
-DELIMITER ;
+-- DELIMITER ;

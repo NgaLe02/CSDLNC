@@ -30,8 +30,8 @@ public class RouthSalaryController {
 	@Autowired
 	private RouthSalaryService routhSalaryService;
 
-	@GetMapping("getLstRouthSalary")
-	public ResponseEntity<AjaxResult> getLstRouthSalary(@RequestParam Map<String, Object> params) {
+	@GetMapping("getLstRouteSalary")
+	public ResponseEntity<AjaxResult> getLstRouteSalary(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
 			List<RouteSalaryResponse> result = routhSalaryService.getLstRouteSalary(params);
@@ -45,8 +45,8 @@ public class RouthSalaryController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@PostMapping("insertRouthSalary")
-	public ResponseEntity<AjaxResult> insertRouthSalary(@Validated @RequestBody RouteSalary model,
+	@PostMapping("insertRouteSalary")
+	public ResponseEntity<AjaxResult> insertRouteSalary(@Validated @RequestBody RouteSalary model,
 			BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
@@ -74,8 +74,8 @@ public class RouthSalaryController {
 		}
 	}
 
-	@PutMapping("updateRouthSalary")
-	public ResponseEntity<AjaxResult> updateRouthSalary(@Validated @RequestBody RouteSalary model,
+	@PutMapping("updateRouteSalary")
+	public ResponseEntity<AjaxResult> updateRouteSalary(@Validated @RequestBody RouteSalary model,
 			BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
@@ -101,8 +101,8 @@ public class RouthSalaryController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@DeleteMapping("{id}/deleteRouthSalary")
-	public ResponseEntity<AjaxResult> deleteRouthSalary(@PathVariable("id") int id) {
+	@DeleteMapping("{id}/deleteRouteSalary")
+	public ResponseEntity<AjaxResult> deleteRouteSalary(@PathVariable("id") int id) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
 			int result = routhSalaryService.deleteRouteSalary(id);
