@@ -18,23 +18,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ptit.csdlnc.model.RouteSalary;
-import com.ptit.csdlnc.model.response.RouteSalaryResponse;
-import com.ptit.csdlnc.service.RouthSalaryService;
+import com.ptit.csdlnc.model.Route;
+import com.ptit.csdlnc.model.response.RouteResponse;
+import com.ptit.csdlnc.service.RouteService;
 import com.ptit.csdlnc.util.AjaxResult;
 
 @RestController
-@RequestMapping("api/routeSalary")
+@RequestMapping("api/route")
 @CrossOrigin(origins = "*")
-public class RouthSalaryController {
+public class RouteController {
 	@Autowired
-	private RouthSalaryService routhSalaryService;
+	private RouteService routeService;
 
-	@GetMapping("getLstRouteSalary")
-	public ResponseEntity<AjaxResult> getLstRouteSalary(@RequestParam Map<String, Object> params) {
+	@GetMapping("getLstRoute")
+	public ResponseEntity<AjaxResult> getLstRoute(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			List<RouteSalaryResponse> result = routhSalaryService.getLstRouteSalary(params);
+			List<RouteResponse> result = routeService.getLstRoute(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 		} catch (Exception e) {
@@ -45,8 +45,8 @@ public class RouthSalaryController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@PostMapping("insertRouteSalary")
-	public ResponseEntity<AjaxResult> insertRouteSalary(@Validated @RequestBody RouteSalary model,
+	@PostMapping("insertRoute")
+	public ResponseEntity<AjaxResult> insertRoute(@Validated @RequestBody Route model,
 			BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
@@ -57,7 +57,7 @@ public class RouthSalaryController {
 		}
 
 		try {
-			int result = routhSalaryService.insertRouteSalary(model);
+			int result = routeService.insertRoute(model);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Lưu thành công");
@@ -74,8 +74,8 @@ public class RouthSalaryController {
 		}
 	}
 
-	@PutMapping("updateRouteSalary")
-	public ResponseEntity<AjaxResult> updateRouteSalary(@Validated @RequestBody RouteSalary model,
+	@PutMapping("updateRoute")
+	public ResponseEntity<AjaxResult> updateRoute(@Validated @RequestBody Route model,
 			BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
@@ -86,7 +86,7 @@ public class RouthSalaryController {
 		}
 
 		try {
-			int result = routhSalaryService.updateRouteSalary(model);
+			int result = routeService.updateRoute(model);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Cập nhật thành công");
@@ -101,11 +101,11 @@ public class RouthSalaryController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@DeleteMapping("{id}/deleteRouteSalary")
-	public ResponseEntity<AjaxResult> deleteRouteSalary(@PathVariable("id") int id) {
+	@DeleteMapping("{id}/deleteRoute")
+	public ResponseEntity<AjaxResult> deleteRoute(@PathVariable("id") int id) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			int result = routhSalaryService.deleteRouteSalary(id);
+			int result = routeService.deleteRoute(id);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Xoá thành công");

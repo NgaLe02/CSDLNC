@@ -173,6 +173,35 @@ export default function TicketPriceForm(props: any) {
                 onChange={handleChange}
               />
             </div>
+
+            <div className="mb-3">
+              <label htmlFor="ngayBatDau" className="form-label">
+                Ngày bắt đầu
+              </label>
+              <input
+                type="date"
+                className="form-control"
+                id="ngayBatDau"
+                name="ngayBatDau"
+                value={model.ngayBatDau ?? ""}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="ngayKetThuc" className="form-label">
+                Ngày kết thúc
+              </label>
+              <input
+                type="date"
+                className="form-control"
+                id="ngayKetThuc"
+                name="ngayKetThuc"
+                value={model.ngayKetThuc ?? ""}
+                onChange={handleChange}
+              />
+            </div>
+
           </div>
           <button
             type="button"

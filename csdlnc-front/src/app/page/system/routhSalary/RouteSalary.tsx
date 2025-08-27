@@ -147,7 +147,7 @@ export default function RouteSalary() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel ? "Sửa loại xe" : "Thêm loại xe"}
+                  {editingModel ? "Sửa lương tuyến đường" : "Thêm lương tuyến đường"}
                 </h5>
                 <button
                   type="button"

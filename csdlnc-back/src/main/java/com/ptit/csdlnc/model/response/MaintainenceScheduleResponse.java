@@ -1,5 +1,11 @@
 package com.ptit.csdlnc.model.response;
 
+import java.sql.Date;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -12,10 +18,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CarResponse {
+public class MaintainenceScheduleResponse {
+	private Integer maLichBaoDuong;
 	private String maXe;
-	private String bienSo;
-	private String tinhTrang;
-	private Integer maLoaiXe;
-	private TypeCarResponse loaiXe;
+	private Double chiPhi;
+	private Date ngayBaoDuong;
+
+	private CarResponse xe;
+
 }

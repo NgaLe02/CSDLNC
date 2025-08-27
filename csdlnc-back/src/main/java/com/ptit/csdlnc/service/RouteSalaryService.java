@@ -13,7 +13,7 @@ import com.ptit.csdlnc.model.RouteSalary;
 import com.ptit.csdlnc.model.response.RouteSalaryResponse;
 
 @Service
-public class RouthSalaryService {
+public class RouteSalaryService {
 	@Autowired
 	RouteSalaryDAO routeSalaryDAO;
 
@@ -43,8 +43,6 @@ public class RouthSalaryService {
 				errorMessage = ex.getRootCause().getMessage();
 			}
 			throw new RuntimeException(errorMessage);
-		} catch (Exception e) {
-			throw new RuntimeException("Có lỗi xảy ra khi thêm lương tuyến đường!", e);
 		}
 		return result;
 	}
@@ -64,8 +62,6 @@ public class RouthSalaryService {
 
 		} catch (DataIntegrityViolationException e) {
 			throw new RuntimeException("Dữ liệu đầu vào không hợp lệ hoặc vi phạm ràng buộc DB!", e);
-		} catch (Exception e) {
-			throw new RuntimeException("Có lỗi xảy ra khi thêm lương tuyến đường!", e);
 		}
 		return result;
 	}

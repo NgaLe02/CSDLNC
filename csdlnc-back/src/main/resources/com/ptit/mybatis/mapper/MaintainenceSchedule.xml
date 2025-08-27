@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.MaintainenceScheduleDAO">
+	<resultMap id="maintainenceScheduleMap" type="com.ptit.csdlnc.model.response.MaintainenceScheduleResponse">
+        <id property="maMua" column="maMua"/>
+        <result property="tenMua" column="tenMua"/>
+    </resultMap>
+
+	<select id="getLstMaintainenceSchedule" resultMap="maintainenceScheduleMap">
+        SELECT maMua, tenMua
+        FROM mua
+    </select>
+
+    <select id="getMaintainenceScheduleById" parameterType="int" resultMap="maintainenceScheduleMap">
+        SELECT maMua, tenMua
+        FROM mua
+        WHERE maMua = #{maMua}
+    </select>
+
+    <insert id="insertMaintainenceSchedule" parameterType="com.ptit.csdlnc.model.MaintainenceSchedule" useGeneratedKeys="true" keyProperty="maMua">
+        INSERT INTO mua (tenMua)
+        VALUES (#{tenMua})
+    </insert>
+
+    <update id="updateMaintainenceSchedule" parameterType="com.ptit.csdlnc.model.MaintainenceSchedule">
+        UPDATE mua
+        SET tenMua = #{tenMua}
+        WHERE maMua = #{maMua}
+    </update>
+
+    <delete id="deleteMaintainenceSchedule" parameterType="int">
+        DELETE mua
+        WHERE maMua = #{maMua}
+    </delete>
+	
+</mapper>

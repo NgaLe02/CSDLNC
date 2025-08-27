@@ -14,7 +14,7 @@ import com.ptit.csdlnc.model.Route;
 import com.ptit.csdlnc.model.response.RouteResponse;
 
 @Service
-public class RouthService {
+public class RouteService {
 	@Autowired
 	RouteDAO routeDAO;
 

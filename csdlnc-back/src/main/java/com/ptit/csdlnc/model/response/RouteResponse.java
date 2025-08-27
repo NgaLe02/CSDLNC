@@ -20,5 +20,6 @@ public class RouteResponse {
 	private Integer thoiGianUocTinh;
 	private Integer doPhucTap;
 	private Integer maLuongTuyen;
+	private RouteSalaryResponse luongTuyenDuong;
 
 }

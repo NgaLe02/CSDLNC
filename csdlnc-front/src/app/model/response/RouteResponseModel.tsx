@@ -5,11 +5,9 @@ export class RouteResponseModel {
   diemKhoiHanh?: number;
   diemDen?: number;
   thoiGianUocTinh?: number;
-  maTuyenLuong?: number;
   doPhucTap?: number;
-  luongCoBan?: number;
-  ngayBatDau?: string;
-  ngayKetThuc?: string;
+  maLuongTuyen?: number;
+  khoangCach?: number;
 
   luongTuyenDuong?: RouteSalaryModel;
 

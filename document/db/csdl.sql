@@ -22,6 +22,7 @@ CREATE TABLE Xe (
 
 CREATE TABLE HanDangKiem (
     maHanDangKiem INT PRIMARY KEY AUTO_INCREMENT,
+    chiPhi DECIMAL(12,2),
     ngayDangKiem DATE,
     maXe CHAR(3),
     FOREIGN KEY (maXe) REFERENCES Xe(maXe)
@@ -103,7 +104,7 @@ CREATE TABLE Mua (
 CREATE TABLE GiaVe (
     maGiaVe INT PRIMARY KEY AUTO_INCREMENT,
     giaVe DECIMAL(12,2) not null,
-    ngayHieuLuc DATE not null,
+    ngayBatDau DATE not null,
     ngayKetThuc DATE,
     maTuyen VARCHAR(4) not null,
     maMua INT not null,
@@ -318,6 +319,129 @@ BEGIN
     ) THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'KhoangCach trung voi mot muc luong da ton tai';
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+-- Trigger BEFORE INSERT
+CREATE TRIGGER trg_giave_before_insert
+BEFORE INSERT ON GiaVe
+FOR EACH ROW
+BEGIN
+    -- 1. Kiểm tra ngayKetThuc >= ngayBatDau nếu ngayKetThuc không null
+    IF NEW.ngayKetThuc IS NOT NULL AND NEW.ngayKetThuc < NEW.ngayBatDau THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ngayKetThuc phai lon hon hoac bang ngayBatDau';
+    END IF;
+
+    -- 2. Kiểm tra trùng khoảng thời gian cho cùng maTuyen và maMua
+    IF EXISTS (
+        SELECT 1
+        FROM GiaVe
+        WHERE maTuyen = NEW.maTuyen
+          AND maMua = NEW.maMua
+          AND (
+                (NEW.ngayBatDau BETWEEN ngayBatDau AND IFNULL(ngayKetThuc, '9999-12-31'))
+             OR (NEW.ngayKetThuc IS NOT NULL AND ngayBatDau BETWEEN NEW.ngayBatDau AND NEW.ngayKetThuc)
+              )
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Khoang thoi gian bi trung voi gia ve da ton tai';
+    END IF;
+END$$
+
+-- Trigger BEFORE UPDATE
+CREATE TRIGGER trg_giave_before_update
+BEFORE UPDATE ON GiaVe
+FOR EACH ROW
+BEGIN
+    -- 1. Kiểm tra ngayKetThuc >= ngayBatDau nếu ngayKetThuc không null
+    IF NEW.ngayKetThuc IS NOT NULL AND NEW.ngayKetThuc < NEW.ngayBatDau THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ngayKetThuc phai lon hon hoac bang ngayBatDau';
+    END IF;
+
+    -- 2. Kiểm tra trùng khoảng thời gian cho cùng maTuyen và maMua (ngoại trừ chính bản ghi này)
+    IF EXISTS (
+        SELECT 1
+        FROM GiaVe
+        WHERE maTuyen = NEW.maTuyen
+          AND maMua = NEW.maMua
+          AND maGiaVe <> OLD.maGiaVe
+          AND (
+                (NEW.ngayBatDau BETWEEN ngayBatDau AND IFNULL(ngayKetThuc, '9999-12-31'))
+             OR (NEW.ngayKetThuc IS NOT NULL AND ngayBatDau BETWEEN NEW.ngayBatDau AND NEW.ngayKetThuc)
+              )
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Khoang thoi gian bi trung voi gia ve da ton tai';
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+-- Trigger BEFORE INSERT
+CREATE TRIGGER trg_handangkiem_before_insert
+BEFORE INSERT ON HanDangKiem
+FOR EACH ROW
+BEGIN
+    -- 1. Kiểm tra ngayDangKiem không null
+    IF NEW.ngayDangKiem IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ngayDangKiem khong duoc de trong';
+    END IF;
+
+    -- 2. Kiểm tra chiPhi >= 0 nếu không null
+    IF NEW.chiPhi IS NOT NULL AND NEW.chiPhi < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'chiPhi phai >= 0';
+    END IF;
+
+    -- 3. Kiểm tra trùng ngayDangKiem cho cùng maXe
+    IF EXISTS (
+        SELECT 1
+        FROM HanDangKiem
+        WHERE maXe = NEW.maXe
+          AND ngayDangKiem = NEW.ngayDangKiem
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Da ton tai dang kiem cho xe nay trong ngay';
+    END IF;
+END$$
+
+-- Trigger BEFORE UPDATE
+CREATE TRIGGER trg_handangkiem_before_update
+BEFORE UPDATE ON HanDangKiem
+FOR EACH ROW
+BEGIN
+    -- 1. Kiểm tra ngayDangKiem không null
+    IF NEW.ngayDangKiem IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ngayDangKiem khong duoc de trong';
+    END IF;
+
+    -- 2. Kiểm tra chiPhi >= 0 nếu không null
+    IF NEW.chiPhi IS NOT NULL AND NEW.chiPhi < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'chiPhi phai >= 0';
+    END IF;
+
+    -- 3. Kiểm tra trùng ngayDangKiem cho cùng maXe (ngoại trừ bản ghi hiện tại)
+    IF EXISTS (
+        SELECT 1
+        FROM HanDangKiem
+        WHERE maXe = NEW.maXe
+          AND ngayDangKiem = NEW.ngayDangKiem
+          AND maHanDangKiem <> OLD.maHanDangKiem
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Da ton tai dang kiem cho xe nay trong ngay';
     END IF;
 END$$
 

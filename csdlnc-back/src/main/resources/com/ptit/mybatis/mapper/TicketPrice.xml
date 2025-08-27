@@ -7,6 +7,8 @@
         <result property="giaVe" column="giaVe"/>
         <result property="maTuyen" column="maTuyen"/>
         <result property="maMua" column="maMua"/>
+        <result property="ngayBatDau" column="ngayBatDau"/>
+        <result property="ngayKetThuc" column="ngayKetThuc"/>
          <association property="mua" javaType="com.ptit.csdlnc.model.response.SeasonResponse">
 	        <id property="maMua" column="maMua"/>
 	        <result property="tenMua" column="tenMua"/>
@@ -23,6 +25,8 @@
         G.giaVe, 
         G.maTuyen, 
         G.maMua,
+        G.ngayBatDau,
+        G.ngayKetThuc,
         M.tenMua,
         TD.diemDen,
         TD.diemKhoiHanh
@@ -32,15 +36,25 @@
     </select>
 
     <select id="getTicketPriceById" parameterType="int" resultMap="ticketPriceMap">
-        SELECT maGiaVe, giaVe, maTuyen, maMua
-        FROM GiaVe
-        WHERE maGiaVe = #{maGiaVe}
+        SELECT G.maGiaVe, 
+        G.giaVe, 
+        G.maTuyen, 
+        G.maMua,
+        G.ngayBatDau,
+        G.ngayKetThuc,
+        M.tenMua,
+        TD.diemDen,
+        TD.diemKhoiHanh
+        FROM GiaVe G
+        LEFT JOIN mua M on G.maMua = M.maMua
+        LEFT JOIN tuyenduong TD on TD.maTuyen = G.maTuyen
+        WHERE G.maGiaVe = #{maGiaVe}
     </select>
 
     <insert id="insertTicketPrice" parameterType="com.ptit.csdlnc.model.TicketPrice"
             useGeneratedKeys="true" keyProperty="maGiaVe">
-        INSERT INTO GiaVe (giaVe, maTuyen, maMua)
-        VALUES (#{giaVe}, #{maTuyen}, #{maMua})
+        INSERT INTO GiaVe (giaVe, maTuyen, maMua, ngayBatDau, ngayKetThuc)
+        VALUES (#{giaVe}, #{maTuyen}, #{maMua}, #{ngayBatDau}, #{ngayKetThuc})
     </insert>
 
     <update id="updateTicketPrice" parameterType="com.ptit.csdlnc.model.TicketPrice">
@@ -49,7 +63,9 @@
             ngayHieuLuc = #{ngayHieuLuc},
             ngayKetThuc = #{ngayKetThuc},
             maTuyen = #{maTuyen},
-            maMua = #{maMua}
+            maMua = #{maMua},
+            ngayBatDau = #{ngayBatDau},
+            ngayKetThuc = #{ngayKetThuc}
         WHERE maGiaVe = #{maGiaVe}
     </update>
 

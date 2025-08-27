@@ -83,9 +83,9 @@ export default function RouteSystem() {
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách lương tuyến đường</h6>
+            <h6 className="mb-0">Danh sách tuyến đường</h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
-              Thêm
+              Thêm tuyến đường
             </button>
           </div>
           <div className="table-responsive">
@@ -96,25 +96,29 @@ export default function RouteSystem() {
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
-                  <th scope="col">Mã lương tuyến đường</th>
+                  <th scope="col">Mã tuyến đường</th>
                   <th scope="col">Độ phức tạp</th>
-                  <th scope="col">Khoảng cách từ</th>
-                  <th scope="col">Khoảng cách đến</th>
+                  <th scope="col">Điểm khởi hành</th>
+                  <th scope="col">Điểm đến</th>
+                  <th scope="col">Lương tài xế</th>
                   {/* <th scope="col">Ngày bắt đầu</th>
                   <th scope="col">Ngày kết thúc</th> */}
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
-                {listData.map((item: RouteModel, index: number) => (
+                {listData.map((item: RouteResponseModel, index: number) => (
                   <tr key={item.maTuyen}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
+                    <td>{item.maTuyen}</td>
                     <td>{item.doPhucTap}</td>
-                    <td>{item.diemDen}</td>
                     <td>{item.diemKhoiHanh}</td>
+                    <td>{item.diemDen}</td>
+                    <td>{item.luongTuyenDuong?.luongCoBan}</td>
+
                     {/* <td>{dayjs(item.ngayBatDau).format("YYYY-MM-DD")}</td> */}
                     {/* <td>{item.ngayKetThuc ? dayjs(item.ngayKetThuc).format("YYYY-MM-DD") : ''}</td> */}
                     <td>
@@ -145,7 +149,7 @@ export default function RouteSystem() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel ? "Sửa loại xe" : "Thêm loại xe"}
+                  {editingModel ? "Sửa tuyến đường" : "Thêm tuyến đường"}
                 </h5>
                 <button
                   type="button"

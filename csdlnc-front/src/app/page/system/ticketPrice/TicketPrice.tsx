@@ -82,9 +82,9 @@ export default function TicketPrice() {
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách mùa</h6>
+            <h6 className="mb-0">Danh sách giá vé</h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
-              Thêm mùa
+              Thêm giá vé
             </button>
           </div>
           <div className="table-responsive">
@@ -146,7 +146,7 @@ export default function TicketPrice() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel ? "Sửa loại xe" : "Thêm loại xe"}
+                  {editingModel ? "Sửa giá vé" : "Thêm giá vé"}
                 </h5>
                 <button
                   type="button"

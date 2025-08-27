@@ -10,19 +10,40 @@
         <result property="thoiGianUocTinh" column="thoiGianUocTinh"/>
         <result property="maLuongTuyen" column="maLuongTuyen"/>
         <result property="doPhucTap" column="doPhucTap"/>
+        
+         <association property="luongTuyenDuong" javaType="com.ptit.csdlnc.model.response.RouteSalaryResponse">
+	        <id property="maLuongTuyen" column="maLuongTuyen"/>
+	        <result property="luongCoBan" column="luongCoBan"/>
+	    </association>
     </resultMap>
 	
 
     <select id="getLstRoute" resultMap="routeMap">
-        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap, maLuongTuyen
-        FROM tuyenduong
+        SELECT TD.maTuyen, 
+        TD.diemKhoiHanh, 
+        TD.diemDen, 
+        TD.khoangCach, 
+        TD.thoiGianUocTinh, 
+        TD.doPhucTap, 
+        TD.maLuongTuyen,
+        LTD.luongCoBan
+        FROM tuyenduong TD
+        LEFT JOIN luongtuyenduong LTD on TD.maLuongTuyen = LTD.maLuongTuyen
         ORDER BY maTuyen
     </select>
     
     <select id="getRouteById" parameterType="java.lang.String" resultType="com.ptit.csdlnc.model.Route">
-        SELECT maTuyen, diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap, maLuongTuyen
-        FROM tuyenduong
-        WHERE maTuyen = #{maTuyen}
+        SELECT TD.maTuyen, 
+        TD.diemKhoiHanh, 
+        TD.diemDen, 
+        TD.khoangCach, 
+        TD.thoiGianUocTinh, 
+        TD.doPhucTap, 
+        TD.maLuongTuyen,
+        LTD.luongCoBan
+        FROM tuyenduong TD
+        LEFT JOIN luongtuyenduong LTD on TD.maLuongTuyen = LTD.maLuongTuyen
+        WHERE TD.maTuyen = #{maTuyen}
     </select>
     
 

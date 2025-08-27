@@ -3,6 +3,8 @@ export class TicketPriceModel {
   maTuyen?: string;
   maMua?: number;
   giaVe?: number;
+  ngayKetThuc?: string;
+  ngayBatDau?: string;
 
   constructor(init?: Partial<TicketPriceModel>) {
     Object.assign(this, init);

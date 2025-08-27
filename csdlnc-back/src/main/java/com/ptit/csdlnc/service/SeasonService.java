@@ -8,9 +8,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.ptit.csdlnc.dao.SeasonDAO;
-import com.ptit.csdlnc.model.Employee;
 import com.ptit.csdlnc.model.Season;
-import com.ptit.csdlnc.model.response.EmployeeResponse;
 import com.ptit.csdlnc.model.response.SeasonResponse;
 
 @Service
