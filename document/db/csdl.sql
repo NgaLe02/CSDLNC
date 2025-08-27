@@ -64,15 +64,17 @@ CREATE TABLE TuyenDuong (
 
 CREATE TABLE ChuyenXe (
     maChuyen VARCHAR(4) PRIMARY KEY,
-    tinhTrangChuyen VARCHAR(50),
-    ngayGioKhoiHanh DATETIME,
-    ngayGioDen DATETIME,
-    chiPhiVanHanh DECIMAL(12,2),
-    thulaoLaiXe DECIMAL(12,2),
-    maXe CHAR(3),
-    maTuyen VARCHAR(4),
+    tinhTrangChuyen VARCHAR(50) not null,
+    ngayGioKhoiHanh DATETIME not null,
+    ngayGioDen DATETIME not null,
+    chiPhiVanHanh DECIMAL(12,2) not null,
+    tiLeThuLao DECIMAL(12,2) not null,
+    maXe CHAR(3) not null,
+    maTuyen VARCHAR(4) not null,
     FOREIGN KEY (maXe) REFERENCES Xe(maXe),
-    FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen)
+    FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
+    CONSTRAINT chk_tinhtrangchuyen 
+        CHECK (tinhTrangChuyen IN ('Chưa khởi hành','Đang chạy','Hoàn thành','Hủy'))
 );
 
 
@@ -442,6 +444,149 @@ BEGIN
     ) THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Da ton tai dang kiem cho xe nay trong ngay';
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+-- Trigger BEFORE INSERT
+CREATE TRIGGER trg_chuyenxe_before_insert
+BEFORE INSERT ON ChuyenXe
+FOR EACH ROW
+BEGIN
+    -- 1. ngayGioDen >= ngayGioKhoiHanh
+    IF NEW.ngayGioDen < NEW.ngayGioKhoiHanh THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Ngày giờ đến phải sau hoặc bằng ngày giờ khởi hành';
+    END IF;
+
+    -- 2. chiPhiVanHanh >= 0
+    IF NEW.chiPhiVanHanh < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Chi phí vận hành phải >= 0';
+    END IF;
+
+    -- 3. tiLeThuLao >= 0 và <= 100
+    IF NEW.tiLeThuLao < 0 OR NEW.tiLeThuLao > 100 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Tỉ lệ thù lao phải nằm trong khoảng 0 - 100';
+    END IF;
+
+    -- 4. Không trùng giờ cho cùng xe
+    IF EXISTS (
+        SELECT 1
+        FROM ChuyenXe
+        WHERE maXe = NEW.maXe
+          AND (
+                (NEW.ngayGioKhoiHanh BETWEEN ngayGioKhoiHanh AND ngayGioDen)
+             OR (NEW.ngayGioDen BETWEEN ngayGioKhoiHanh AND ngayGioDen)
+             OR (ngayGioKhoiHanh BETWEEN NEW.ngayGioKhoiHanh AND NEW.ngayGioDen)
+              )
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Xe này đã có chuyến trong khoảng thời gian trùng lặp';
+    END IF;
+END$$
+
+-- Trigger BEFORE UPDATE
+CREATE TRIGGER trg_chuyenxe_before_update
+BEFORE UPDATE ON ChuyenXe
+FOR EACH ROW
+BEGIN
+    -- 1. ngayGioDen >= ngayGioKhoiHanh
+    IF NEW.ngayGioDen < NEW.ngayGioKhoiHanh THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Ngày giờ đến phải sau hoặc bằng ngày giờ khởi hành';
+    END IF;
+
+    -- 2. chiPhiVanHanh >= 0
+    IF NEW.chiPhiVanHanh < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Chi phí vận hành phải >= 0';
+    END IF;
+
+    -- 3. tiLeThuLao >= 0 và <= 100
+    IF NEW.tiLeThuLao < 0 OR NEW.tiLeThuLao > 100 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Tỉ lệ thù lao phải nằm trong khoảng 0 - 100';
+    END IF;
+
+    -- 4. Không trùng giờ cho cùng xe (bỏ qua chính bản ghi đang update)
+    IF EXISTS (
+        SELECT 1
+        FROM ChuyenXe
+        WHERE maXe = NEW.maXe
+          AND maChuyen <> OLD.maChuyen
+          AND (
+                (NEW.ngayGioKhoiHanh BETWEEN ngayGioKhoiHanh AND ngayGioDen)
+             OR (NEW.ngayGioDen BETWEEN ngayGioKhoiHanh AND ngayGioDen)
+             OR (ngayGioKhoiHanh BETWEEN NEW.ngayGioKhoiHanh AND NEW.ngayGioDen)
+              )
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Xe này đã có chuyến trong khoảng thời gian trùng lặp';
+    END IF;
+END$$
+
+DELIMITER ;
+
+-- Tự động đổi trạng thái dựa vào ngayGioKhoiHanh và ngayGioDen
+CREATE EVENT IF NOT EXISTS ev_update_tinhtrangchuyen
+ON SCHEDULE EVERY 15 MINUTE
+DO
+    UPDATE ChuyenXe
+    SET tinhTrangChuyen =
+        CASE
+            WHEN NOW() < ngayGioKhoiHanh THEN 'Chưa khởi hành'
+            WHEN NOW() >= ngayGioKhoiHanh AND NOW() < ngayGioDen THEN 'Đang chạy'
+            WHEN NOW() >= ngayGioDen THEN 'Hoàn thành'
+        END
+    WHERE tinhTrangChuyen <> 'Hủy'
+      AND (
+          (NOW() < ngayGioKhoiHanh     AND tinhTrangChuyen <> 'Chưa khởi hành') OR
+          (NOW() BETWEEN ngayGioKhoiHanh AND ngayGioDen AND tinhTrangChuyen <> 'Đang chạy') OR
+          (NOW() >= ngayGioDen         AND tinhTrangChuyen <> 'Hoàn thành')
+      );
+
+
+-- Tự động đổi trạng thái dựa vào ngayGioKhoiHanh và ngayGioDen khi inset, update
+DELIMITER $$
+
+-- Trigger khi INSERT
+CREATE TRIGGER trg_chuyenxe_insert
+BEFORE INSERT ON ChuyenXe
+FOR EACH ROW
+BEGIN
+    IF NEW.tinhTrangChuyen IS NULL OR NEW.tinhTrangChuyen <> 'Hủy' THEN
+        IF NOW() < NEW.ngayGioKhoiHanh THEN
+            SET NEW.tinhTrangChuyen = 'Chưa khởi hành';
+        ELSEIF NOW() >= NEW.ngayGioKhoiHanh AND NOW() < NEW.ngayGioDen THEN
+            SET NEW.tinhTrangChuyen = 'Đang chạy';
+        ELSEIF NOW() >= NEW.ngayGioDen THEN
+            SET NEW.tinhTrangChuyen = 'Hoàn thành';
+        END IF;
+    END IF;
+END$$
+
+-- Trigger khi UPDATE
+CREATE TRIGGER trg_chuyenxe_update
+BEFORE UPDATE ON ChuyenXe
+FOR EACH ROW
+BEGIN
+    -- Nếu có thay đổi ngày giờ khởi hành hoặc ngày giờ đến
+    IF (NEW.ngayGioKhoiHanh <> OLD.ngayGioKhoiHanh)
+       OR (NEW.ngayGioDen <> OLD.ngayGioDen) THEN
+        IF NEW.tinhTrangChuyen <> 'Hủy' THEN
+            IF NOW() < NEW.ngayGioKhoiHanh THEN
+                SET NEW.tinhTrangChuyen = 'Chưa khởi hành';
+            ELSEIF NOW() >= NEW.ngayGioKhoiHanh AND NOW() < NEW.ngayGioDen THEN
+                SET NEW.tinhTrangChuyen = 'Đang chạy';
+            ELSEIF NOW() >= NEW.ngayGioDen THEN
+                SET NEW.tinhTrangChuyen = 'Hoàn thành';
+            END IF;
+        END IF;
     END IF;
 END$$
 

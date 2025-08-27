@@ -7,7 +7,6 @@
 	    <result property="tinhTrang" column="tinhTrang"/>
 	    <result property="maLoaiXe" column="maLoaiXe"/>
 	    
-	    <!-- ánh xạ sang object TypeCarResponse -->
 	    <association property="loaiXe" javaType="com.ptit.csdlnc.model.response.TypeCarResponse">
 	        <id property="maLoaiXe" column="maLoaiXe"/>
 	        <result property="tenLoaiXe" column="tenLoaiXe"/>

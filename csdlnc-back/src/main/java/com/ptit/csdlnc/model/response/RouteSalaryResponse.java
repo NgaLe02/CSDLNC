@@ -1,7 +1,5 @@
 package com.ptit.csdlnc.model.response;
 
-import java.sql.Date;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;

@@ -1,10 +1,6 @@
 package com.ptit.csdlnc.model.response;
 
-import java.sql.Date;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

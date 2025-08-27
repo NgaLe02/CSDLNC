@@ -1,6 +1,6 @@
 package com.ptit.csdlnc.model;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
