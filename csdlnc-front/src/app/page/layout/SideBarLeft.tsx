@@ -136,6 +136,16 @@ function SideBarLeft() {
                 >
                   Giá vé
                 </a>
+                <a
+                  href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/system/chuyen-xe");
+                  }}
+                >
+                  Chuyến xe
+                </a>
               </div>
             </div>
             <a href="widget.html" className="nav-item nav-link">

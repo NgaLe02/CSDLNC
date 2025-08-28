@@ -11,6 +11,7 @@ import Season from "./app/page/system/season/Season";
 import RouteSalary from "./app/page/system/routhSalary/RouteSalary";
 import RouteSystem from "./app/page/system/routes/RouteSystem";
 import TicketPrice from "./app/page/system/ticketPrice/TicketPrice";
+import Trip from "./app/page/system/trip/Trip";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 <Route path="luong-tuyen-duong" element={<RouteSalary />} />
                 <Route path="tuyen-duong" element={<RouteSystem />} />
                 <Route path="gia-ve" element={<TicketPrice />} />
+                <Route path="chuyen-xe" element={<Trip />} />
               </Route>
             </Routes>
           </div>

@@ -18,23 +18,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ptit.csdlnc.model.Trip;
-import com.ptit.csdlnc.model.response.TripResponse;
-import com.ptit.csdlnc.service.TripService;
+import com.ptit.csdlnc.model.Ticket;
+import com.ptit.csdlnc.model.response.TicketResponse;
+import com.ptit.csdlnc.service.TicketService;
 import com.ptit.csdlnc.util.AjaxResult;
 
 @RestController
-@RequestMapping("api/trip")
+@RequestMapping("api/ticket")
 @CrossOrigin(origins = "*")
-public class TripController {
+public class TicketController {
 	@Autowired
-	private TripService tripService;
+	private TicketService ticketService;
 
-	@GetMapping("getLstTrip")
-	public ResponseEntity<AjaxResult> getLstTrip(@RequestParam Map<String, Object> params) {
+	@GetMapping("getLstTicket")
+	public ResponseEntity<AjaxResult> getLstTicket(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			List<TripResponse> result = tripService.getLstTrip(params);
+			List<TicketResponse> result = ticketService.getLstTicket(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 		} catch (Exception e) {
@@ -45,8 +45,9 @@ public class TripController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@PostMapping("insertTrip")
-	public ResponseEntity<AjaxResult> insertTrip(@Validated @RequestBody Trip model, BindingResult bindingResult) {
+	@PostMapping("insertTicket")
+	public ResponseEntity<AjaxResult> insertTicket(@Validated @RequestBody Ticket model,
+			BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
 		if (bindingResult.hasErrors()) {
@@ -55,7 +56,7 @@ public class TripController {
 			return ResponseEntity.badRequest().body(ajaxResult);
 		}
 		try {
-			int result = tripService.insertTrip(model);
+			int result = ticketService.insertTicket(model);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Lưu thành công");
@@ -70,8 +71,9 @@ public class TripController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@PutMapping("updateTrip")
-	public ResponseEntity<AjaxResult> updateTrip(@Validated @RequestBody Trip model, BindingResult bindingResult) {
+	@PutMapping("updateTicket")
+	public ResponseEntity<AjaxResult> updateTicket(@Validated @RequestBody Ticket model,
+			BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
 		if (bindingResult.hasErrors()) {
@@ -81,7 +83,7 @@ public class TripController {
 		}
 
 		try {
-			int result = tripService.updateTrip(model);
+			int result = ticketService.updateTicket(model);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Cập nhật thành công");
@@ -96,11 +98,11 @@ public class TripController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@DeleteMapping("{id}/deleteTrip")
-	public ResponseEntity<AjaxResult> deleteTrip(@PathVariable("id") String id) {
+	@DeleteMapping("{id}/deleteTicket")
+	public ResponseEntity<AjaxResult> deleteTicket(@PathVariable("id") int id) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			int result = tripService.deleteTrip(id);
+			int result = ticketService.deleteTicket(id);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Xoá thành công");

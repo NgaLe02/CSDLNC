@@ -43,7 +43,7 @@ export class TripService {
     });
   }
 
-  public deleteTrip(id: number) {
+  public deleteTrip(id: string) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/trip/" + id + "/deleteTrip"
     );

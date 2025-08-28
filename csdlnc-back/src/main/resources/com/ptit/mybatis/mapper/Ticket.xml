@@ -1,36 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ptit.csdlnc.dao.TicketDAO">
-	<resultMap id="ticketMap" type="com.ptit.csdlnc.model.response.TicketResponse">
+	<resultMap id="ticketResponseMap" type="com.ptit.csdlnc.model.response.TicketResponse">
         <id property="maVe" column="maVe"/>
-        <result property="tenMua" column="tenMua"/>
+        <result property="gheNgoi" column="gheNgoi"/>
+        <result property="maHanhKhach" column="maHanhKhach"/>
+        <result property="maChuyen" column="maChuyen"/>
+        <result property="ngayMua" column="ngayMua"/>
+
+        <!-- mapping nested object PassengerResponse -->
+        <association property="hanhKhach" javaType="com.ptit.csdlnc.model.response.PassengerResponse">
+            <id property="maHanhKhach" column="p_maHanhKhach"/>
+            <result property="hoTen" column="p_hoTen"/>
+            <result property="soDienThoai" column="p_soDienThoai"/>
+            <result property="cmnd" column="p_cmnd"/>
+        </association>
+
+        <!-- mapping nested object TripResponse -->
+        <association property="chuyenXe" javaType="com.ptit.csdlnc.model.response.TripResponse">
+            <id property="maChuyen" column="t_maChuyen"/>
+            <result property="ngayGioKhoiHanh" column="t_ngayGioKhoiHanh"/>
+            <result property="ngayGioDen" column="t_ngayGioDen"/>
+            <result property="diemDi" column="t_diemDi"/>
+            <result property="diemDen" column="t_diemDen"/>
+            <result property="tinhTrangChuyen" column="t_tinhTrangChuyen"/>
+        </association>
     </resultMap>
 
-	<select id="getLstTicket" resultMap="ticketMap">
-        SELECT maMua, tenMua
-        FROM ve
+    <select id="getLstTicket" resultMap="ticketResponseMap">
+        SELECT
+            v.maVe,
+            v.gheNgoi,
+            v.maHanhKhach,
+            v.maChuyen,
+            v.ngayMua,
+
+            -- Passenger
+            p.maHanhKhach as p_maHanhKhach,
+            p.hoTen as p_hoTen,
+            p.soDienThoai as p_soDienThoai,
+            p.email as p_email,
+
+            -- Trip
+            t.maChuyen as t_maChuyen,
+            t.ngayGioKhoiHanh as t_ngayGioKhoiHanh,
+            t.ngayGioDen as t_ngayGioDen,
+            t.diemDi as t_diemDi,
+            t.diemDen as t_diemDen,
+            t.trangThai as t_trangThai
+
+        FROM ve v
+        LEFT JOIN hanhkhach p ON v.maHanhKhach = p.maHanhKhach
+        LEFT JOIN chuyenxe t ON v.maChuyen = t.maChuyen
     </select>
 
-    <select id="getTicketById" parameterType="int" resultMap="ticketMap">
-        SELECT maMua, tenMua
-        FROM ve
-        WHERE maMua = #{maMua}
+    <select id="findTicketById" parameterType="string" resultMap="ticketResponseMap">
+        SELECT
+            v.maVe,
+            v.gheNgoi,
+            v.maHanhKhach,
+            v.maChuyen,
+            v.ngayMua,
+
+            p.maHanhKhach as p_maHanhKhach,
+            p.hoTen as p_hoTen,
+            p.soDienThoai as p_soDienThoai,
+            p.email as p_email,
+
+            t.maChuyen as t_maChuyen,
+            t.ngayGioKhoiHanh as t_ngayGioKhoiHanh,
+            t.ngayGioDen as t_ngayGioDen,
+            t.diemDi as t_diemDi,
+            t.diemDen as t_diemDen,
+            t.trangThai as t_trangThai
+
+        FROM ve v
+        LEFT JOIN hanhkhach p ON v.maHanhKhach = p.maHanhKhach
+        LEFT JOIN chuyenxe t ON v.maChuyen = t.maChuyen
+        WHERE v.maVe = #{maVe}
     </select>
 
-    <insert id="insertTicket" parameterType="com.ptit.csdlnc.model.Ticket" useGeneratedKeys="true" keyProperty="maVe">
-        INSERT INTO ve (tenMua)
-        VALUES (#{tenMua})
-    </insert>
-
-    <update id="updateTicket" parameterType="com.ptit.csdlnc.model.Ticket">
-        UPDATE ve
-        SET tenMua = #{tenMua}
-        WHERE maMua = #{maMua}
-    </update>
-
-    <delete id="deleteTicket" parameterType="int">
-        DELETE ve
-        WHERE maMua = #{maMua}
-    </delete>
+	<insert id="insertTicket" parameterType="com.ptit.csdlnc.model.Ticket" useGeneratedKeys="true" keyProperty="maVe">
+	    INSERT INTO Ve (gheNgoi, maHanhKhach, maChuyen, ngayMua)
+	    VALUES (#{gheNgoi}, #{maHanhKhach}, #{maChuyen}, #{ngayMua})
+	</insert>
+	
+	<update id="updateTicket" parameterType="com.ptit.csdlnc.model.Ticket">
+	    UPDATE Ve
+	    SET gheNgoi = #{gheNgoi},
+	        maHanhKhach = #{maHanhKhach},
+	        maChuyen = #{maChuyen},
+	        ngayMua = #{ngayMua}
+	    WHERE maVe = #{maVe}
+	</update>
+	
+	<delete id="deleteTicket" parameterType="int">
+	    DELETE FROM Ve
+	    WHERE maVe = #{maVe}
+	</delete>
 	
 </mapper>

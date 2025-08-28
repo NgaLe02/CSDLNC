@@ -30,15 +30,6 @@ public class TicketPriceService {
 			Throwable root = e.getRootCause();
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
-			if (msg != null) {
-				if (msg.contains("tenMua")) {
-					throw new RuntimeException("Tên mùa đã tồn tại!");
-				} else {
-					throw new RuntimeException("Dữ liệu đã tồn tại!");
-				}
-			} else {
-				throw new RuntimeException("Dữ liệu đã tồn tại!");
-			}
 		}
 		return result;
 	}
@@ -50,16 +41,6 @@ public class TicketPriceService {
 		} catch (DuplicateKeyException e) {
 			Throwable root = e.getRootCause();
 			String msg = root != null ? root.getMessage() : e.getMessage();
-
-			if (msg != null) {
-				if (msg.contains("tenMua")) {
-					throw new RuntimeException("Tên mùa đã tồn tại!");
-				} else {
-					throw new RuntimeException("Dữ liệu đã tồn tại!");
-				}
-			} else {
-				throw new RuntimeException("Dữ liệu đã tồn tại!");
-			}
 		}
 		return result;
 	}

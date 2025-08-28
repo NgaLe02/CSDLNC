@@ -35,7 +35,7 @@ public class Route {
 	@Positive(message = "Khoảng cách phải lớn hơn 0")
 	private Double khoangCach;
 
-	@NotNull(message = "Thời gian ước tính không được null")
+//	@NotNull(message = "Thời gian ước tính không được null")
 	@Positive(message = "Thời gian ước tính phải lớn hơn 0")
 	private Integer thoiGianUocTinh;
 

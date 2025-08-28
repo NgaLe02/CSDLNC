@@ -16,6 +16,6 @@ public interface TripDAO {
 
 	int updateTrip(Trip model) throws Exception;
 
-	int deleteTrip(int id) throws Exception;
+	int deleteTrip(String id) throws Exception;
 
 }

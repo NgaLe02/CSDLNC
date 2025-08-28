@@ -57,7 +57,7 @@ CREATE TABLE TuyenDuong (
     doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),
     diemDen VARCHAR(100) not null,
     khoangCach DECIMAL(10,2) not null,
-    thoiGianUocTinh INT not null,
+    thoiGianUocTinh INT,
     maLuongTuyen INT not null,
     FOREIGN KEY (maLuongTuyen) REFERENCES LuongTuyenDuong(maLuongTuyen)
 );
@@ -89,10 +89,10 @@ CREATE TABLE PhanCong (
 
 CREATE TABLE Ve (
     maVe INT PRIMARY KEY AUTO_INCREMENT,
-    ngayMua DATE,
-    gheNgoi VARCHAR(10),
-    maHanhKhach INT,
-    maChuyen VARCHAR(4),
+    ngayMua DATE  not null, 
+    gheNgoi VARCHAR(10)  not null,
+    maHanhKhach INT  not null,
+    maChuyen VARCHAR(4) v,
     FOREIGN KEY (maHanhKhach) REFERENCES HanhKhach(maHanhKhach),
     FOREIGN KEY (maChuyen) REFERENCES ChuyenXe(maChuyen),
     UNIQUE (maChuyen, gheNgoi) -- đảm bảo 1 ghế chỉ được bán 1 lần cho 1 chuyến
@@ -587,6 +587,86 @@ BEGIN
                 SET NEW.tinhTrangChuyen = 'Hoàn thành';
             END IF;
         END IF;
+    END IF;
+END$$
+
+DELIMITER ;
+
+-- Vé:
+-- Các ràng buộc cần có
+-- ngayMua <= ngayGioKhoiHanh (không thể mua vé sau khi chuyến xe khởi hành).
+-- maHanhKhach phải tồn tại trong bảng HanhKhach.
+-- maChuyen phải tồn tại trong bảng ChuyenXe.
+-- gheNgoi hợp lệ (ví dụ, số ghế nằm trong danh sách ghế hợp lệ của xe).
+-- 1 hành khách không được mua nhiều vé cho cùng 1 chuyến.
+
+-- Kiểm tra ngày mua phải trước giờ khởi hành
+DELIMITER $$
+
+CREATE TRIGGER trg_check_ngayMua
+BEFORE INSERT ON Ve
+FOR EACH ROW
+BEGIN
+    DECLARE v_khoiHanh DATETIME;
+
+    SELECT ngayGioKhoiHanh INTO v_khoiHanh
+    FROM ChuyenXe
+    WHERE maChuyen = NEW.maChuyen;
+
+    IF NEW.ngayMua > DATE(v_khoiHanh) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Không thể mua vé sau khi chuyến xe khởi hành!';
+    END IF;
+END$$
+
+DELIMITER ;
+
+-- Kiểm tra 1 hành khách không mua trùng chuyến
+DELIMITER $$
+
+CREATE TRIGGER trg_check_trungVe
+BEFORE INSERT ON Ve
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM Ve
+        WHERE maHanhKhach = NEW.maHanhKhach
+          AND maChuyen = NEW.maChuyen
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Hành khách này đã có vé cho chuyến xe!';
+    END IF;
+END$$
+
+DELIMITER ;
+-- Kiểm tra khi UPDATE (cập nhật lại vé)
+DELIMITER $$
+
+CREATE TRIGGER trg_check_updateVe
+BEFORE UPDATE ON Ve
+FOR EACH ROW
+BEGIN
+    DECLARE v_khoiHanh DATETIME;
+
+    -- Kiểm tra không đổi sang ngày mua > ngày khởi hành
+    SELECT ngayGioKhoiHanh INTO v_khoiHanh
+    FROM ChuyenXe
+    WHERE maChuyen = NEW.maChuyen;
+
+    IF NEW.ngayMua > DATE(v_khoiHanh) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Không thể cập nhật vé với ngày mua sau khi xe đã khởi hành!';
+    END IF;
+
+    -- Kiểm tra trùng vé
+    IF EXISTS (
+        SELECT 1 FROM Ve
+        WHERE maHanhKhach = NEW.maHanhKhach
+          AND maChuyen = NEW.maChuyen
+          AND maVe <> NEW.maVe
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Hành khách này đã có vé cho chuyến xe!';
     END IF;
 END$$
 

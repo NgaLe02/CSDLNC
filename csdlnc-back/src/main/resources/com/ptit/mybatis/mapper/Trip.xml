@@ -21,6 +21,11 @@
 	        <result property="diemKhoiHanh" column="diemKhoiHanh"/>
 	        <result property="diemDen" column="diemDen"/>
 	        <result property="khoangCach" column="khoangCach"/>
+	        
+	        <association property="luongTuyenDuong" javaType="com.ptit.csdlnc.model.response.RouteSalaryResponse">
+	        <id property="maLuongTuyen" column="ltd_maLuongTuyen"/>
+	        <result property="luongCoBan" column="ltd_luongCoBan"/>
+	    </association>
 	    </association>
     </resultMap>
 
@@ -36,10 +41,14 @@
 	           cx.maTuyen, 
 	           td.diemKhoiHanh, 
 	           td.diemDen, 
-	           td.khoangCach
+	           td.khoangCach,
+	           
+	           ltd.luongCoBan as ltd_luongCoBan,
+	           ltd.maLuongTuyen as ltd_maLuongTuyen
 	    FROM ChuyenXe cx
 	    JOIN Xe x ON cx.maXe = x.maXe
 	    JOIN TuyenDuong td ON cx.maTuyen = td.maTuyen
+	    JOIN luongtuyenduong ltd ON td.maLuongTuyen = ltd.maLuongTuyen
 	</select>
 	
 	<select id="getTripById" parameterType="string" resultMap="tripMap">
@@ -54,16 +63,20 @@
 	           cx.maTuyen, 
 	           td.diemKhoiHanh, 
 	           td.diemDen, 
-	           td.khoangCach
+	           td.khoangCach,
+	           
+	           ltd.luongCoBan as ltd_luongCoBan,
+	           ltd.maLuongTuyen as ltd_maLuongTuyen
 	    FROM ChuyenXe cx
 	    JOIN Xe x ON cx.maXe = x.maXe
 	    JOIN TuyenDuong td ON cx.maTuyen = td.maTuyen
+	    JOIN luongtuyenduong ltd ON td.maLuongTuyen = ltd.maLuongTuyen
 	    WHERE cx.maChuyen = #{maChuyen}
 	</select>
 	
 	<insert id="insertTrip" parameterType="com.ptit.csdlnc.model.Trip" useGeneratedKeys="true" keyProperty="maChuyen">
 	    INSERT INTO ChuyenXe(tinhTrangChuyen, ngayGioKhoiHanh, ngayGioDen, chiPhiVanHanh, tiLeThuLao, maXe, maTuyen)
-	    VALUES (#{maChuyen}, #{tinhTrangChuyen}, #{ngayGioKhoiHanh}, #{ngayGioDen}, #{chiPhiVanHanh}, #{tiLeThuLao}, #{maXe}, #{maTuyen})
+	    VALUES ( #{tinhTrangChuyen}, #{ngayGioKhoiHanh}, #{ngayGioDen}, #{chiPhiVanHanh}, #{tiLeThuLao}, #{maXe}, #{maTuyen})
 	</insert>
 	
 	<update id="updateTrip" parameterType="com.ptit.csdlnc.model.Trip">
