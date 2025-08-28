@@ -1,4 +1,4 @@
-import { SeasonModel } from "../Season";
+import { SeasonModel } from "../SeasonModel";
 import { RouteResponseModel } from "./RouteResponseModel";
 
 export class TicketPriceResponseModel {

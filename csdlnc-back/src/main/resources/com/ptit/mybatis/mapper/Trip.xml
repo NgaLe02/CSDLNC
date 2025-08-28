@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ptit.csdlnc.dao.TripDAO">
-	<resultMap id="TripMap" type="com.ptit.csdlnc.model.response.TripResponse">
+	<resultMap id="tripMap" type="com.ptit.csdlnc.model.response.TripResponse">
         <id property="maChuyen" column="maChuyen"/>
         <result property="tinhTrangChuyen" column="tinhTrangChuyen"/>
         <result property="ngayGioKhoiHanh" column="ngayGioKhoiHanh"/>
@@ -24,7 +24,7 @@
 	    </association>
     </resultMap>
 
-	<select id="getLstTrip" resultMap="TripMap">
+	<select id="getLstTrip" resultMap="tripMap">
 	    SELECT cx.maChuyen, 
 	    	   cx.tinhTrangChuyen, 
 	    	   cx.ngayGioKhoiHanh, 
@@ -42,7 +42,7 @@
 	    JOIN TuyenDuong td ON cx.maTuyen = td.maTuyen
 	</select>
 	
-	<select id="getTripById" parameterType="string" resultMap="TripMap">
+	<select id="getTripById" parameterType="string" resultMap="tripMap">
 	    SELECT cx.maChuyen, 
 	    	   cx.tinhTrangChuyen, 
 	    	   cx.ngayGioKhoiHanh, 
@@ -61,8 +61,8 @@
 	    WHERE cx.maChuyen = #{maChuyen}
 	</select>
 	
-	<insert id="insertTrip" parameterType="com.ptit.csdlnc.model.Trip">
-	    INSERT INTO ChuyenXe(maChuyen, tinhTrangChuyen, ngayGioKhoiHanh, ngayGioDen, chiPhiVanHanh, tiLeThuLao, maXe, maTuyen)
+	<insert id="insertTrip" parameterType="com.ptit.csdlnc.model.Trip" useGeneratedKeys="true" keyProperty="maChuyen">
+	    INSERT INTO ChuyenXe(tinhTrangChuyen, ngayGioKhoiHanh, ngayGioDen, chiPhiVanHanh, tiLeThuLao, maXe, maTuyen)
 	    VALUES (#{maChuyen}, #{tinhTrangChuyen}, #{ngayGioKhoiHanh}, #{ngayGioDen}, #{chiPhiVanHanh}, #{tiLeThuLao}, #{maXe}, #{maTuyen})
 	</insert>
 	

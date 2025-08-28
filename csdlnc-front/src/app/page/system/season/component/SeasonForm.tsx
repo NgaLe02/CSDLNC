@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { SeasonModel } from "../../../../model/Season";
+import { SeasonModel } from "../../../../model/SeasonModel";
 import { SeasonService } from "../../../../services/SeasonService";
 
 export default function SeasonForm(props: any) {

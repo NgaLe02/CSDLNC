@@ -6,7 +6,7 @@ import { TicketPriceService } from "../../../../services/TicketPriceService";
 import { RouteResponseModel } from "../../../../model/response/RouteResponseModel";
 import { RouteService } from "../../../../services/RouteService";
 import { HttpStatusCode } from "axios";
-import { SeasonModel } from "../../../../model/Season";
+import { SeasonModel } from "../../../../model/SeasonModel";
 import { SeasonService } from "../../../../services/SeasonService";
 
 export default function TicketPriceForm(props: any) {

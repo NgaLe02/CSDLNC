@@ -2,22 +2,22 @@ import axios from "axios";
 import { ParamUtil } from "../utils/paramUtil";
 import { HeadersUtil } from "../utils/headersUtil";
 import { ApiUrlUtil } from "../utils/apiUrlUtil";
-import { SeasonModel } from "../model/SeasonModel";
+import { TripModel } from "../model/TripModel";
 
-export class SeasonService {
-  private static _seasonService: SeasonService;
+export class TripService {
+  private static _seasonService: TripService;
 
-  public static getInstance(): SeasonService {
-    if (!SeasonService._seasonService) {
-      SeasonService._seasonService = new SeasonService();
+  public static getInstance(): TripService {
+    if (!TripService._seasonService) {
+      TripService._seasonService = new TripService();
     }
-    return SeasonService._seasonService;
+    return TripService._seasonService;
   }
 
-  public getLstSeason(request: any) {
+  public getLstTrip(request: any) {
     const params = ParamUtil.toRequestParams(request);
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/season/getLstSeason",
+      process.env.REACT_APP_API_URL + "/trip/getLstTrip",
       params
     );
     return axios.get(url, {
@@ -25,27 +25,27 @@ export class SeasonService {
     });
   }
 
-  public insertSeason(model: SeasonModel) {
+  public insertTrip(model: TripModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/season/insertSeason"
+      process.env.REACT_APP_API_URL + "/trip/insertTrip"
     );
     return axios.post(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public updateSeason(model: SeasonModel) {
+  public updateTrip(model: TripModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/season/updateSeason"
+      process.env.REACT_APP_API_URL + "/trip/updateTrip"
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public deleteSeason(id: number) {
+  public deleteTrip(id: number) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/season/" + id + "/deleteSeason"
+      process.env.REACT_APP_API_URL + "/trip/" + id + "/deleteTrip"
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

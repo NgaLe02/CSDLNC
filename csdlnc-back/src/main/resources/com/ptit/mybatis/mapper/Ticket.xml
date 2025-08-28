@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.TicketDAO">
+	<resultMap id="ticketMap" type="com.ptit.csdlnc.model.response.TicketResponse">
+        <id property="maVe" column="maVe"/>
+        <result property="tenMua" column="tenMua"/>
+    </resultMap>
+
+	<select id="getLstTicket" resultMap="ticketMap">
+        SELECT maMua, tenMua
+        FROM ve
+    </select>
+
+    <select id="getTicketById" parameterType="int" resultMap="ticketMap">
+        SELECT maMua, tenMua
+        FROM ve
+        WHERE maMua = #{maMua}
+    </select>
+
+    <insert id="insertTicket" parameterType="com.ptit.csdlnc.model.Ticket" useGeneratedKeys="true" keyProperty="maVe">
+        INSERT INTO ve (tenMua)
+        VALUES (#{tenMua})
+    </insert>
+
+    <update id="updateTicket" parameterType="com.ptit.csdlnc.model.Ticket">
+        UPDATE ve
+        SET tenMua = #{tenMua}
+        WHERE maMua = #{maMua}
+    </update>
+
+    <delete id="deleteTicket" parameterType="int">
+        DELETE ve
+        WHERE maMua = #{maMua}
+    </delete>
+	
+</mapper>
