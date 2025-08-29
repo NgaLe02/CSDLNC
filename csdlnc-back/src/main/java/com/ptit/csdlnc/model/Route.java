@@ -1,13 +1,14 @@
 package com.ptit.csdlnc.model;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,6 +46,9 @@ public class Route {
 	@Max(value = 3, message = "Độ phức tạp tối đa là 3")
 	private Integer doPhucTap;
 	
+	@NotNull(message = "Hệ số đường khó không được null")
+	@Positive(message = "Hệ số đường khó phải lớn hơn 0")
+	private Double heSoDuongKho;
 	private Integer maLuongTuyen;
 
 
