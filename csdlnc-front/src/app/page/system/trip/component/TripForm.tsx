@@ -9,6 +9,7 @@ import { HttpStatusCode } from "axios";
 import { RouteService } from "../../../../services/RouteService";
 import { Constant } from "../../../../constants/constant";
 import dayjs from "dayjs";
+import { TicketPriceService } from "../../../../services/TicketPriceService";
 
 export default function TripForm(props: any) {
   const [model, setModel] = useState<TripModel>(props.model ?? new TripModel());
@@ -17,6 +18,7 @@ export default function TripForm(props: any) {
   const [listStatusTrip, setStatusTrip] = useState<any[]>(
     Constant.LIST_STATUS_TRIP
   );
+  const [listTicketPrice, setTicketPrice] = useState<any[]>([]);
 
   useEffect(() => {
     if (props.type === "C") {
@@ -30,6 +32,7 @@ export default function TripForm(props: any) {
   useEffect(() => {
     getLstCar();
     getLstRoute();
+    getLstTicketPrice();
   }, []);
 
   function getLstCar() {
@@ -60,6 +63,26 @@ export default function TripForm(props: any) {
           if (response.data.status) {
             const data = response.data.responseData;
             setListRoute(data);
+          } else {
+            toast.error(response.data.message);
+          }
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch(() => {
+        toast.error("Có lỗi xảy ra");
+      });
+  }
+
+  function getLstTicketPrice() {
+    TicketPriceService.getInstance()
+      .getLstTicketPrice({})
+      .then((response) => {
+        if (response.status === HttpStatusCode.Ok) {
+          if (response.data.status) {
+            const data = response.data.responseData;
+            setTicketPrice(data);
           } else {
             toast.error(response.data.message);
           }

@@ -99,6 +99,20 @@ export default function EmployeeForm(props: any) {
             />
           </div>
 
+          <div className="mb-3">
+            <label htmlFor="soDienThoai" className="form-label">
+              Só điện thoại
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="soDienThoai"
+              name="soDienThoai"
+              value={model.soDienThoai ?? ""}
+              onChange={handleChange}
+            />
+          </div>
+
           <button
             type="button"
             className="btn btn-secondary"

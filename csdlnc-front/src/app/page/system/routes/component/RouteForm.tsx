@@ -141,6 +141,21 @@ export default function RouteForm(props: any) {
             />
           </div>
 
+          <div className="mb-3">
+            <label htmlFor="heSoDuongKho" className="form-label">
+              Hệ số đường khó
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              id="heSoDuongKho"
+              name="heSoDuongKho"
+              value={model.heSoDuongKho ?? ""}
+              step="1"
+              onChange={handleChange}
+            />
+          </div>
+
           <button
             type="button"
             className="btn btn-secondary"

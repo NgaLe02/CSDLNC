@@ -97,6 +97,7 @@ export default function Employee() {
                   <th scope="col">Mã nhân viên</th>
                   <th scope="col">Họ tên</th>
                   <th scope="col">CMND</th>
+                  <th scope="col">Số điện thoại</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -110,6 +111,7 @@ export default function Employee() {
                     <td>{item.maNhanVien}</td>
                     <td>{item.hoTen}</td>
                     <td>{item.cmnd}</td>
+                    <td>{item.soDienThoai}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-info ms-2"

@@ -32,20 +32,11 @@ public class TicketService {
 			throw new RuntimeException("Ghế này đã có người mua trong chuyến xe!");
 
 		} catch (DataIntegrityViolationException e) {
-			// lỗi vi phạm trigger, foreign key, check constraint
 			Throwable root = e.getRootCause();
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
 			if (msg != null) {
-				if (msg.contains("Ngày mua vé không được NULL")) {
-					throw new RuntimeException("Ngày mua vé không được để trống!");
-				} else if (msg.contains("FK_maHanhKhach")) {
-					throw new RuntimeException("Hành khách không tồn tại!");
-				} else if (msg.contains("FK_maChuyen")) {
-					throw new RuntimeException("Chuyến xe không tồn tại!");
-				} else {
-					throw new RuntimeException("Lỗi dữ liệu: " + msg);
-				}
+				throw new RuntimeException(msg);
 			} else {
 				throw new RuntimeException("Lỗi dữ liệu không xác định!");
 			}
@@ -71,15 +62,7 @@ public class TicketService {
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
 			if (msg != null) {
-				if (msg.contains("Ngày mua vé không được NULL")) {
-					throw new RuntimeException("Ngày mua vé không được để trống!");
-				} else if (msg.contains("FK_maHanhKhach")) {
-					throw new RuntimeException("Hành khách không tồn tại!");
-				} else if (msg.contains("FK_maChuyen")) {
-					throw new RuntimeException("Chuyến xe không tồn tại!");
-				} else {
-					throw new RuntimeException("Lỗi dữ liệu: " + msg);
-				}
+				throw new RuntimeException(msg);
 			} else {
 				throw new RuntimeException("Lỗi dữ liệu không xác định!");
 			}

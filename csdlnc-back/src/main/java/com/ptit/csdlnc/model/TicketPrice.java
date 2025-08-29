@@ -2,11 +2,12 @@ package com.ptit.csdlnc.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ public class TicketPrice {
 	private String maTuyen;
 
 	@NotNull(message = "Mã mùa không được null")
-	private Integer maMua;
+	private String maMua;
 	
 	@NotNull(message = "Ngày bắt đầu không được null")
 	private Date ngayBatDau;

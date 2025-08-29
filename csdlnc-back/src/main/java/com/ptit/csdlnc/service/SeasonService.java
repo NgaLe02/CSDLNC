@@ -63,7 +63,7 @@ public class SeasonService {
 		return result;
 	}
 
-	public int deleteSeason(int id) throws Exception {
+	public int deleteSeason(String id) throws Exception {
 		return seasonDAO.deleteSeason(id);
 	}
 }

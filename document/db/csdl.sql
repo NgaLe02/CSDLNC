@@ -3,7 +3,8 @@ use csdlnc;
 CREATE TABLE NhanVien (
     maNhanVien INT PRIMARY KEY AUTO_INCREMENT,
     hoTen VARCHAR(100),
-    cmnd VARCHAR(20) UNIQUE
+    cmnd VARCHAR(20) UNIQUE,
+    soDienThoai VARCHAR(20) UNIQUE
 );
 
 CREATE TABLE LoaiXe (
@@ -15,10 +16,29 @@ CREATE TABLE LoaiXe (
 CREATE TABLE Xe (
 	maXe CHAR(3) PRIMARY KEY,
     bienSo VARCHAR(20) NOT NULL UNIQUE,
-    tinhTrang VARCHAR(50),
+    tinhTrang VARCHAR(50) NOT NULL CHECK (tinhTrang IN (
+        'Đang hoạt động',
+        'Sắp bảo dưỡng',
+        'Đang bảo dưỡng',
+        'Quá hạn bảo dưỡng',
+        'Hết hạn đăng kiểm',
+    )),
     maLoaiXe INT NOT NULL,
     FOREIGN KEY (maLoaiXe) REFERENCES LoaiXe(maLoaiXe)
 );
+
+-- Đang hoạt động
+-- Xe đang chạy bình thường, chưa tới kỳ bảo dưỡng/đăng kiểm.
+-- Sắp bảo dưỡng
+-- Khi số ngày còn lại trong chu kỳ bảo dưỡng < X ngày (ví dụ 30 ngày) hoặc số km tính toán gần chạm ngưỡng → cảnh báo để chủ xe chuẩn bị.
+-- Đang bảo dưỡng
+-- Xe được đưa đi bảo dưỡng, tạm thời không hoạt động.
+-- Quá hạn bảo dưỡng
+-- Khi số ngày/khoảng cách vượt quá chu kỳ (360 ngày hoặc km tính toán vượt ngưỡng). Xe không nên hoạt động nếu quá hạn.
+-- Hết hạn đăng kiểm
+-- Nếu ngày đăng kiểm < ngày hiện tại → xe phải ngừng hoạt động cho đến khi đăng kiểm lại.
+-- (Tuỳ chọn thêm) Ngừng hoạt động / Thanh lý
+-- Khi xe bị loại bỏ khỏi hệ thống.
 
 CREATE TABLE HanDangKiem (
     maHanDangKiem INT PRIMARY KEY AUTO_INCREMENT,
@@ -59,43 +79,85 @@ CREATE TABLE TuyenDuong (
     khoangCach DECIMAL(10,2) not null,
     thoiGianUocTinh INT,
     maLuongTuyen INT not null,
+    heSoDuongKho DECIMAL(10,2) not null DEFAULT 1.0,
     FOREIGN KEY (maLuongTuyen) REFERENCES LuongTuyenDuong(maLuongTuyen)
 );
 
 CREATE TABLE ChuyenXe (
-    maChuyen VARCHAR(4) PRIMARY KEY,
-    tinhTrangChuyen VARCHAR(50) not null,
-    ngayGioKhoiHanh DATETIME not null,
-    ngayGioDen DATETIME not null,
-    chiPhiVanHanh DECIMAL(12,2) not null,
-    tiLeThuLao DECIMAL(12,2) not null,
-    maXe CHAR(3) not null,
-    maTuyen VARCHAR(4) not null,
+    maXe VARCHAR(10) NOT NULL,
+    maTuyen VARCHAR(10) NOT NULL,
+    maChuyen INT NOT NULL,
+    maMua VARCHAR(10) NOT NULL,
+    maGiaVe VARCHAR(10) NOT NULL,
+    ngayGioKhoiHanh DATETIME NOT NULL,
+    ngayGioDen DATETIME NOT NULL,
+    tinhTrangChuyen VARCHAR(50) NOT NULL,
+    chiPhiVanHanh DECIMAL(12,2) NOT NULL,
+    tiLeThuLao DECIMAL(12,2) NOT NULL,
+    PRIMARY KEY (maXe, maTuyen, maChuyen),
     FOREIGN KEY (maXe) REFERENCES Xe(maXe),
     FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
+    FOREIGN KEY (maMua) REFERENCES Mua(maMua),
+    FOREIGN KEY (maGiaVe, maTuyen, maMua)
+        REFERENCES GiaVe(maGiaVe, maTuyen, maMua),
     CONSTRAINT chk_tinhtrangchuyen 
         CHECK (tinhTrangChuyen IN ('Chưa khởi hành','Đang chạy','Hoàn thành','Hủy'))
 );
 
 
+
+-- CREATE TABLE ChuyenXe (
+--     maChuyen VARCHAR(4) PRIMARY KEY,
+--     tinhTrangChuyen VARCHAR(50) not null,
+--     ngayGioKhoiHanh DATETIME not null,
+--     ngayGioDen DATETIME not null,
+--     chiPhiVanHanh DECIMAL(12,2) not null,
+--     tiLeThuLao DECIMAL(12,2) not null,
+--     maXe CHAR(3) not null,
+--     maTuyen VARCHAR(4) not null,
+--     FOREIGN KEY (maXe) REFERENCES Xe(maXe),
+--     FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
+--     CONSTRAINT chk_tinhtrangchuyen 
+--         CHECK (tinhTrangChuyen IN ('Chưa khởi hành','Đang chạy','Hoàn thành','Hủy'))
+-- );
+
+
+-- CREATE TABLE PhanCong (
+--     maNhanVien INT,
+--     maChuyen VARCHAR(4),
+--     vaiTro VARCHAR(255),
+--     PRIMARY KEY (maChuyen, maNhanVien),
+--     FOREIGN KEY (maChuyen) REFERENCES ChuyenXe(maChuyen),
+--     FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien),
+--     CHECK (vaiTro IN ('Lái xe', 'Phụ xe'))
+-- );
+
 CREATE TABLE PhanCong (
-	maNhanVien INT,
     maChuyen VARCHAR(4),
-    vaiTro varchar(255),
-    PRIMARY KEY (maChuyen, maNhanVien),
-    FOREIGN KEY (maChuyen) REFERENCES ChuyenXe(maChuyen),
-    FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien)
+    maTuyen  VARCHAR(4),
+    maXe     VARCHAR(10),
+    maNhanVien INT,
+    vaiTro VARCHAR(255),
+    PRIMARY KEY (maChuyen, maTuyen, maXe, maNhanVien),
+    FOREIGN KEY (maChuyen, maTuyen, maXe) 
+        REFERENCES ChuyenXe(maChuyen, maTuyen, maXe),
+    FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien),
+    CONSTRAINT chk_vaiTro CHECK (vaiTro IN ('Lái xe', 'Phụ xe'))
 );
 
+
 CREATE TABLE Ve (
-    maVe INT PRIMARY KEY AUTO_INCREMENT,
+    maVe INT ,
+    maXe VARCHAR(10) NOT NULL,
+    maTuyen VARCHAR(10) NOT NULL,
+    maChuyen INT NOT NULL,
     ngayMua DATE  not null, 
     gheNgoi VARCHAR(10)  not null,
     maHanhKhach INT  not null,
-    maChuyen VARCHAR(4) v,
+    PRIMARY KEY (maXe, maTuyen, maChuyen, maVe),
     FOREIGN KEY (maHanhKhach) REFERENCES HanhKhach(maHanhKhach),
-    FOREIGN KEY (maChuyen) REFERENCES ChuyenXe(maChuyen),
-    UNIQUE (maChuyen, gheNgoi) -- đảm bảo 1 ghế chỉ được bán 1 lần cho 1 chuyến
+    FOREIGN KEY (maXe, maTuyen, maChuyen) REFERENCES ChuyenXe(maXe, maTuyen, maChuyen),
+    CONSTRAINT uq_ve_chuyen_ghe UNIQUE (maXe, maTuyen, maChuyen, gheNgoi) -- đảm bảo 1 ghế chỉ được bán 1 lần cho 1 chuyến
 );
 
 CREATE TABLE Mua (
@@ -104,12 +166,13 @@ CREATE TABLE Mua (
 );
 
 CREATE TABLE GiaVe (
-    maGiaVe INT PRIMARY KEY AUTO_INCREMENT,
+    maGiaVe INT ,
     giaVe DECIMAL(12,2) not null,
     ngayBatDau DATE not null,
     ngayKetThuc DATE,
     maTuyen VARCHAR(4) not null,
     maMua INT not null,
+    PRIMARY KEY (maTuyen, maMua, maGiaVe),
     FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
     FOREIGN KEY (maMua) REFERENCES Mua(maMua)
 );
@@ -161,43 +224,118 @@ CREATE TRIGGER trg_gen_maChuyen
 BEFORE INSERT ON ChuyenXe
 FOR EACH ROW
 BEGIN
-    DECLARE newId INT;
-    DECLARE newCode VARCHAR(10);
+    DECLARE maxChuyen INT;
 
-    -- Lấy số lớn nhất hiện có (bỏ ký tự 'C')
-    SELECT IFNULL(MAX(CAST(SUBSTRING(maChuyen, 2) AS UNSIGNED)), 0) + 1
-    INTO newId
-    FROM ChuyenXe;
+    -- Nếu người dùng không truyền maChuyen, thì tự sinh
+    IF NEW.maChuyen IS NULL OR NEW.maChuyen = '' THEN
+        SELECT COALESCE(MAX(CAST(SUBSTRING(maChuyen, 3) AS UNSIGNED)), 0) + 1
+        INTO maxChuyen
+        FROM ChuyenXe
+        WHERE maXe = NEW.maXe AND maTuyen = NEW.maTuyen;
 
-    -- Format thành C + số có 3 chữ số
-    SET newCode = CONCAT('C', LPAD(newId, 3, '0'));
-
-    SET NEW.maChuyen = newCode;
+        -- Gắn ký tự CX trước số
+        SET NEW.maChuyen = CONCAT('CX', LPAD(maxChuyen, 2, '0'));
+    END IF;
 END$$
 
 DELIMITER ;
 
+
+-- DELIMITER $$
+
+-- CREATE TRIGGER trg_gen_maChuyen
+-- BEFORE INSERT ON ChuyenXe
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE newId INT;
+--     DECLARE newCode VARCHAR(10);
+
+--     -- Lấy số lớn nhất hiện có (bỏ ký tự 'C')
+--     SELECT IFNULL(MAX(CAST(SUBSTRING(maChuyen, 2) AS UNSIGNED)), 0) + 1
+--     INTO newId
+--     FROM ChuyenXe;
+
+--     -- Format thành C + số có 3 chữ số
+--     SET newCode = CONCAT('C', LPAD(newId, 3, '0'));
+
+--     SET NEW.maChuyen = newCode;
+-- END$$
+
+-- DELIMITER ;
+
 -- gen mã vé
-DELIMITER //
-CREATE TRIGGER trg_generate_maVe
+
+DELIMITER $$
+
+CREATE TRIGGER trg_gen_maVe
 BEFORE INSERT ON Ve
 FOR EACH ROW
 BEGIN
-    DECLARE tuyen VARCHAR(4);
-    DECLARE xe VARCHAR(3);
-    DECLARE newCode VARCHAR(50);
+    DECLARE maxVe INT;
 
-    -- lấy thông tin tuyến + xe từ bảng ChuyenXe
-    SELECT maTuyen, maXe INTO tuyen, xe
-    FROM ChuyenXe WHERE maChuyen = NEW.maChuyen;
+    -- Nếu chưa có maVe (NULL hoặc 0) thì tự sinh
+    IF NEW.maVe IS NULL OR NEW.maVe = 0 THEN
+        SELECT COALESCE(MAX(maVe), 0) + 1
+        INTO maxVe
+        FROM Ve
+        WHERE maChuyen = NEW.maChuyen
+          AND maXe = NEW.maXe
+          AND maTuyen = NEW.maTuyen;
 
-    -- ghép thành mã vé (dùng maVe INT AUTO_INCREMENT nếu cần số thứ tự)
-    SET newCode = CONCAT(NEW.maChuyen, '_', tuyen, '_', xe, '_', LPAD(NEW.maHanhKhach,4,'0'));
+        SET NEW.maVe = maxVe;
+    END IF;
+END$$
 
-    SET NEW.maVe = newCode;
-END //
 DELIMITER ;
 
+
+--gen ma mua
+DELIMITER $$
+
+CREATE TRIGGER trg_gen_maMua
+BEFORE INSERT ON Mua
+FOR EACH ROW
+BEGIN
+    DECLARE maxNum INT;
+
+    -- Nếu người dùng không truyền maMua, thì tự sinh
+    IF NEW.maMua IS NULL OR NEW.maMua = '' THEN
+        -- Lấy số lớn nhất trong maMua hiện tại (bỏ chữ M)
+        SELECT COALESCE(MAX(CAST(SUBSTRING(maMua, 2) AS UNSIGNED)), 0)
+        INTO maxNum
+        FROM Mua;
+
+        -- Tăng lên 1 và gán cho NEW.maMua với prefix 'M'
+        SET NEW.maMua = CONCAT('M', maxNum + 1);
+    END IF;
+END $$
+
+DELIMITER ;
+
+--gen mã giá vé
+DELIMITER $$
+
+CREATE TRIGGER trg_gen_maGiaVe
+BEFORE INSERT ON GiaVe
+FOR EACH ROW
+BEGIN
+    DECLARE maxNum INT;
+
+    -- Nếu người dùng không truyền maGiaVe, thì tự sinh
+    IF NEW.maGiaVe IS NULL OR NEW.maGiaVe = '' THEN
+        -- Lấy số lớn nhất (bỏ padding) trong cùng (maTuyen, maMua)
+        SELECT COALESCE(MAX(CAST(maGiaVe AS UNSIGNED)), 0)
+        INTO maxNum
+        FROM GiaVe
+        WHERE maTuyen = NEW.maTuyen
+          AND maMua  = NEW.maMua;
+
+        -- Sinh mã mới, padding thành 3 chữ số
+        SET NEW.maGiaVe = LPAD(maxNum + 1, 3, '0');
+    END IF;
+END $$
+
+DELIMITER ;
 
 -- DELIMITER $$
 
@@ -337,7 +475,7 @@ BEGIN
     -- 1. Kiểm tra ngayKetThuc >= ngayBatDau nếu ngayKetThuc không null
     IF NEW.ngayKetThuc IS NOT NULL AND NEW.ngayKetThuc < NEW.ngayBatDau THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'ngayKetThuc phai lon hon hoac bang ngayBatDau';
+        SET MESSAGE_TEXT = 'Ngày kết thúc phải lớn hơn ngày bắt đầu';
     END IF;
 
     -- 2. Kiểm tra trùng khoảng thời gian cho cùng maTuyen và maMua
@@ -352,7 +490,7 @@ BEGIN
               )
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Khoang thoi gian bi trung voi gia ve da ton tai';
+        SET MESSAGE_TEXT = 'Khoảng thời gian bị trùng với giá vé đã tồn tại';
     END IF;
 END$$
 
@@ -364,7 +502,7 @@ BEGIN
     -- 1. Kiểm tra ngayKetThuc >= ngayBatDau nếu ngayKetThuc không null
     IF NEW.ngayKetThuc IS NOT NULL AND NEW.ngayKetThuc < NEW.ngayBatDau THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'ngayKetThuc phai lon hon hoac bang ngayBatDau';
+        SET MESSAGE_TEXT = 'Ngày kết thúc phải lớn hơn ngày bắt đầu';
     END IF;
 
     -- 2. Kiểm tra trùng khoảng thời gian cho cùng maTuyen và maMua (ngoại trừ chính bản ghi này)
@@ -380,7 +518,7 @@ BEGIN
               )
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Khoang thoi gian bi trung voi gia ve da ton tai';
+        SET MESSAGE_TEXT = 'Khoảng thời gian bị trùng với giá vé đã tồn tại';
     END IF;
 END$$
 
@@ -669,5 +807,253 @@ BEGIN
         SET MESSAGE_TEXT = 'Hành khách này đã có vé cho chuyến xe!';
     END IF;
 END$$
+
+DELIMITER ;
+
+
+-- DELIMITER $$
+
+-- CREATE TRIGGER trg_chuyenxe_set_maGiaVe
+-- BEFORE INSERT ON ChuyenXe
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE v_maGiaVe INT;
+
+--     -- Tìm mã giá vé theo maTuyen + maMua và ngày khởi hành của chuyến
+--     SELECT g.maGiaVe
+--     INTO v_maGiaVe
+--     FROM GiaVe g
+--     WHERE g.maTuyen = NEW.maTuyen
+--       AND g.maMua = NEW.maMua
+--       AND g.ngayBatDau <= DATE(NEW.ngayGioKhoiHanh)
+--       AND (g.ngayKetThuc IS NULL OR g.ngayKetThuc >= DATE(NEW.ngayGioKhoiHanh))
+--     ORDER BY g.ngayBatDau DESC
+--     LIMIT 1;
+
+--     IF v_maGiaVe IS NOT NULL THEN
+--         SET NEW.maGiaVe = v_maGiaVe;
+--     ELSE
+--         SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Không tìm thấy giá vé hợp lệ cho tuyến đường trong mùa này';
+--     END IF;
+-- END$$
+
+-- DELIMITER ;
+
+-- DELIMITER $$
+
+-- CREATE TRIGGER trg_chuyenxe_update_maGiaVe
+-- BEFORE UPDATE ON ChuyenXe
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE v_maGiaVe INT;
+
+--     SELECT g.maGiaVe
+--     INTO v_maGiaVe
+--     FROM GiaVe g
+--     WHERE g.maTuyen = NEW.maTuyen
+--       AND g.maMua = NEW.maMua
+--       AND g.ngayBatDau <= DATE(NEW.ngayGioKhoiHanh)
+--       AND (g.ngayKetThuc IS NULL OR g.ngayKetThuc >= DATE(NEW.ngayGioKhoiHanh))
+--     ORDER BY g.ngayBatDau DESC
+--     LIMIT 1;
+
+--     IF v_maGiaVe IS NOT NULL THEN
+--         SET NEW.maGiaVe = v_maGiaVe;
+--     ELSE
+--         SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Không tìm thấy giá vé hợp lệ cho tuyến đường trong mùa này';
+--     END IF;
+-- END$$
+
+-- DELIMITER ;
+DELIMITER $$
+
+CREATE TRIGGER trg_cx_bi_set_or_check_maGiaVe
+BEFORE INSERT ON ChuyenXe
+FOR EACH ROW
+BEGIN
+    DECLARE v_maGiaVe INT;
+
+    -- Tìm giá vé hợp lệ theo (maTuyen, maMua) tại ngày khởi hành
+    SELECT gv.maGiaVe
+      INTO v_maGiaVe
+      FROM GiaVe gv
+     WHERE gv.maTuyen = NEW.maTuyen
+       AND gv.maMua   = NEW.maMua
+       AND gv.ngayBatDau <= DATE(NEW.ngayGioKhoiHanh)
+       AND (gv.ngayKetThuc IS NULL OR gv.ngayKetThuc >= DATE(NEW.ngayGioKhoiHanh))
+     ORDER BY gv.ngayBatDau DESC, gv.maGiaVe DESC
+     LIMIT 1;
+
+    IF v_maGiaVe IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Không tìm thấy giá vé hợp lệ cho (maTuyen, maMua) tại ngày khởi hành';
+    END IF;
+
+    IF NEW.maGiaVe IS NULL THEN
+        -- FE không gửi: tự gán
+        SET NEW.maGiaVe = v_maGiaVe;
+    ELSEIF NEW.maGiaVe <> v_maGiaVe THEN
+        -- FE gửi sai: chặn
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'maGiaVe gửi lên không khớp giá vé đang hiệu lực tại ngày khởi hành';
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+-- Trigger khi INSERT
+CREATE TRIGGER trg_check_vaiTro_insert
+BEFORE INSERT ON PhanCong
+FOR EACH ROW
+BEGIN
+    IF NEW.vaiTro NOT IN ('Lái xe', 'Phụ xe') THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Vai trò chỉ được phép: Lái xe hoặc Phụ xe';
+    END IF;
+END$$
+
+-- Trigger khi UPDATE
+CREATE TRIGGER trg_check_vaiTro_update
+BEFORE UPDATE ON PhanCong
+FOR EACH ROW
+BEGIN
+    IF NEW.vaiTro NOT IN ('Lái xe', 'Phụ xe') THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Vai trò chỉ được phép: Lái xe hoặc Phụ xe';
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER trg_check_PhanCong_insert
+BEFORE INSERT ON PhanCong
+FOR EACH ROW
+BEGIN
+    DECLARE cnt_lx INT DEFAULT 0;
+    DECLARE cnt_px INT DEFAULT 0;
+
+    -- Đếm số Lái xe đã có trong chuyến
+    SELECT COUNT(*) INTO cnt_lx
+    FROM PhanCong
+    WHERE maChuyen = NEW.maChuyen
+      AND maTuyen = NEW.maTuyen
+      AND maXe = NEW.maXe
+      AND vaiTro = 'Lái xe';
+
+    -- Đếm số Phụ xe đã có trong chuyến
+    SELECT COUNT(*) INTO cnt_px
+    FROM PhanCong
+    WHERE maChuyen = NEW.maChuyen
+      AND maTuyen = NEW.maTuyen
+      AND maXe = NEW.maXe
+      AND vaiTro = 'Phụ xe';
+
+    -- Nếu thêm 1 người nữa mà vượt quá số lượng cho phép thì báo lỗi
+    IF (NEW.vaiTro = 'Lái xe' AND cnt_lx >= 1) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Trong một chuyến chỉ được có đúng 1 Lái xe';
+    END IF;
+
+    IF (NEW.vaiTro = 'Phụ xe' AND cnt_px >= 1) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Trong một chuyến chỉ được có đúng 1 Phụ xe';
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER trg_check_phancong
+BEFORE INSERT ON PhanCong
+FOR EACH ROW
+BEGIN
+    DECLARE soLaiXe INT DEFAULT 0;
+    DECLARE soPhuXe INT DEFAULT 0;
+
+    -- Đếm số người đã phân công cho chuyến xe này
+    SELECT 
+        SUM(CASE WHEN vaiTro = 'Lái xe' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN vaiTro = 'Phụ xe' THEN 1 ELSE 0 END)
+    INTO soLaiXe, soPhuXe
+    FROM PhanCong
+    WHERE maChuyen = NEW.maChuyen
+      AND maTuyen  = NEW.maTuyen
+      AND maXe     = NEW.maXe;
+
+    -- Nếu thêm 1 Lái xe nữa mà đã có rồi thì báo lỗi
+    IF NEW.vaiTro = 'Lái xe' AND soLaiXe >= 1 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Mỗi chuyến xe chỉ được phép có 1 Lái xe';
+    END IF;
+
+    -- Nếu thêm 1 Phụ xe nữa mà đã có rồi thì báo lỗi
+    IF NEW.vaiTro = 'Phụ xe' AND soPhuXe >= 1 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Mỗi chuyến xe chỉ được phép có 1 Phụ xe';
+    END IF;
+
+    -- Nếu đã có 2 người thì không cho thêm nữa
+    IF (soLaiXe + soPhuXe) >= 2 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Mỗi chuyến xe chỉ được phép có 2 người (1 lái xe, 1 phụ xe)';
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER trg_capNhatTinhTrangXe
+AFTER UPDATE ON ChuyenXe
+FOR EACH ROW
+BEGIN
+    DECLARE kmLamViec DECIMAL(10,2);
+    DECLARE tongKm DECIMAL(10,2);
+    DECLARE ngayConLai INT;
+
+    -- Chỉ xử lý khi chuyến xe được đánh dấu Hoàn thành
+    IF NEW.trangThai = 'Hoàn thành' THEN
+        -- Tính km làm việc của chuyến này
+        SELECT NEW.khoangCach * T.heSoDuongKho
+        INTO kmLamViec
+        FROM TuyenDuong T
+        WHERE T.maTuyen = NEW.maTuyen;
+
+        -- Tính tổng km từ lần bảo dưỡng gần nhất
+        SELECT SUM(C.khoangCach * T.heSoDuongKho)
+        INTO tongKm
+        FROM ChuyenXe C
+        JOIN TuyenDuong T ON C.maTuyen = T.maTuyen
+        WHERE C.maXe = NEW.maXe
+          AND C.ngayGioKhoiHanh >= (
+              SELECT MAX(B.ngayBaoDuong)
+              FROM LichBaoDuong B
+              WHERE B.maXe = NEW.maXe
+          )
+          AND C.trangThai = 'Hoàn thành';
+
+        -- Tính số ngày còn lại
+        SET ngayConLai = 360 - FLOOR(tongKm / 100);
+
+        -- Cập nhật tình trạng xe
+        IF ngayConLai > 30 THEN
+            UPDATE Xe SET tinhTrang = 'Đang hoạt động' WHERE maXe = NEW.maXe;
+        ELSEIF ngayConLai > 10 THEN
+            UPDATE Xe SET tinhTrang = 'Sắp bảo dưỡng' WHERE maXe = NEW.maXe;
+        ELSE
+            UPDATE Xe SET tinhTrang = 'Quá hạn bảo dưỡng' WHERE maXe = NEW.maXe;
+        END IF;
+    END IF;
+END $$
 
 DELIMITER ;

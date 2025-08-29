@@ -31,22 +31,12 @@ public class TripService {
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
 			if (msg != null) {
-				if (msg.contains("tiLeThuLao")) {
-					throw new RuntimeException("Tỉ lệ thù lao phải nằm trong khoảng 0 - 100!");
-				} else if (msg.contains("ngayGioKhoiHanh")) {
-					throw new RuntimeException("Ngày giờ đến phải sau hoặc bằng ngày giờ khởi hành!");
-				} else if (msg.contains("chiPhiVanHanh")) {
-					throw new RuntimeException("Chi phí vận hành phải >= 0!");
-				} else if (msg.contains("Xe này đã có chuyến trong khoảng thời gian trùng lặp")) {
-					throw new RuntimeException("Xe này đã có chuyến trong khoảng thời gian trùng lặp!");
-				} else {
-					throw new RuntimeException("Lỗi dữ liệu: " + msg);
-				}
+				throw new RuntimeException(msg);
 			} else {
 				throw new RuntimeException("Lỗi dữ liệu không xác định!");
 			}
 
-		} 
+		}
 		return result;
 	}
 
@@ -60,17 +50,8 @@ public class TripService {
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
 			if (msg != null) {
-				if (msg.contains("tiLeThuLao")) {
-					throw new RuntimeException("Tỉ lệ thù lao phải nằm trong khoảng 0 - 100!");
-				} else if (msg.contains("ngayGioKhoiHanh")) {
-					throw new RuntimeException("Ngày giờ đến phải sau hoặc bằng ngày giờ khởi hành!");
-				} else if (msg.contains("chiPhiVanHanh")) {
-					throw new RuntimeException("Chi phí vận hành phải >= 0!");
-				} else if (msg.contains("Xe này đã có chuyến trong khoảng thời gian trùng lặp")) {
-					throw new RuntimeException("Xe này đã có chuyến trong khoảng thời gian trùng lặp!");
-				} else {
-					throw new RuntimeException("Lỗi dữ liệu: " + msg);
-				}
+				throw new RuntimeException(msg);
+
 			} else {
 				throw new RuntimeException("Lỗi dữ liệu không xác định!");
 			}

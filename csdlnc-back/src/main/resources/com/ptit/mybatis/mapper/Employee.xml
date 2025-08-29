@@ -5,28 +5,30 @@
         <id property="maNhanVien" column="maNhanVien"/>
         <result property="hoTen" column="hoTen"/>
         <result property="cmnd" column="cmnd"/>
+        <result property="soDienThoai" column="soDienThoai"/>
     </resultMap>
 
 	<select id="getLstEmployee" resultMap="employeeMap">
-        SELECT maNhanVien, hoTen, cmnd
+        SELECT maNhanVien, hoTen, cmnd, soDienThoai
         FROM nhanvien
     </select>
 
     <select id="getEmployeeById" parameterType="int" resultMap="employeeMap">
-        SELECT maNhanVien, hoTen, cmnd
+        SELECT maNhanVien, hoTen, cmnd, soDienThoai
         FROM nhanvien
         WHERE maNhanVien = #{maNhanVien}
     </select>
 
     <insert id="insertEmployee" parameterType="com.ptit.csdlnc.model.Employee" useGeneratedKeys="true" keyProperty="maNhanVien">
-        INSERT INTO nhanvien (hoTen, cmnd)
-        VALUES (#{hoTen}, #{cmnd})
+        INSERT INTO nhanvien (hoTen, cmnd, soDienThoai)
+        VALUES (#{hoTen}, #{cmnd}, #{soDienThoai})
     </insert>
 
     <update id="updateEmployee" parameterType="com.ptit.csdlnc.model.Employee">
         UPDATE nhanvien
         SET hoTen = #{hoTen},
             cmnd = #{cmnd}
+            soDienThoai = #{soDienThoai}
         WHERE maNhanVien = #{maNhanVien}
     </update>
 

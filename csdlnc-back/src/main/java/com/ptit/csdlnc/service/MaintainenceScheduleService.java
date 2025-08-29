@@ -29,13 +29,7 @@ public class MaintainenceScheduleService {
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
 			if (msg != null) {
-				if (msg.contains("ngayBaoDuong")) {
-					throw new RuntimeException("Ngày bảo dưỡng cho xe đã tồn tại!");
-				} else if (msg.contains("chiPhi")) {
-					throw new RuntimeException("Chi phí không hợp lệ!");
-				} else {
-					throw new RuntimeException("Dữ liệu không hợp lệ: " + msg);
-				}
+				throw new RuntimeException(msg);
 			} else {
 				throw new RuntimeException("Dữ liệu không hợp lệ!");
 			}
@@ -50,13 +44,7 @@ public class MaintainenceScheduleService {
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
 			if (msg != null) {
-				if (msg.contains("ngayBaoDuong")) {
-					throw new RuntimeException("Ngày bảo dưỡng cho xe đã tồn tại!");
-				} else if (msg.contains("chiPhi")) {
-					throw new RuntimeException("Chi phí không hợp lệ!");
-				} else {
-					throw new RuntimeException("Dữ liệu không hợp lệ: " + msg);
-				}
+				throw new RuntimeException(msg);
 			} else {
 				throw new RuntimeException("Dữ liệu không hợp lệ!");
 			}

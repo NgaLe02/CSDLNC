@@ -4,9 +4,10 @@
     
     <resultMap id="ticketPriceMap" type="com.ptit.csdlnc.model.response.TicketPriceResponse">
         <id property="maGiaVe" column="maGiaVe"/>
+        <id property="maTuyen" column="maTuyen"/>
+        <id property="maMua" column="maMua"/>
+        
         <result property="giaVe" column="giaVe"/>
-        <result property="maTuyen" column="maTuyen"/>
-        <result property="maMua" column="maMua"/>
         <result property="ngayBatDau" column="ngayBatDau"/>
         <result property="ngayKetThuc" column="ngayKetThuc"/>
          <association property="mua" javaType="com.ptit.csdlnc.model.response.SeasonResponse">

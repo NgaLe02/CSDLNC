@@ -14,10 +14,10 @@ export default function TicketPrice() {
   );
 
   useEffect(() => {
-    getLstSeason();
+    getLstTicketPrice();
   }, []);
 
-  function getLstSeason() {
+  function getLstTicketPrice() {
     TicketPriceService.getInstance()
       .getLstTicketPrice({})
       .then((response) => {
@@ -60,7 +60,7 @@ export default function TicketPrice() {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
             toast.success(resp.data.message);
-            getLstSeason();
+            getLstTicketPrice();
           } else {
             toast.error(resp.data.message);
           }
@@ -75,7 +75,7 @@ export default function TicketPrice() {
 
   function closeModal(status: boolean) {
     setShowForm(false);
-    getLstSeason();
+    getLstTicketPrice();
   }
   return (
     <>

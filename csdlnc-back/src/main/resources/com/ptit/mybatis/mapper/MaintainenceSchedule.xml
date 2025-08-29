@@ -2,35 +2,48 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ptit.csdlnc.dao.MaintainenceScheduleDAO">
 	<resultMap id="maintainenceScheduleMap" type="com.ptit.csdlnc.model.response.MaintainenceScheduleResponse">
-        <id property="maMua" column="maMua"/>
-        <result property="tenMua" column="tenMua"/>
+        <id property="maLichBaoDuong" column="maLichBaoDuong"/>
+        <result property="chiPhi" column="chiPhi"/>
+        <result property="ngayBaoDuong" column="ngayBaoDuong"/>
+        <result property="maXe" column="maXe"/>
+        
+        <association property="xe" javaType="com.ptit.csdlnc.model.response.CarResponse">
+	        <id property="maXe" column="maXe"/>
+	        <result property="bienSo" column="bienSo"/>
+	    </association>
     </resultMap>
 
 	<select id="getLstMaintainenceSchedule" resultMap="maintainenceScheduleMap">
-        SELECT maMua, tenMua
-        FROM mua
+        SELECT lbd.maLichBaoDuong, lbd.chiPhi, lbd.ngayBaoDuong, lbd.maXe, 
+        	   x.bienSo
+        FROM lichbaoduong lbd
+        JOIN Xe x ON cx.maXe = x.maXe
     </select>
 
     <select id="getMaintainenceScheduleById" parameterType="int" resultMap="maintainenceScheduleMap">
-        SELECT maMua, tenMua
-        FROM mua
-        WHERE maMua = #{maMua}
+         SELECT lbd.maLichBaoDuong, lbd.chiPhi, lbd.ngayBaoDuong, lbd.maXe, 
+        	   x.bienSo
+        FROM lichbaoduong lbd
+        JOIN Xe x ON cx.maXe = x.maXe
+        WHERE maLichBaoDuong = #{maLichBaoDuong}
     </select>
 
-    <insert id="insertMaintainenceSchedule" parameterType="com.ptit.csdlnc.model.MaintainenceSchedule" useGeneratedKeys="true" keyProperty="maMua">
-        INSERT INTO mua (tenMua)
-        VALUES (#{tenMua})
+    <insert id="insertMaintainenceSchedule" parameterType="com.ptit.csdlnc.model.MaintainenceSchedule" useGeneratedKeys="true" keyProperty="maLichBaoDuong">
+        INSERT INTO lichbaoduong (chiPhi, ngayBaoDuong, maXe)
+        VALUES (#{chiPhi}, #{ngayBaoDuong}, #{maXe})
     </insert>
 
     <update id="updateMaintainenceSchedule" parameterType="com.ptit.csdlnc.model.MaintainenceSchedule">
-        UPDATE mua
-        SET tenMua = #{tenMua}
-        WHERE maMua = #{maMua}
+        UPDATE lichbaoduong
+        SET chiPhi = #{chiPhi},
+        	ngayBaoDuong = #{ngayBaoDuon},
+        	maXe = #{maXe}
+        WHERE maLichBaoDuong = #{maLichBaoDuong}
     </update>
 
     <delete id="deleteMaintainenceSchedule" parameterType="int">
-        DELETE mua
-        WHERE maMua = #{maMua}
+        DELETE lichbaoduong
+        WHERE maLichBaoDuong = #{maLichBaoDuong}
     </delete>
 	
 </mapper>

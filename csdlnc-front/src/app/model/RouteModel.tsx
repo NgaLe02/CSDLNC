@@ -6,6 +6,7 @@ export class RouteModel {
   maTuyenLuong?: number;
   khoangCach?: number;
   doPhucTap?: number;
+  heSoDuongKho?: number;
   // luongCoBan?: number;
   // ngayBatDau?: string;
   // ngayKetThuc?: string;

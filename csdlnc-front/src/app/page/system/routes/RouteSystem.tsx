@@ -98,6 +98,7 @@ export default function RouteSystem() {
                   </th>
                   <th scope="col">Mã tuyến đường</th>
                   <th scope="col">Độ phức tạp</th>
+                  <th scope="col">Hệ số đường khó</th>
                   <th scope="col">Điểm khởi hành</th>
                   <th scope="col">Điểm đến</th>
                   <th scope="col">Lương tài xế</th>
@@ -115,6 +116,7 @@ export default function RouteSystem() {
                     <td>{index + 1}</td>
                     <td>{item.maTuyen}</td>
                     <td>{item.doPhucTap}</td>
+                    <td>{item.heSoDuongKho}</td>
                     <td>{item.diemKhoiHanh}</td>
                     <td>{item.diemDen}</td>
                     <td>{item.luongTuyenDuong?.luongCoBan}</td>

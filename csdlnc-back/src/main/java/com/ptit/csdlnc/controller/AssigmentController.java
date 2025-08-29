@@ -18,25 +18,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ptit.csdlnc.model.Passenger;
-import com.ptit.csdlnc.model.Season;
-import com.ptit.csdlnc.model.response.PassengerResponse;
-import com.ptit.csdlnc.model.response.SeasonResponse;
-import com.ptit.csdlnc.service.SeasonService;
+import com.ptit.csdlnc.model.Assignment;
+import com.ptit.csdlnc.model.response.AssigmentResponse;
+import com.ptit.csdlnc.service.AssigmentService;
 import com.ptit.csdlnc.util.AjaxResult;
 
 @RestController
-@RequestMapping("api/season")
+@RequestMapping("api/assigment")
 @CrossOrigin(origins = "*")
-public class SeasonController {
+public class AssigmentController {
 	@Autowired
-	private SeasonService seasonService;
+	private AssigmentService assigmentService;
 
-	@GetMapping("getLstSeason")
-	public ResponseEntity<AjaxResult> getLstSeason(@RequestParam Map<String, Object> params) {
+	@GetMapping("getLstAssigment")
+	public ResponseEntity<AjaxResult> getLstAssigment(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			List<SeasonResponse> result = seasonService.getLstSeason(params);
+			List<AssigmentResponse> result = assigmentService.getLstAssigment(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 		} catch (Exception e) {
@@ -47,8 +45,9 @@ public class SeasonController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@PostMapping("insertSeason")
-	public ResponseEntity<AjaxResult> insertSeason(@Validated @RequestBody Season model, BindingResult bindingResult) {
+	@PostMapping("insertAssigment")
+	public ResponseEntity<AjaxResult> insertAssigment(@Validated @RequestBody Assignment model,
+			BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
 		if (bindingResult.hasErrors()) {
@@ -57,7 +56,7 @@ public class SeasonController {
 			return ResponseEntity.badRequest().body(ajaxResult);
 		}
 		try {
-			int result = seasonService.insertSeason(model);
+			int result = assigmentService.insertAssigment(model);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Lưu thành công");
@@ -72,8 +71,9 @@ public class SeasonController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@PutMapping("updateSeason")
-	public ResponseEntity<AjaxResult> updateSeason(@Validated @RequestBody Season model, BindingResult bindingResult) {
+	@PutMapping("updateAssigment")
+	public ResponseEntity<AjaxResult> updateAssigment(@Validated @RequestBody Assignment model,
+			BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
 		if (bindingResult.hasErrors()) {
@@ -83,7 +83,7 @@ public class SeasonController {
 		}
 
 		try {
-			int result = seasonService.updateSeason(model);
+			int result = assigmentService.updateAssigment(model);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Cập nhật thành công");
@@ -98,11 +98,11 @@ public class SeasonController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@DeleteMapping("{id}/deleteSeason")
-	public ResponseEntity<AjaxResult> deleteSeason(@PathVariable("id") String id) {
+	@DeleteMapping("{id}/deleteAssigment")
+	public ResponseEntity<AjaxResult> deleteAssigment(@PathVariable("id") String id) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			int result = seasonService.deleteSeason(id);
+			int result = assigmentService.deleteAssigment(id);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Xoá thành công");

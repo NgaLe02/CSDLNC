@@ -12,16 +12,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RouteResponse {
+public class AssigmentResponse {
+	private Integer maNhanVien;
+	private String maChuyen;
 	private String maTuyen;
-	private String diemKhoiHanh;
-	private String diemDen;
-	private Double khoangCach;
-	private Integer thoiGianUocTinh;
-	private Integer doPhucTap;
-	private Double heSoDuongKho;
-
-	private Integer maLuongTuyen;
-	private RouteSalaryResponse luongTuyenDuong;
+	private String maXe;
+	private String vaiTro;
+	
+	private EmployeeResponse nhanVien;
+	private TripResponse chuyenXe;
+	private RouteResponse tuyenDuong;
+	private CarResponse xe;
+	
 
 }

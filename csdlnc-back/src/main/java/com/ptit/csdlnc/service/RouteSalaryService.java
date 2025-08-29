@@ -36,8 +36,14 @@ public class RouteSalaryService {
 			result = routeSalaryDAO.insertRouteSalary(model);
 
 		} catch (DataIntegrityViolationException e) {
-			throw new RuntimeException("Dữ liệu đầu vào không hợp lệ hoặc vi phạm ràng buộc DB!", e);
-		} catch (DataAccessException ex) {
+			Throwable root = e.getRootCause();
+			String msg = root != null ? root.getMessage() : e.getMessage();
+
+			if (msg != null) {
+				throw new RuntimeException(msg);
+			} else {
+				throw new RuntimeException("Dữ liệu không hợp lệ!");
+			}		} catch (DataAccessException ex) {
 			String errorMessage = "Lỗi không xác định";
 			if (ex.getRootCause() != null) {
 				errorMessage = ex.getRootCause().getMessage();
@@ -61,8 +67,14 @@ public class RouteSalaryService {
 			result = routeSalaryDAO.updateRouteSalary(model);
 
 		} catch (DataIntegrityViolationException e) {
-			throw new RuntimeException("Dữ liệu đầu vào không hợp lệ hoặc vi phạm ràng buộc DB!", e);
-		}
+			Throwable root = e.getRootCause();
+			String msg = root != null ? root.getMessage() : e.getMessage();
+
+			if (msg != null) {
+				throw new RuntimeException(msg);
+			} else {
+				throw new RuntimeException("Dữ liệu không hợp lệ!");
+			}		}
 		return result;
 	}
 

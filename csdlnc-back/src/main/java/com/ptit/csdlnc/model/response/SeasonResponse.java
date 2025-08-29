@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SeasonResponse {
-	private Integer maMua;
+	private String maMua;
 	private String tenMua;
 
 }

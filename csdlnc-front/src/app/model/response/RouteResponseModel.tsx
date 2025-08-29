@@ -7,6 +7,7 @@ export class RouteResponseModel {
   thoiGianUocTinh?: number;
   doPhucTap?: number;
   maLuongTuyen?: number;
+  heSoDuongKho?: number;
   khoangCach?: number;
 
   luongTuyenDuong?: RouteSalaryModel;

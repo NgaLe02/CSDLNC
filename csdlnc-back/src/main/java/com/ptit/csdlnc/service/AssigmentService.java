@@ -4,29 +4,27 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
 
-import com.ptit.csdlnc.dao.TicketPriceDAO;
-import com.ptit.csdlnc.model.TicketPrice;
-import com.ptit.csdlnc.model.response.SeasonResponse;
-import com.ptit.csdlnc.model.response.TicketPriceResponse;
+import com.ptit.csdlnc.dao.AssigmentDAO;
+import com.ptit.csdlnc.model.Assignment;
+import com.ptit.csdlnc.model.response.AssigmentResponse;
 
 @Service
-public class TicketPriceService {
+public class AssigmentService {
 	@Autowired
-	TicketPriceDAO ticketPriceDAO;
+	AssigmentDAO assigmentDAO;
 
-	public List<TicketPriceResponse> getLstTicketPrice(Map<String, Object> params) throws Exception {
-		List<TicketPriceResponse> result = ticketPriceDAO.getLstTicketPrice(params);
+	public List<AssigmentResponse> getLstAssigment(Map<String, Object> params) throws Exception {
+		List<AssigmentResponse> result = assigmentDAO.getLstAssigment(params);
 		return result;
 	}
 
-	public int insertTicketPrice(TicketPrice model) throws Exception {
+	public int insertAssigment(Assignment model) throws Exception {
 		int result = 0;
 		try {
-			result = ticketPriceDAO.insertTicketPrice(model);
+			result = assigmentDAO.insertAssigment(model);
 		} catch (UncategorizedSQLException e) {
 			// lỗi vi phạm trigger, foreign key, check constraint
 			Throwable root = e.getRootCause();
@@ -42,10 +40,10 @@ public class TicketPriceService {
 		return result;
 	}
 
-	public int updateTicketPrice(TicketPrice model) throws Exception {
+	public int updateAssigment(Assignment model) throws Exception {
 		int result = 0;
 		try {
-			result = ticketPriceDAO.updateTicketPrice(model);
+			result = assigmentDAO.updateAssigment(model);
 		} catch (UncategorizedSQLException e) {
 			// lỗi vi phạm trigger, foreign key, check constraint
 			Throwable root = e.getRootCause();
@@ -53,15 +51,18 @@ public class TicketPriceService {
 
 			if (msg != null) {
 				throw new RuntimeException(msg);
+
 			} else {
 				throw new RuntimeException("Lỗi dữ liệu không xác định!");
 			}
 
+		} catch (Exception e) {
+			throw new RuntimeException("Lỗi hệ thống: " + e.getMessage());
 		}
 		return result;
 	}
 
-	public int deleteTicketPrice(int id) throws Exception {
-		return ticketPriceDAO.deleteTicketPrice(id);
+	public int deleteAssigment(String id) throws Exception {
+		return assigmentDAO.deleteAssigment(id);
 	}
 }

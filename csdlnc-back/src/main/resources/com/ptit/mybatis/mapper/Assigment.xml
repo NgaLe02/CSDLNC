@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.AssigmentDAO">
+	<resultMap id="assigmentMap" type="com.ptit.csdlnc.model.response.AssigmentResponse">
+        <id property="maChuyen" column="maChuyen"/>
+        <id property="maTuyen" column="maTuyen"/>
+        <id property="maXe" column="maXe"/>     
+        <id property="maNhanVien" column="maNhanVien"/>    
+        <result property="vaiTro" column="vaiTro"/>    
+        
+        <!-- Association tới ChuyenXe -->
+        <association property="chuyenXe" javaType="com.ptit.csdlnc.model.response.TripResponse">
+            <id property="maChuyen" column="maChuyen"/>
+            <id property="maTuyen" column="maTuyen"/>
+            <id property="maXe" column="maXe"/>
+            <result property="tinhTrangChuyen" column="tinhTrangChuyen"/>
+	        <result property="ngayGioKhoiHanh" column="ngayGioKhoiHanh"/>
+	        <result property="ngayGioDen" column="ngayGioDen"/>
+	        <result property="chiPhiVanHanh" column="chiPhiVanHanh"/>
+	        <result property="tiLeThuLao" column="tiLeThuLao"/>
+        </association>
+
+        <!-- Association tới NhanVien -->
+        <association property="nhanVien" javaType="com.ptit.csdlnc.model.response.EmployeeResponse">
+            <id property="maNhanVien" column="maNhanVien"/>
+            <result property="hoTen" column="hoTen"/>
+            <result property="cmnd" column="cmnd"/>
+            <result property="soDienThoai" column="soDienThoai"/>
+        </association>
+
+        <!-- Association tới Xe -->
+        <association property="xe" javaType="com.ptit.csdlnc.model.response.CarResponse">
+            <id property="maXe" column="maXe"/>
+		    <result property="bienSo" column="bienSo"/>
+		    <result property="tinhTrang" column="tinhTrang"/>
+		    <result property="maLoaiXe" column="maLoaiXe"/>
+		    
+		    <association property="loaiXe" javaType="com.ptit.csdlnc.model.response.TypeCarResponse">
+		        <id property="maLoaiXe" column="maLoaiXe"/>
+		        <result property="tenLoaiXe" column="tenLoaiXe"/>
+		        <result property="soGhe" column="soGhe"/>    
+	    	</association>
+        </association>
+
+        <!-- Association tới TuyenDuong -->
+        <association property="tuyenDuong" javaType="com.ptit.csdlnc.model.response.RouteResponse">
+            <id property="maTuyen" column="maTuyen"/>
+            <result property="diemKhoiHanh" column="diemKhoiHanh"/>
+	        <result property="diemDen" column="diemDen"/>
+	        <result property="khoangCach" column="khoangCach"/>
+	        <result property="thoiGianUocTinh" column="thoiGianUocTinh"/>
+	        <result property="maLuongTuyen" column="maLuongTuyen"/>
+	        <result property="doPhucTap" column="doPhucTap"/>
+	        
+	         <association property="luongTuyenDuong" javaType="com.ptit.csdlnc.model.response.RouteSalaryResponse">
+		        <id property="maLuongTuyen" column="maLuongTuyen"/>
+		        <result property="luongCoBan" column="luongCoBan"/>
+		    </association>
+        </association>
+    </resultMap>
+
+	<select id="getLstAssigment" resultMap="assigmentMap">
+        SELECT 
+            pc.maChuyen, pc.maTuyen, pc.maXe, pc.maNhanVien, pc.vaiTro,
+            cx.ngayGioKhoiHanh, cx.ngayGioDen, cx.tinhTrangChuyen, cx.chiPhiVanHanh, cx.tiLeThuLao,
+            nv.hoTen, nv.cmnd,
+            x.bienSo, lx.maLoaiXe, lx.soGhe, lx.tenLoaiXe,
+            td.diemKhoiHanh, td.diemDen, td.diemCuoi, td.thoiGianUocTinh, td.luongCoBan
+        FROM PhanCong pc
+        LEFT JOIN ChuyenXe cx 
+            ON pc.maChuyen = cx.maChuyen
+           AND pc.maTuyen  = cx.maTuyen
+           AND pc.maXe     = cx.maXe
+        LEFT JOIN NhanVien nv 
+            ON pc.maNhanVien = nv.maNhanVien
+        LEFT JOIN Xe x
+            ON pc.maXe = x.maXe
+        LEFT JOIN loaixe lx 
+        	ON lx.maLoaiXe = x.maLoaiXe
+        LEFT JOIN TuyenDuong td
+            ON pc.maTuyen = td.maTuyen
+    </select>
+
+    <select id="getAssigmentById" parameterType="int" resultMap="assigmentMap">
+        SELECT 
+            pc.maChuyen, pc.maTuyen, pc.maXe, pc.maNhanVien, pc.vaiTro,
+            cx.ngayGioKhoiHanh, cx.ngayGioDen, cx.tinhTrangChuyen, cx.chiPhiVanHanh, cx.tiLeThuLao,
+            nv.hoTen, nv.cmnd,
+            x.bienSo, lx.maLoaiXe, lx.soGhe, lx.tenLoaiXe,
+            td.diemKhoiHanh, td.diemDen, td.diemCuoi, td.thoiGianUocTinh, td.luongCoBan
+        FROM PhanCong pc
+        LEFT JOIN ChuyenXe cx 
+            ON pc.maChuyen = cx.maChuyen
+           AND pc.maTuyen  = cx.maTuyen
+           AND pc.maXe     = cx.maXe
+        LEFT JOIN NhanVien nv 
+            ON pc.maNhanVien = nv.maNhanVien
+        LEFT JOIN Xe x
+            ON pc.maXe = x.maXe
+        LEFT JOIN loaixe lx 
+        	ON lx.maLoaiXe = x.maLoaiXe
+        LEFT JOIN TuyenDuong td
+            ON pc.maTuyen = td.maTuyen
+        WHERE pc.maChuyen = #{maChuyen}
+          AND pc.maTuyen  = #{maTuyen}
+          AND pc.maXe     = #{maXe}
+          AND pc.maNhanVien = #{maNhanVien}
+    </select>
+
+    <insert id="insertAssignment" parameterType="com.ptit.csdlnc.model.Assignment">
+        INSERT INTO PhanCong (maChuyen, maTuyen, maXe, maNhanVien, vaiTro)
+        VALUES (#{maChuyen}, #{maTuyen}, #{maXe}, #{maNhanVien}, #{vaiTro})
+    </insert>
+
+    <update id="updateAssignment" parameterType="com.ptit.csdlnc.model.Assignment">
+        UPDATE PhanCong
+        SET vaiTro = #{vaiTro}
+        WHERE maChuyen = #{maChuyen}
+          AND maTuyen  = #{maTuyen}
+          AND maXe     = #{maXe}
+          AND maNhanVien = #{maNhanVien}
+    </update>
+
+
+    <delete id="deleteAssignment" parameterType="map">
+        DELETE FROM PhanCong
+        WHERE maChuyen = #{maChuyen}
+          AND maTuyen  = #{maTuyen}
+          AND maXe     = #{maXe}
+          AND maNhanVien = #{maNhanVien}
+    </delete>
+	
+</mapper>

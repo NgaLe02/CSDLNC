@@ -10,6 +10,8 @@
         <result property="thoiGianUocTinh" column="thoiGianUocTinh"/>
         <result property="maLuongTuyen" column="maLuongTuyen"/>
         <result property="doPhucTap" column="doPhucTap"/>
+        <result property="heSoDuongKho" column="heSoDuongKho"/>
+        
         
          <association property="luongTuyenDuong" javaType="com.ptit.csdlnc.model.response.RouteSalaryResponse">
 	        <id property="maLuongTuyen" column="maLuongTuyen"/>
@@ -26,6 +28,7 @@
         TD.thoiGianUocTinh, 
         TD.doPhucTap, 
         TD.maLuongTuyen,
+        TD.heSoDuongKho,
         LTD.luongCoBan
         FROM tuyenduong TD
         LEFT JOIN luongtuyenduong LTD on TD.maLuongTuyen = LTD.maLuongTuyen
@@ -40,6 +43,7 @@
         TD.thoiGianUocTinh, 
         TD.doPhucTap, 
         TD.maLuongTuyen,
+        TD.heSoDuongKho,
         LTD.luongCoBan
         FROM tuyenduong TD
         LEFT JOIN luongtuyenduong LTD on TD.maLuongTuyen = LTD.maLuongTuyen
@@ -48,8 +52,8 @@
     
 
     <insert id="insertRoute" parameterType="com.ptit.csdlnc.model.Route" useGeneratedKeys="true" keyProperty="maTuyen">
-        INSERT INTO tuyenduong (diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap,maLuongTuyen)
-        VALUES (#{diemKhoiHanh}, #{diemDen}, #{khoangCach}, #{thoiGianUocTinh}, #{doPhucTap}, #{maLuongTuyen})
+        INSERT INTO tuyenduong (diemKhoiHanh, diemDen, khoangCach, thoiGianUocTinh, doPhucTap,maLuongTuyen, heSoDuongKho)
+        VALUES (#{diemKhoiHanh}, #{diemDen}, #{khoangCach}, #{thoiGianUocTinh}, #{doPhucTap}, #{maLuongTuyen}, #{heSoDuongKho})
     </insert>
 
     <update id="updateRoute" parameterType="com.ptit.csdlnc.model.Route">
@@ -60,7 +64,8 @@
             khoangCach = #{khoangCach},
             thoiGianUocTinh = #{thoiGianUocTinh},
             doPhucTap = #{doPhucTap},
-            maLuongTuyen = #{maLuongTuyen}
+            maLuongTuyen = #{maLuongTuyen},
+            heSoDuongKho = #{heSoDuongKho}
         WHERE maTuyen = #{maTuyen}
     </update>
 

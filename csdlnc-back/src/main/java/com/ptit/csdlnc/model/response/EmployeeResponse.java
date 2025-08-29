@@ -16,4 +16,5 @@ public class EmployeeResponse {
 	private Integer maNhanVien;
 	private String hoTen;
 	private String cmnd;
+	private String soDienThoai;
 }

@@ -28,7 +28,7 @@
         WHERE maMua = #{maMua}
     </update>
 
-    <delete id="deleteSeason" parameterType="int">
+    <delete id="deleteSeason" parameterType="string">
         DELETE mua
         WHERE maMua = #{maMua}
     </delete>

@@ -16,6 +16,6 @@ public interface SeasonDAO {
 
 	int updateSeason(Season model) throws Exception;
 
-	int deleteSeason(int id) throws Exception;
+	int deleteSeason(String id) throws Exception;
 
 }

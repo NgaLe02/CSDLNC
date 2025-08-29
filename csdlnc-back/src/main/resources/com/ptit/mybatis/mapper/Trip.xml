@@ -3,13 +3,15 @@
 <mapper namespace="com.ptit.csdlnc.dao.TripDAO">
 	<resultMap id="tripMap" type="com.ptit.csdlnc.model.response.TripResponse">
         <id property="maChuyen" column="maChuyen"/>
+        <id property="maXe" column="maXe"/>
+        <id property="maTuyen" column="maTuyen"/>
+        
         <result property="tinhTrangChuyen" column="tinhTrangChuyen"/>
         <result property="ngayGioKhoiHanh" column="ngayGioKhoiHanh"/>
         <result property="ngayGioDen" column="ngayGioDen"/>
         <result property="chiPhiVanHanh" column="chiPhiVanHanh"/>
         <result property="tiLeThuLao" column="tiLeThuLao"/>
-        <result property="maXe" column="maXe"/>
-        <result property="maTuyen" column="maTuyen"/>
+        
         
        <association property="xe" javaType="com.ptit.csdlnc.model.response.CarResponse">
 	        <id property="maXe" column="maXe"/>

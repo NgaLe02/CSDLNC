@@ -30,13 +30,7 @@ public class RegistrationExpiryService {
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
 			if (msg != null) {
-				if (msg.contains("ngayDangKiem")) {
-					throw new RuntimeException("Ngày đăng kiểm cho xe đã tồn tại!");
-				} else if (msg.contains("chiPhi")) {
-					throw new RuntimeException("Chi phí không hợp lệ!");
-				} else {
-					throw new RuntimeException("Dữ liệu không hợp lệ: " + msg);
-				}
+				throw new RuntimeException(msg);
 			} else {
 				throw new RuntimeException("Dữ liệu không hợp lệ!");
 			}
@@ -51,13 +45,7 @@ public class RegistrationExpiryService {
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
 			if (msg != null) {
-				if (msg.contains("ngayDangKiem")) {
-					throw new RuntimeException("Ngày đăng kiểm cho xe đã tồn tại!");
-				} else if (msg.contains("chiPhi")) {
-					throw new RuntimeException("Chi phí không hợp lệ!");
-				} else {
-					throw new RuntimeException("Dữ liệu không hợp lệ: " + msg);
-				}
+				throw new RuntimeException(msg);
 			} else {
 				throw new RuntimeException("Dữ liệu không hợp lệ!");
 			}
