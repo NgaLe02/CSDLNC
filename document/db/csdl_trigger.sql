@@ -16,7 +16,7 @@ END$$
 
 DELIMITER ;
 
--- gen ma tuyen duong khi insert
+-- 2. gen ma tuyen duong khi insert
 DELIMITER $$
 
 CREATE TRIGGER trg_gen_maTuyen
@@ -39,7 +39,7 @@ END$$
 
 DELIMITER ;
 
--- gen ma chuyen duong khi insert
+-- 3. gen ma chuyen xe khi insert
 DELIMITER $$
 
 CREATE TRIGGER trg_gen_maChuyen
@@ -62,30 +62,7 @@ END$$
 
 DELIMITER ;
 
-
--- DELIMITER $$
-
--- CREATE TRIGGER trg_gen_maChuyen
--- BEFORE INSERT ON ChuyenXe
--- FOR EACH ROW
--- BEGIN
---     DECLARE newId INT;
---     DECLARE newCode VARCHAR(10);
-
---     -- Lấy số lớn nhất hiện có (bỏ ký tự 'C')
---     SELECT IFNULL(MAX(CAST(SUBSTRING(maChuyen, 2) AS UNSIGNED)), 0) + 1
---     INTO newId
---     FROM ChuyenXe;
-
---     -- Format thành C + số có 3 chữ số
---     SET newCode = CONCAT('C', LPAD(newId, 3, '0'));
-
---     SET NEW.maChuyen = newCode;
--- END$$
-
--- DELIMITER ;
-
--- gen mã vé
+-- 4. gen mã vé
 
 DELIMITER $$
 
@@ -111,7 +88,7 @@ END$$
 DELIMITER ;
 
 
---gen ma mua
+-- 5. gen mã mùa
 DELIMITER $$
 
 CREATE TRIGGER trg_gen_maMua
@@ -134,7 +111,7 @@ END $$
 
 DELIMITER ;
 
---gen mã giá vé
+-- 6.gen mã giá vé
 DELIMITER $$
 
 CREATE TRIGGER trg_gen_maGiaVe
@@ -159,73 +136,8 @@ END $$
 
 DELIMITER ;
 
--- DELIMITER $$
+-- 6. check khoảng cách từ - đến bảng LuongTuyenDuong
 
--- CREATE TRIGGER trg_luongTuyenDuong_checkOverlap_insert
--- BEFORE INSERT ON LuongTuyenDuong
--- FOR EACH ROW
--- BEGIN
---     -- Kiểm tra khoangCachTu < khoangCachDen
---     IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
---         SIGNAL SQLSTATE '45000'
---             SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
---     END IF;
-
---     -- Kiểm tra chồng lấp về khoảng cách và thời gian cho cùng độ phức tạp
---     IF EXISTS (
---         SELECT 1
---         FROM LuongTuyenDuong
---         WHERE doPhucTap = NEW.doPhucTap
---           AND NOT (NEW.khoangCachDen < khoangCachTu OR NEW.khoangCachTu > khoangCachDen)
---           AND (
---                 (NEW.ngayKetThuc IS NULL AND NEW.ngayBatDau <= IFNULL(ngayKetThuc, NEW.ngayBatDau))
---                 OR
---                 (ngayKetThuc IS NULL AND ngayBatDau <= NEW.ngayKetThuc)
---                 OR
---                 (NEW.ngayBatDau <= ngayKetThuc AND NEW.ngayKetThuc >= ngayBatDau)
---               )
---     ) THEN
---         SIGNAL SQLSTATE '45000'
---             SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian chồng lấp với bản ghi hiện có cho độ phức tạp này';
---     END IF;
--- END$$
-
--- DELIMITER ;
-
-
--- DELIMITER $$
-
--- CREATE TRIGGER trg_luongTuyenDuong_checkOverlap_update
--- BEFORE UPDATE ON LuongTuyenDuong
--- FOR EACH ROW
--- BEGIN
---     -- Kiểm tra khoangCachTu < khoangCachDen
---     IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
---         SIGNAL SQLSTATE '45000'
---             SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
---     END IF;
-
---     -- Kiểm tra chồng lấp về khoảng cách và thời gian cho cùng độ phức tạp
---     IF EXISTS (
---         SELECT 1
---         FROM LuongTuyenDuong
---         WHERE doPhucTap = NEW.doPhucTap
---           AND maLuongTuyen <> NEW.maLuongTuyen
---           AND NOT (NEW.khoangCachDen < khoangCachTu OR NEW.khoangCachTu > khoangCachDen)
---           AND (
---                 (NEW.ngayKetThuc IS NULL AND NEW.ngayBatDau <= IFNULL(ngayKetThuc, NEW.ngayBatDau))
---                 OR
---                 (ngayKetThuc IS NULL AND ngayBatDau <= NEW.ngayKetThuc)
---                 OR
---                 (NEW.ngayBatDau <= ngayKetThuc AND NEW.ngayKetThuc >= ngayBatDau)
---               )
---     ) THEN
---         SIGNAL SQLSTATE '45000'
---             SET MESSAGE_TEXT = 'Khoảng cách hoặc thời gian chồng lấp với bản ghi hiện có cho độ phức tạp này';
---     END IF;
--- END$$
-
--- DELIMITER ;
 DELIMITER $$
 
 CREATE TRIGGER trg_check_khoangCach
@@ -234,7 +146,7 @@ FOR EACH ROW
 BEGIN
     IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
         SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'KhoangCachTu phai nho hon KhoangCachDen';
+        SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
     END IF;
 END$$
 
@@ -244,12 +156,13 @@ FOR EACH ROW
 BEGIN
     IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
         SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'KhoangCachTu phai nho hon KhoangCachDen';
+        SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
     END IF;
 END$$
 
 DELIMITER ;
 
+-- 7. Kiểm tra giá trị khoảng cách: Trong cùng 1 khoảng cách chỉ có 1 mức lương tồn tại
 
 DELIMITER $$
 
@@ -264,7 +177,7 @@ BEGIN
           AND NOT (NEW.khoangCachDen <= khoangCachTu OR NEW.khoangCachTu >= khoangCachDen)
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'KhoangCach trung voi mot muc luong da ton tai';
+        SET MESSAGE_TEXT = 'Khoảng cách trùng với 1 mức lương đã tồn tại';
     END IF;
 END$$
 
@@ -280,16 +193,17 @@ BEGIN
           AND NOT (NEW.khoangCachDen <= khoangCachTu OR NEW.khoangCachTu >= khoangCachDen)
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'KhoangCach trung voi mot muc luong da ton tai';
+        SET MESSAGE_TEXT = 'Khoảng cách trùng với 1 mức lương đã tồn tại';
     END IF;
 END$$
 
 DELIMITER ;
 
 
-DELIMITER $$
+-- 8. Bảng giá vé: Ngày kết thúc phải lớn hơn ngày bắt đầu, trong cùng khoảng thời gian chỉ có 1 mã tuyến, mã mùa có hiệu lực
 
--- Trigger BEFORE INSERT
+
+DELIMITER $$
 CREATE TRIGGER trg_giave_before_insert
 BEFORE INSERT ON GiaVe
 FOR EACH ROW
@@ -346,6 +260,7 @@ END$$
 
 DELIMITER ;
 
+-- 9. Bảng HanDangKiem: Kiểm tra giá trị Ngày đăng kiểm không được null, chi phí phải lớn hơn 0,  1 zxe không thể bị trùng ngày đăng kiểm
 DELIMITER $$
 
 -- Trigger BEFORE INSERT
@@ -356,15 +271,13 @@ BEGIN
     -- 1. Kiểm tra ngayDangKiem không null
     IF NEW.ngayDangKiem IS NULL THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'ngayDangKiem khong duoc de trong';
+        SET MESSAGE_TEXT = 'Ngày đăng kiểm không được để trống';
     END IF;
-
     -- 2. Kiểm tra chiPhi >= 0 nếu không null
     IF NEW.chiPhi IS NOT NULL AND NEW.chiPhi < 0 THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'chiPhi phai >= 0';
+        SET MESSAGE_TEXT = 'Chi phí phải >= 0';
     END IF;
-
     -- 3. Kiểm tra trùng ngayDangKiem cho cùng maXe
     IF EXISTS (
         SELECT 1
@@ -373,7 +286,7 @@ BEGIN
           AND ngayDangKiem = NEW.ngayDangKiem
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Da ton tai dang kiem cho xe nay trong ngay';
+        SET MESSAGE_TEXT = 'Đã tồm tại đăng kiểm xe này trong ngày';
     END IF;
 END$$
 
@@ -385,15 +298,13 @@ BEGIN
     -- 1. Kiểm tra ngayDangKiem không null
     IF NEW.ngayDangKiem IS NULL THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'ngayDangKiem khong duoc de trong';
+        SET MESSAGE_TEXT = 'Ngày đăng kiểm không được để trống';
     END IF;
-
     -- 2. Kiểm tra chiPhi >= 0 nếu không null
     IF NEW.chiPhi IS NOT NULL AND NEW.chiPhi < 0 THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'chiPhi phai >= 0';
+        SET MESSAGE_TEXT = 'Chi phí phải >= 0';
     END IF;
-
     -- 3. Kiểm tra trùng ngayDangKiem cho cùng maXe (ngoại trừ bản ghi hiện tại)
     IF EXISTS (
         SELECT 1
@@ -403,7 +314,7 @@ BEGIN
           AND maHanDangKiem <> OLD.maHanDangKiem
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Da ton tai dang kiem cho xe nay trong ngay';
+        SET MESSAGE_TEXT = 'Đã tồm tại đăng kiểm xe này trong ngày';
     END IF;
 END$$
 
@@ -411,29 +322,28 @@ DELIMITER ;
 
 DELIMITER $$
 
--- Trigger BEFORE INSERT
+-- 10. Bảng ChuyenXe: Kiếm tra các giá trị sao cho ngày giờ đến phải sau ngày giờ khởi hành, chi phí vận hành phải lớn hơn bằng 0, tỉ lệ thù sao lớn hơn 1
+-- 1 xe chỉ có thể ở trong 1 chuyến xe trong 1 khoảng thời gian
+
 CREATE TRIGGER trg_chuyenxe_before_insert
 BEFORE INSERT ON ChuyenXe
 FOR EACH ROW
 BEGIN
     -- 1. ngayGioDen >= ngayGioKhoiHanh
-    IF NEW.ngayGioDen < NEW.ngayGioKhoiHanh THEN
+    IF NEW.ngayGioDen <= NEW.ngayGioKhoiHanh THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Ngày giờ đến phải sau hoặc bằng ngày giờ khởi hành';
+        SET MESSAGE_TEXT = 'Ngày giờ đến phải sau ngày giờ khởi hành';
     END IF;
-
     -- 2. chiPhiVanHanh >= 0
     IF NEW.chiPhiVanHanh < 0 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Chi phí vận hành phải >= 0';
     END IF;
-
-    -- 3. tiLeThuLao >= 0 và <= 100
-    IF NEW.tiLeThuLao < 0 OR NEW.tiLeThuLao > 100 THEN
+    -- 3. tiLeThuLao > 1
+    IF NEW.tiLeThuLao <= 1 THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Tỉ lệ thù lao phải nằm trong khoảng 0 - 100';
+        SET MESSAGE_TEXT = 'Tỉ lệ thù lao phải lớn hơn 1';
     END IF;
-
     -- 4. Không trùng giờ cho cùng xe
     IF EXISTS (
         SELECT 1
@@ -450,7 +360,6 @@ BEGIN
     END IF;
 END$$
 
--- Trigger BEFORE UPDATE
 CREATE TRIGGER trg_chuyenxe_before_update
 BEFORE UPDATE ON ChuyenXe
 FOR EACH ROW
@@ -460,19 +369,16 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Ngày giờ đến phải sau hoặc bằng ngày giờ khởi hành';
     END IF;
-
     -- 2. chiPhiVanHanh >= 0
     IF NEW.chiPhiVanHanh < 0 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Chi phí vận hành phải >= 0';
     END IF;
-
     -- 3. tiLeThuLao >= 0 và <= 100
     IF NEW.tiLeThuLao < 0 OR NEW.tiLeThuLao > 100 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Tỉ lệ thù lao phải nằm trong khoảng 0 - 100';
     END IF;
-
     -- 4. Không trùng giờ cho cùng xe (bỏ qua chính bản ghi đang update)
     IF EXISTS (
         SELECT 1
@@ -492,7 +398,7 @@ END$$
 
 DELIMITER ;
 
--- Tự động đổi trạng thái dựa vào ngayGioKhoiHanh và ngayGioDen
+-- 11. Tự động đổi trạng thái dựa vào ngayGioKhoiHanh và ngayGioDen
 CREATE EVENT IF NOT EXISTS ev_update_tinhtrangchuyen
 ON SCHEDULE EVERY 15 MINUTE
 DO
@@ -511,7 +417,7 @@ DO
       );
 
 
--- Tự động đổi trạng thái dựa vào ngayGioKhoiHanh và ngayGioDen khi inset, update
+-- 12. Tự động đổi trạng thái dựa vào ngayGioKhoiHanh và ngayGioDen khi inset, update
 DELIMITER $$
 
 -- Trigger khi INSERT
@@ -560,7 +466,7 @@ DELIMITER ;
 -- gheNgoi hợp lệ (ví dụ, số ghế nằm trong danh sách ghế hợp lệ của xe).
 -- 1 hành khách không được mua nhiều vé cho cùng 1 chuyến.
 
--- Kiểm tra ngày mua phải trước giờ khởi hành
+-- 13. Kiểm tra ngày mua phải trước giờ khởi hành
 DELIMITER $$
 
 CREATE TRIGGER trg_check_ngayMua
@@ -632,63 +538,6 @@ END$$
 
 DELIMITER ;
 
-
--- DELIMITER $$
-
--- CREATE TRIGGER trg_chuyenxe_set_maGiaVe
--- BEFORE INSERT ON ChuyenXe
--- FOR EACH ROW
--- BEGIN
---     DECLARE v_maGiaVe INT;
-
---     -- Tìm mã giá vé theo maTuyen + maMua và ngày khởi hành của chuyến
---     SELECT g.maGiaVe
---     INTO v_maGiaVe
---     FROM GiaVe g
---     WHERE g.maTuyen = NEW.maTuyen
---       AND g.maMua = NEW.maMua
---       AND g.ngayBatDau <= DATE(NEW.ngayGioKhoiHanh)
---       AND (g.ngayKetThuc IS NULL OR g.ngayKetThuc >= DATE(NEW.ngayGioKhoiHanh))
---     ORDER BY g.ngayBatDau DESC
---     LIMIT 1;
-
---     IF v_maGiaVe IS NOT NULL THEN
---         SET NEW.maGiaVe = v_maGiaVe;
---     ELSE
---         SIGNAL SQLSTATE '45000'
---             SET MESSAGE_TEXT = 'Không tìm thấy giá vé hợp lệ cho tuyến đường trong mùa này';
---     END IF;
--- END$$
-
--- DELIMITER ;
-
--- DELIMITER $$
-
--- CREATE TRIGGER trg_chuyenxe_update_maGiaVe
--- BEFORE UPDATE ON ChuyenXe
--- FOR EACH ROW
--- BEGIN
---     DECLARE v_maGiaVe INT;
-
---     SELECT g.maGiaVe
---     INTO v_maGiaVe
---     FROM GiaVe g
---     WHERE g.maTuyen = NEW.maTuyen
---       AND g.maMua = NEW.maMua
---       AND g.ngayBatDau <= DATE(NEW.ngayGioKhoiHanh)
---       AND (g.ngayKetThuc IS NULL OR g.ngayKetThuc >= DATE(NEW.ngayGioKhoiHanh))
---     ORDER BY g.ngayBatDau DESC
---     LIMIT 1;
-
---     IF v_maGiaVe IS NOT NULL THEN
---         SET NEW.maGiaVe = v_maGiaVe;
---     ELSE
---         SIGNAL SQLSTATE '45000'
---             SET MESSAGE_TEXT = 'Không tìm thấy giá vé hợp lệ cho tuyến đường trong mùa này';
---     END IF;
--- END$$
-
--- DELIMITER ;
 DELIMITER $$
 
 CREATE TRIGGER trg_cx_bi_set_or_check_maGiaVe
@@ -751,47 +600,6 @@ END$$
 
 DELIMITER ;
 
-
-DELIMITER $$
-
-CREATE TRIGGER trg_check_PhanCong_insert
-BEFORE INSERT ON PhanCong
-FOR EACH ROW
-BEGIN
-    DECLARE cnt_lx INT DEFAULT 0;
-    DECLARE cnt_px INT DEFAULT 0;
-
-    -- Đếm số Lái xe đã có trong chuyến
-    SELECT COUNT(*) INTO cnt_lx
-    FROM PhanCong
-    WHERE maChuyen = NEW.maChuyen
-      AND maTuyen = NEW.maTuyen
-      AND maXe = NEW.maXe
-      AND vaiTro = 'Lái xe';
-
-    -- Đếm số Phụ xe đã có trong chuyến
-    SELECT COUNT(*) INTO cnt_px
-    FROM PhanCong
-    WHERE maChuyen = NEW.maChuyen
-      AND maTuyen = NEW.maTuyen
-      AND maXe = NEW.maXe
-      AND vaiTro = 'Phụ xe';
-
-    -- Nếu thêm 1 người nữa mà vượt quá số lượng cho phép thì báo lỗi
-    IF (NEW.vaiTro = 'Lái xe' AND cnt_lx >= 1) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Trong một chuyến chỉ được có đúng 1 Lái xe';
-    END IF;
-
-    IF (NEW.vaiTro = 'Phụ xe' AND cnt_px >= 1) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Trong một chuyến chỉ được có đúng 1 Phụ xe';
-    END IF;
-END$$
-
-DELIMITER ;
-
-
 DELIMITER $$
 
 CREATE TRIGGER trg_check_phancong
@@ -832,9 +640,7 @@ END$$
 
 DELIMITER ;
 
-
 DELIMITER $$
-
 CREATE TRIGGER trg_capNhatTinhTrangXe
 AFTER UPDATE ON ChuyenXe
 FOR EACH ROW
@@ -842,15 +648,16 @@ BEGIN
     DECLARE kmLamViec DECIMAL(10,2);
     DECLARE tongKm DECIMAL(10,2);
     DECLARE ngayConLai INT;
-
+    
     -- Chỉ xử lý khi chuyến xe được đánh dấu Hoàn thành
     IF NEW.trangThai = 'Hoàn thành' THEN
+    
         -- Tính km làm việc của chuyến này
         SELECT NEW.khoangCach * T.heSoDuongKho
         INTO kmLamViec
         FROM TuyenDuong T
         WHERE T.maTuyen = NEW.maTuyen;
-
+        
         -- Tính tổng km từ lần bảo dưỡng gần nhất
         SELECT SUM(C.khoangCach * T.heSoDuongKho)
         INTO tongKm
@@ -863,10 +670,10 @@ BEGIN
               WHERE B.maXe = NEW.maXe
           )
           AND C.trangThai = 'Hoàn thành';
-
+          
         -- Tính số ngày còn lại
         SET ngayConLai = 360 - FLOOR(tongKm / 100);
-
+        
         -- Cập nhật tình trạng xe
         IF ngayConLai > 30 THEN
             UPDATE Xe SET tinhTrang = 'Đang hoạt động' WHERE maXe = NEW.maXe;
@@ -877,5 +684,4 @@ BEGIN
         END IF;
     END IF;
 END $$
-
 DELIMITER ;

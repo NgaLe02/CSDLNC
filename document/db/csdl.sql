@@ -84,6 +84,23 @@ CREATE TABLE TuyenDuong (
     FOREIGN KEY (maLuongTuyen) REFERENCES LuongTuyenDuong(maLuongTuyen)
 );
 
+CREATE TABLE Mua (
+    maMua INT PRIMARY KEY AUTO_INCREMENT,
+    tenMua VARCHAR(50) not null unique
+);
+
+CREATE TABLE GiaVe (
+    maGiaVe INT ,
+    giaVe DECIMAL(12,2) not null,
+    ngayBatDau DATE not null,
+    ngayKetThuc DATE,
+    maTuyen VARCHAR(4) not null,
+    maMua INT not null,
+    PRIMARY KEY (maTuyen, maMua, maGiaVe),
+    FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
+    FOREIGN KEY (maMua) REFERENCES Mua(maMua)
+);
+
 CREATE TABLE ChuyenXe (
     maXe VARCHAR(10) NOT NULL,
     maTuyen VARCHAR(10) NOT NULL,
@@ -105,34 +122,6 @@ CREATE TABLE ChuyenXe (
         CHECK (tinhTrangChuyen IN ('Chưa khởi hành','Đang chạy','Hoàn thành','Hủy'))
 );
 
-
-
--- CREATE TABLE ChuyenXe (
---     maChuyen VARCHAR(4) PRIMARY KEY,
---     tinhTrangChuyen VARCHAR(50) not null,
---     ngayGioKhoiHanh DATETIME not null,
---     ngayGioDen DATETIME not null,
---     chiPhiVanHanh DECIMAL(12,2) not null,
---     tiLeThuLao DECIMAL(12,2) not null,
---     maXe CHAR(3) not null,
---     maTuyen VARCHAR(4) not null,
---     FOREIGN KEY (maXe) REFERENCES Xe(maXe),
---     FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
---     CONSTRAINT chk_tinhtrangchuyen 
---         CHECK (tinhTrangChuyen IN ('Chưa khởi hành','Đang chạy','Hoàn thành','Hủy'))
--- );
-
-
--- CREATE TABLE PhanCong (
---     maNhanVien INT,
---     maChuyen VARCHAR(4),
---     vaiTro VARCHAR(255),
---     PRIMARY KEY (maChuyen, maNhanVien),
---     FOREIGN KEY (maChuyen) REFERENCES ChuyenXe(maChuyen),
---     FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien),
---     CHECK (vaiTro IN ('Lái xe', 'Phụ xe'))
--- );
-
 CREATE TABLE PhanCong (
     maChuyen VARCHAR(4),
     maTuyen  VARCHAR(4),
@@ -146,7 +135,6 @@ CREATE TABLE PhanCong (
     CONSTRAINT chk_vaiTro CHECK (vaiTro IN ('Lái xe', 'Phụ xe'))
 );
 
-
 CREATE TABLE Ve (
     maVe INT ,
     maXe VARCHAR(10) NOT NULL,
@@ -158,25 +146,10 @@ CREATE TABLE Ve (
     PRIMARY KEY (maXe, maTuyen, maChuyen, maVe),
     FOREIGN KEY (maHanhKhach) REFERENCES HanhKhach(maHanhKhach),
     FOREIGN KEY (maXe, maTuyen, maChuyen) REFERENCES ChuyenXe(maXe, maTuyen, maChuyen),
-    CONSTRAINT uq_ve_chuyen_ghe UNIQUE (maXe, maTuyen, maChuyen, gheNgoi) -- đảm bảo 1 ghế chỉ được bán 1 lần cho 1 chuyến
+    CONSTRAINT uq_ve_chuyen_ghe UNIQUE (maXe, maTuyen, maChuyen, gheNgoi) 
 );
 
-CREATE TABLE Mua (
-    maMua INT PRIMARY KEY AUTO_INCREMENT,
-    tenMua VARCHAR(50) not null unique
-);
 
-CREATE TABLE GiaVe (
-    maGiaVe INT ,
-    giaVe DECIMAL(12,2) not null,
-    ngayBatDau DATE not null,
-    ngayKetThuc DATE,
-    maTuyen VARCHAR(4) not null,
-    maMua INT not null,
-    PRIMARY KEY (maTuyen, maMua, maGiaVe),
-    FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
-    FOREIGN KEY (maMua) REFERENCES Mua(maMua)
-);
 
 -- gen maxe khi insert
 DELIMITER $$
