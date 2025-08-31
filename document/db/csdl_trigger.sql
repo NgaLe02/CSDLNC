@@ -650,10 +650,10 @@ BEGIN
     DECLARE ngayConLai INT;
     
     -- Chỉ xử lý khi chuyến xe được đánh dấu Hoàn thành
-    IF NEW.trangThai = 'Hoàn thành' THEN
+    IF NEW.tinhTrangChuyen = 'Hoàn thành' THEN
     
         -- Tính km làm việc của chuyến này
-        SELECT NEW.khoangCach * T.heSoDuongKho
+        SELECT T.khoangCach * T.heSoDuongKho
         INTO kmLamViec
         FROM TuyenDuong T
         WHERE T.maTuyen = NEW.maTuyen;
@@ -669,7 +669,7 @@ BEGIN
               FROM LichBaoDuong B
               WHERE B.maXe = NEW.maXe
           )
-          AND C.trangThai = 'Hoàn thành';
+          AND C.tinhTrangChuyen = 'Hoàn thành';
           
         -- Tính số ngày còn lại
         SET ngayConLai = 360 - FLOOR(tongKm / 100);
