@@ -21,7 +21,7 @@ CREATE TABLE LoaiXe (
 );
 
 CREATE TABLE Xe (
-	maXe CHAR(3) PRIMARY KEY,
+	maXe VARCHAR(3) PRIMARY KEY,
     bienSo VARCHAR(20) NOT NULL UNIQUE,
     tinhTrang VARCHAR(50) NOT NULL CHECK (tinhTrang IN (
         'Đang hoạt động',
@@ -51,7 +51,7 @@ CREATE TABLE HanDangKiem (
     maHanDangKiem INT PRIMARY KEY AUTO_INCREMENT,
     chiPhi DECIMAL(12,2) CHECK (chiPhi >= 0),
     ngayDangKiem DATE NOT NULL,
-    maXe CHAR(3),
+    maXe CHAR(3),	
 	CONSTRAINT uq_xe_ngay UNIQUE (maXe, ngayDangKiem),
     FOREIGN KEY (maXe) REFERENCES Xe(maXe)
 );
@@ -92,7 +92,7 @@ CREATE TABLE Mua (
 );
 
 CREATE TABLE GiaVe (
-    maGiaVe INT ,
+    maGiaVe varchar(3) ,
     giaVe DECIMAL(12,2) not null,
     ngayBatDau DATE not null,
     ngayKetThuc DATE,
@@ -105,11 +105,11 @@ CREATE TABLE GiaVe (
 );
 
 CREATE TABLE ChuyenXe (
-    maXe VARCHAR(10) NOT NULL,
-    maTuyen VARCHAR(10) NOT NULL,
-    maChuyen INT NOT NULL,
-    maMua VARCHAR(10) NOT NULL,
-    maGiaVe VARCHAR(10) NOT NULL,
+    maXe VARCHAR(3) NOT NULL,
+    maTuyen VARCHAR(4) NOT NULL,
+    maChuyen VARCHAR(5) NOT NULL,
+    maMua INT NOT NULL,
+    maGiaVe VARCHAR(3) NOT NULL,
     ngayGioKhoiHanh DATETIME NOT NULL,
     ngayGioDen DATETIME NOT NULL,
     tinhTrangChuyen VARCHAR(50) NOT NULL,
@@ -119,8 +119,8 @@ CREATE TABLE ChuyenXe (
     FOREIGN KEY (maXe) REFERENCES Xe(maXe),
     FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
     FOREIGN KEY (maMua) REFERENCES Mua(maMua),
-    FOREIGN KEY (maGiaVe, maTuyen, maMua)
-        REFERENCES GiaVe(maGiaVe, maTuyen, maMua),
+    FOREIGN KEY (maTuyen, maMua, maGiaVe)
+		REFERENCES GiaVe(maTuyen, maMua, maGiaVe),
     CONSTRAINT chk_tinhtrangchuyen 
         CHECK (tinhTrangChuyen IN ('Chưa khởi hành','Đang chạy','Hoàn thành','Hủy')),
 	CONSTRAINT chk_thoiGian  
@@ -128,14 +128,14 @@ CREATE TABLE ChuyenXe (
 );
 
 CREATE TABLE PhanCong (
-    maChuyen VARCHAR(4),
+    maChuyen VARCHAR(5),
     maTuyen  VARCHAR(4),
-    maXe     VARCHAR(10),
+    maXe     VARCHAR(3),
     maNhanVien INT,
     vaiTro VARCHAR(255),
     PRIMARY KEY (maChuyen, maTuyen, maXe, maNhanVien),
-    FOREIGN KEY (maChuyen, maTuyen, maXe) 
-        REFERENCES ChuyenXe(maChuyen, maTuyen, maXe),
+    FOREIGN KEY (maXe, maTuyen, maChuyen) 
+        REFERENCES ChuyenXe(maXe, maTuyen, maChuyen),
     FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien),
     CONSTRAINT chk_vaiTro CHECK (vaiTro IN ('Lái xe', 'Phụ xe')),
 	UNIQUE (maXe, maTuyen, maChuyen, vaiTro)
@@ -143,9 +143,9 @@ CREATE TABLE PhanCong (
 
 CREATE TABLE Ve (
     maVe INT ,
-    maXe VARCHAR(10) NOT NULL,
-    maTuyen VARCHAR(10) NOT NULL,
-    maChuyen INT NOT NULL,
+    maXe VARCHAR(3) NOT NULL,
+    maTuyen VARCHAR(4) NOT NULL,
+    maChuyen VARCHAR(5) NOT NULL,
     ngayMua DATE  not null, 
     gheNgoi VARCHAR(10)  not null,
     maHanhKhach INT  not null,
