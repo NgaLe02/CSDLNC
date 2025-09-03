@@ -477,19 +477,23 @@ CREATE TRIGGER trg_check_ngayMua
 BEFORE INSERT ON Ve
 FOR EACH ROW
 BEGIN
-    DECLARE v_khoiHanh DATETIME;
+    DECLARE ngayKhoiHanh DATETIME;
 
-    SELECT ngayGioKhoiHanh INTO v_khoiHanh
+    SELECT ngayGioKhoiHanh
+    INTO ngayKhoiHanh
     FROM ChuyenXe
-    WHERE maChuyen = NEW.maChuyen;
+    WHERE maChuyen = NEW.maChuyen
+      AND maXe = NEW.maXe
+      AND maTuyen = NEW.maTuyen;
 
-    IF NEW.ngayMua > DATE(v_khoiHanh) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Không thể mua vé sau khi chuyến xe khởi hành!';
+    IF NEW.ngayMua > ngayKhoiHanh THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Ngày mua không được sau ngày khởi hành';
     END IF;
-END$$
+END $$
 
 DELIMITER ;
+
 
 -- Kiểm tra 1 hành khách không mua trùng chuyến
 DELIMITER $$
@@ -502,6 +506,8 @@ BEGIN
         SELECT 1 FROM Ve
         WHERE maHanhKhach = NEW.maHanhKhach
           AND maChuyen = NEW.maChuyen
+          AND maXe = NEW.maXe
+          AND maTuyen = NEW.maTuyen
     ) THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Hành khách này đã có vé cho chuyến xe!';
@@ -509,6 +515,7 @@ BEGIN
 END$$
 
 DELIMITER ;
+
 -- Kiểm tra khi UPDATE (cập nhật lại vé)
 DELIMITER $$
 
@@ -518,21 +525,26 @@ FOR EACH ROW
 BEGIN
     DECLARE v_khoiHanh DATETIME;
 
-    -- Kiểm tra không đổi sang ngày mua > ngày khởi hành
+    -- Lấy ngày khởi hành dựa trên 3 khóa chính
     SELECT ngayGioKhoiHanh INTO v_khoiHanh
     FROM ChuyenXe
-    WHERE maChuyen = NEW.maChuyen;
+    WHERE maChuyen = NEW.maChuyen
+      AND maXe = NEW.maXe
+      AND maTuyen = NEW.maTuyen;
 
-    IF NEW.ngayMua > DATE(v_khoiHanh) THEN
+    -- Kiểm tra ngày mua không vượt ngày khởi hành
+    IF NEW.ngayMua > v_khoiHanh THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Không thể cập nhật vé với ngày mua sau khi xe đã khởi hành!';
     END IF;
 
-    -- Kiểm tra trùng vé
+    -- Kiểm tra trùng vé với hành khách khác
     IF EXISTS (
         SELECT 1 FROM Ve
         WHERE maHanhKhach = NEW.maHanhKhach
           AND maChuyen = NEW.maChuyen
+          AND maXe = NEW.maXe
+          AND maTuyen = NEW.maTuyen
           AND maVe <> NEW.maVe
     ) THEN
         SIGNAL SQLSTATE '45000'

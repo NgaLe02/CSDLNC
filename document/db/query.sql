@@ -1,4 +1,4 @@
-# 1. Hiển thị tên của các lái xe cùng với lương tháng của họ của một tháng cụ thể.
+-- # 1. Hiển thị tên của các lái xe cùng với lương tháng của họ của một tháng cụ thể.
 SELECT nv.hoTen,
        SUM(ltd.luongCoBan * cx.tiLeThuLao) AS tongLuong
 FROM NhanVien nv
@@ -14,7 +14,7 @@ JOIN TuyenDuong td
 JOIN LuongTuyenDuong ltd
     ON td.maLuongTuyen = ltd.maLuongTuyen
 WHERE cx.tinhTrangChuyen = 'Hoàn thành'
-  AND cx.ngayGioDen >= '2024-08-01' AND cx.ngayGioDen < '2024-09-01'
+  AND DATE(cx.ngayGioDen) >= '2025-08-01' AND DATE(cx.ngayGioDen) < '2025-09-01'
 GROUP BY nv.hoTen;
 
 # 2. Hiển thị danh sách các xe đang hoạt động cùng doanh thu của mỗi xe trong một tháng cụ thể.
@@ -36,13 +36,13 @@ JOIN GiaVe gv
    AND cx.maGiaVe = gv.maGiaVe
 WHERE x.tinhTrang = 'Đang hoạt động'
   AND cx.tinhTrangChuyen = 'Hoàn thành'
-  AND cx.ngayGioDen >= '2024-08-01' AND cx.ngayGioDen < '2024-09-01'
+  AND DATE(cx.ngayGioDen) >= '2025-08-01' AND DATE(cx.ngayGioDen) < '2025-09-01'
   AND cx.ngayGioKhoiHanh >= gv.ngayBatDau
   AND (gv.ngayKetThuc IS NULL OR cx.ngayGioKhoiHanh <= gv.ngayKetThuc)
 GROUP BY x.maXe, x.bienSo;
 
-# 3. Hiển thị doanh thu của từng tuyến đường vận tải, doanh thu của từng loại xe,… trong tháng.
-# Doanh thu theo tuyến đường trong một tháng
+-- # 3. Hiển thị doanh thu của từng tuyến đường vận tải, doanh thu của từng loại xe,… trong tháng.
+-- # Doanh thu theo tuyến đường trong một tháng
 SELECT td.maTuyen,
        td.diemKhoiHanh,
        td.diemDen,
@@ -59,7 +59,7 @@ JOIN GiaVe gv
 JOIN TuyenDuong td
   ON cx.maTuyen = td.maTuyen
 WHERE cx.tinhTrangChuyen = 'Hoàn thành'
-  AND cx.ngayGioDen >= '2024-08-01' AND cx.ngayGioDen < '2024-09-01'
+  AND DATE(cx.ngayGioDen) >= '2025-08-01' AND DATE(cx.ngayGioDen) < '2025-09-01'
   AND cx.ngayGioKhoiHanh >= gv.ngayBatDau
   AND (gv.ngayKetThuc IS NULL OR cx.ngayGioKhoiHanh <= gv.ngayKetThuc)
 GROUP BY td.maTuyen, td.diemKhoiHanh, td.diemDen;
@@ -82,12 +82,12 @@ JOIN Xe x
 JOIN loaixe lx
   ON lx.maLoaiXe = x.maLoaiXe
 WHERE cx.tinhTrangChuyen = 'Hoàn thành'
-  AND cx.ngayGioDen >= '2024-08-01' AND cx.ngayGioDen < '2024-09-01'
+  AND DATE(cx.ngayGioDen) >= '2025-08-01' AND DATE(cx.ngayGioDen) < '2025-09-01'
   AND cx.ngayGioKhoiHanh >= gv.ngayBatDau
   AND (gv.ngayKetThuc IS NULL OR cx.ngayGioKhoiHanh <= gv.ngayKetThuc)
 GROUP BY x.maLoaiXe, lx.tenLoaiXe;
 
-#  4. Hiển thị danh sách các xe cùng ngày bảo dưỡng tiếp theo cho mỗi xe, hạn đăng kiểm
+-- #  4. Hiển thị danh sách các xe cùng ngày bảo dưỡng tiếp theo cho mỗi xe, hạn đăng kiểm
 WITH BaoDuongGanNhat AS (
     SELECT lb.maXe, MAX(lb.ngayBaoDuong) AS ngayBaoDuongGanNhat
     FROM LichBaoDuong lb
@@ -122,7 +122,7 @@ LEFT JOIN BaoDuong b ON b.maXe = x.maXe
 LEFT JOIN DangKiem d ON d.maXe = x.maXe;
 
 
-#  5. Hiển thị danh sách các xe quá hạn bảo dưỡng
+-- #  5. Hiển thị danh sách các xe quá hạn bảo dưỡng
 WITH BaoDuong AS (
     SELECT x.maXe,
            DATE_ADD(lb.ngayBaoDuong,

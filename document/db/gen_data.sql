@@ -474,3 +474,81 @@ END$$
 DELIMITER ;
 
 CALL taoPhanCong();
+
+DELIMITER $$
+
+CREATE PROCEDURE taoVe()
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE v_maXe VARCHAR(4);
+    DECLARE v_maTuyen VARCHAR(4);
+    DECLARE v_maChuyen VARCHAR(5);
+    DECLARE v_ngayGioKhoiHanh DATETIME;
+    DECLARE v_soLuongHanhKhach INT;
+    DECLARE seatNo INT;
+    DECLARE v_maHanhKhach VARCHAR(10);
+
+    -- Cursor lấy tất cả chuyến xe
+    DECLARE curChuyenXe CURSOR FOR
+        SELECT maXe, maTuyen, maChuyen, ngayGioKhoiHanh
+        FROM ChuyenXe;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN curChuyenXe;
+
+    read_loop: LOOP
+        FETCH curChuyenXe INTO v_maXe, v_maTuyen, v_maChuyen, v_ngayGioKhoiHanh;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- Xác định số lượng hành khách
+        IF v_maXe IN ('X005','X011') THEN
+            SET v_soLuongHanhKhach = 9;
+        ELSE
+            SET v_soLuongHanhKhach = 20;
+        END IF;
+
+        SET seatNo = 1;
+
+        WHILE seatNo <= v_soLuongHanhKhach DO
+            -- Chọn 1 hành khách chưa có trong chuyến, theo thứ tự tăng dần
+            SELECT h.maHanhKhach
+            INTO v_maHanhKhach
+            FROM HanhKhach h
+            WHERE h.maHanhKhach NOT IN (
+                SELECT maHanhKhach
+                FROM Ve
+                WHERE maXe = v_maXe AND maTuyen = v_maTuyen AND maChuyen = v_maChuyen
+            )
+            ORDER BY h.maHanhKhach ASC
+            LIMIT 1;
+
+            -- Nếu không còn hành khách, thoát vòng WHILE
+            IF v_maHanhKhach IS NULL THEN
+                LEAVE read_loop;
+            END IF;
+
+            -- Chèn vé
+            INSERT INTO Ve (maXe, maTuyen, maChuyen, ngayMua, gheNgoi, maHanhKhach)
+            VALUES (
+                v_maXe,
+                v_maTuyen,
+                v_maChuyen,
+                DATE_SUB(v_ngayGioKhoiHanh, INTERVAL FLOOR(1 + (RAND() * 7)) DAY),
+                seatNo,
+                v_maHanhKhach
+            );
+
+            SET seatNo = seatNo + 1;
+        END WHILE;
+
+    END LOOP;
+
+    CLOSE curChuyenXe;
+END $$
+
+DELIMITER ;
+
+CALL taoVe();
