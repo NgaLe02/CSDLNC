@@ -52,7 +52,8 @@ CREATE TABLE HanDangKiem (
     maHanDangKiem INT PRIMARY KEY AUTO_INCREMENT,
     chiPhi DECIMAL(12,2) CHECK (chiPhi >= 0),
     ngayDangKiem DATE NOT NULL,
-    maXe varCHAR(4),	
+    hieuLuc INT NOT NULL, --month
+    maXe varCHAR(4),	    
 	CONSTRAINT uq_xe_ngay UNIQUE (maXe, ngayDangKiem),
     FOREIGN KEY (maXe) REFERENCES Xe(maXe)
 );
