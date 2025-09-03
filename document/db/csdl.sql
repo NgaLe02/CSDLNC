@@ -117,8 +117,6 @@ CREATE TABLE ChuyenXe (
     tiLeThuLao DECIMAL(12,2) NOT NULL CHECK (tiLeThuLao > 1),
     PRIMARY KEY (maXe, maTuyen, maChuyen),
     FOREIGN KEY (maXe) REFERENCES Xe(maXe),
-    FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
-    FOREIGN KEY (maMua) REFERENCES Mua(maMua),
     FOREIGN KEY (maTuyen, maMua, maGiaVe)
 		REFERENCES GiaVe(maTuyen, maMua, maGiaVe),
     CONSTRAINT chk_tinhtrangchuyen 
