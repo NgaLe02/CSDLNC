@@ -7,14 +7,18 @@ BEFORE INSERT ON Xe
 FOR EACH ROW
 BEGIN
     DECLARE newId INT;
-    -- Lấy số lớn nhất hiện có
-    SELECT IFNULL(MAX(CAST(maXe AS UNSIGNED)), 0) + 1 INTO newId
+
+    -- Lấy số lớn nhất hiện có (bỏ chữ X đi rồi cast sang số)
+    SELECT IFNULL(MAX(CAST(SUBSTRING(maXe, 2) AS UNSIGNED)), 0) + 1
+    INTO newId
     FROM Xe;
-    -- Gán mã mới cho bản ghi
-    SET NEW.maXe = LPAD(newId, 3, '0');
+
+    -- Gán mã mới cho bản ghi với format: X001, X002, ...
+    SET NEW.maXe = CONCAT('X', LPAD(newId, 3, '0'));
 END$$
 
 DELIMITER ;
+
 
 -- 2. gen ma tuyen duong khi insert
 DELIMITER $$
@@ -684,4 +688,52 @@ BEGIN
         END IF;
     END IF;
 END $$
+DELIMITER ;
+
+
+-- khoangCach trong TuyenDuong phải nằm trong khoảng (khoangCachTu, khoangCachDen) của LuongTuyenDuong mà nó tham chiếu (maLuongTuyen).
+DELIMITER $$
+
+CREATE TRIGGER trg_check_khoangCach
+BEFORE INSERT ON TuyenDuong
+FOR EACH ROW
+BEGIN
+    DECLARE kcTu DECIMAL(10,2);
+    DECLARE kcDen DECIMAL(10,2);
+
+    -- Lấy khoảng cách từ bảng LuongTuyenDuong
+    SELECT khoangCachTu, khoangCachDen
+    INTO kcTu, kcDen
+    FROM LuongTuyenDuong
+    WHERE maLuongTuyen = NEW.maLuongTuyen;
+
+    -- Kiểm tra nếu khoangCach không nằm trong khoảng
+    IF NEW.khoangCach < kcTu OR NEW.khoangCach > kcDen THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Khoảng cách không phù hợp với LuongTuyenDuong';
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_check_khoangCach_update
+BEFORE UPDATE ON TuyenDuong
+FOR EACH ROW
+BEGIN
+    DECLARE kcTu DECIMAL(10,2);
+    DECLARE kcDen DECIMAL(10,2);
+
+    SELECT khoangCachTu, khoangCachDen
+    INTO kcTu, kcDen
+    FROM LuongTuyenDuong
+    WHERE maLuongTuyen = NEW.maLuongTuyen;
+
+    IF NEW.khoangCach < kcTu OR NEW.khoangCach > kcDen THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Khoảng cách không phù hợp với LuongTuyenDuong';
+    END IF;
+END$$
+
 DELIMITER ;
