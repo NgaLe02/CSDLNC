@@ -1,6 +1,5 @@
 package com.ptit.csdlnc.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.csdlnc.model.Trip;
-import com.ptit.csdlnc.model.response.TripResponse;
 import com.ptit.csdlnc.service.TripService;
 import com.ptit.csdlnc.util.AjaxResult;
 
@@ -34,7 +32,7 @@ public class TripController {
 	public ResponseEntity<AjaxResult> getLstTrip(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			List<TripResponse> result = tripService.getLstTrip(params);
+			Map<String, Object> result = tripService.getLstTrip(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 		} catch (Exception e) {

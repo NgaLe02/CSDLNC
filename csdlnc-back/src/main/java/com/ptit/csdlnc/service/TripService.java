@@ -1,5 +1,6 @@
 package com.ptit.csdlnc.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +17,21 @@ public class TripService {
 	@Autowired
 	TripDAO tripDAO;
 
-	public List<TripResponse> getLstTrip(Map<String, Object> params) throws Exception {
+	public Map<String, Object> getLstTrip(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if (params.get("limit") != null && params.get("page") != null) {
+			int limit = Integer.parseInt(params.get("limit").toString());
+			int page = Integer.parseInt(params.get("page").toString());
+			int offset = (page - 1) * limit;
+			params.put("offset", offset);
+			params.put("limit", limit);
+		}
+
 		List<TripResponse> result = tripDAO.getLstTrip(params);
-		return result;
+		resultMap.put("data", result);
+		resultMap.put("count", tripDAO.countLstTrip(params));
+		return resultMap;
 	}
 
 	public int insertTrip(Trip model) throws Exception {

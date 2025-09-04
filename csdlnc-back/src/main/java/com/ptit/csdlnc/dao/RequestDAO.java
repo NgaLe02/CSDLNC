@@ -11,12 +11,7 @@ import com.ptit.csdlnc.model.response.EmployeeResponse;
 import com.ptit.csdlnc.model.response.PassengerResponse;
 
 @Mapper
-public interface EmployeeDAO {
-	List<EmployeeResponse> getLstEmployee(Map<String, Object> params) throws Exception;
+public interface RequestDAO {
+	List<Map<String, Object>> getSalary(Map<String, Object> param) throws Exception;
 
-	int insertEmployee(Employee model) throws Exception;
-
-	int updateEmployee(Employee model) throws Exception;
-
-	int deleteEmployee(int id) throws Exception;
 }

@@ -86,6 +86,26 @@
 	        ON td.maLuongTuyen = ltd.maLuongTuyen
 		JOIN Mua m 
 		    ON gv.maMua = m.maMua
+		<if test="limit != null and offset != null">
+		  LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="countLstTrip" parameterType="map" resultType="int">
+	    SELECT count(*)
+	    FROM ChuyenXe cx
+	    JOIN Xe x 
+	        ON cx.maXe = x.maXe
+	    JOIN GiaVe gv 
+	        ON cx.maTuyen = gv.maTuyen
+	       AND cx.maMua   = gv.maMua 
+	       AND cx.maGiaVe = gv.maGiaVe
+	    JOIN TuyenDuong td 
+	        ON cx.maTuyen = td.maTuyen 	    
+	    JOIN LuongTuyenDuong ltd 
+	        ON td.maLuongTuyen = ltd.maLuongTuyen
+		JOIN Mua m 
+		    ON gv.maMua = m.maMua
 	</select>
 
 	

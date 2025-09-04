@@ -168,22 +168,22 @@ function SideBarLeft() {
                 <i className="far fa-file-alt me-2"></i>Các yêu cầu
               </a>
               <div className="dropdown-menu bg-transparent border-0">
-                <a href="signin.html" className="dropdown-item">
+                <a href="/request/re-01" className="dropdown-item">
                   Lương tháng lái xe
                 </a>
-                <a href="signup.html" className="dropdown-item">
+                <a href="/request/re-02" className="dropdown-item">
                   Doanh thu của xe
                 </a>
-                <a href="404.html" className="dropdown-item">
+                <a href="/request/re-03" className="dropdown-item">
                   Doanh thu tuyến đường
                 </a>
-                <a href="blank.html" className="dropdown-item">
+                <a href="/request/re-04" className="dropdown-item">
                   Doanh thu loại xe
                 </a>
-                <a href="blank.html" className="dropdown-item">
+                <a href="/request/re-05" className="dropdown-item">
                   Ngày bảo dưỡng, đăng kiểm
                 </a>
-                <a href="blank.html" className="dropdown-item">
+                <a href="/request/re-06" className="dropdown-item">
                   Quá hạn bảo dưỡng
                 </a>
               </div>

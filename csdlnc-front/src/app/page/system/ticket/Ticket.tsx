@@ -17,9 +17,7 @@ export default function Ticket() {
     });
   const [listData, setListData] = useState<TicketResponseModel[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingModel, setEditingModel] = useState<TicketModel>(
-    new TicketModel()
-  );
+  const [editingModel, setEditingModel] = useState<TicketModel>(new TicketModel());
   const totalElement = useRef(0);
 
   useEffect(() => {
@@ -117,6 +115,15 @@ export default function Ticket() {
                 placeholder="Nhập họ tên hoặc số điện thoại"
                 name="keyword"
                 onChange={(e) => handleChangeSearch(e)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    setModelSearch((prev: any) => ({
+                      ...prev,
+                      time: new Date().getTime()
+                    }));
+                  }
+                }}
               />
             </div>
 
@@ -129,6 +136,15 @@ export default function Ticket() {
                 placeholder="Mã vé"
                 name="maVeFull"
                 onChange={(e) => handleChangeSearch(e)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    setModelSearch((prev: any) => ({
+                      ...prev,
+                      time: new Date().getTime()
+                    }));
+                  }
+                }}
               />
             </div>
 
@@ -181,6 +197,15 @@ export default function Ticket() {
                 placeholder="Điểm khởi hành"
                 name="diemKhoiHanh"
                 onChange={(e) => handleChangeSearch(e)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    setModelSearch((prev: any) => ({
+                      ...prev,
+                      time: new Date().getTime()
+                    }));
+                  }
+                }}
               />
             </div>
 
@@ -193,6 +218,15 @@ export default function Ticket() {
                 placeholder="Điểm đến"
                 name="diemDen"
                 onChange={(e) => handleChangeSearch(e)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    setModelSearch((prev: any) => ({
+                      ...prev,
+                      time: new Date().getTime()
+                    }));
+                  }
+                }}
               />
             </div>
 

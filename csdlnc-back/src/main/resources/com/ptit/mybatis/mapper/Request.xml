@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.RequestDAO">
+    
+    <!-- Hiển thị tên của các lái xe cùng với lương tháng của họ của một tháng cụ thể. -->
+    <select id="getSalary" parameterType="map" resultType="map">
+        SELECT nv.hoTen,
+		       SUM(ltd.luongCoBan * cx.tiLeThuLao) AS tongLuong,
+		       COUNT(DISTINCT cx.maChuyen) AS tongSoChuyen
+		FROM NhanVien nv
+		JOIN PhanCong pc
+		    ON nv.maNhanVien = pc.maNhanVien
+		   AND pc.vaiTro = #{role}
+		JOIN ChuyenXe cx
+		    ON pc.maXe = cx.maXe
+		   AND pc.maTuyen = cx.maTuyen
+		   AND pc.maChuyen = cx.maChuyen
+		JOIN TuyenDuong td
+		    ON cx.maTuyen = td.maTuyen
+		JOIN LuongTuyenDuong ltd
+		    ON td.maLuongTuyen = ltd.maLuongTuyen
+		WHERE cx.tinhTrangChuyen = 'Hoàn thành'
+		  AND DATE(cx.ngayGioDen) &gt;= #{fromDate} 
+		  AND DATE(cx.ngayGioDen) &lt; #{toDate}
+		  <if test="keyword != null and keyword != ''">
+		   AND (nv.hoTen LIKE CONCAT('%', #{keyword}, '%') 
+		        OR nv.soDienThoai LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+		GROUP BY nv.hoTen;
+    </select>
+	
+</mapper>

@@ -18,4 +18,6 @@ public interface TripDAO {
 
 	int deleteTrip(String id) throws Exception;
 
+	int countLstTrip(Map<String, Object> params) throws Exception;
+
 }

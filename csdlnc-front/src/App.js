@@ -13,6 +13,7 @@ import RouteSystem from "./app/page/system/routes/RouteSystem";
 import TicketPrice from "./app/page/system/ticketPrice/TicketPrice";
 import Trip from "./app/page/system/trip/Trip";
 import Ticket from "./app/page/system/ticket/Ticket";
+import Request01 from "./app/page/request/Request01";
 
 function App() {
   return (
@@ -41,7 +42,7 @@ function App() {
               </Route>
 
               <Route path="/request" element={<System />}>
-                <Route path="re-01" element={<Car />} />
+                <Route path="re-01" element={<Request01 />} />
                 <Route path="re-02" element={<TypeCar />} />
                 <Route path="re-03" element={<Passenger />} />
                 <Route path="re-04" element={<Employee />} />

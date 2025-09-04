@@ -1,16 +1,24 @@
 import { HttpStatusCode } from "axios";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { TripModel } from "../../../model/TripModel";
 import { TripService } from "../../../services/TripService";
 import { TripResponseModel } from "../../../model/response/TripResponseModel";
 import TripForm from "./component/TripForm";
 import dayjs from "dayjs";
+import PaginationCommon from "../../../common/PaginationCommon";
 
 export default function Trip() {
   const [listData, setListData] = useState<TripResponseModel[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingModel, setEditingModel] = useState<TripModel>(new TripModel());
+  const totalElement = useRef(0);
+  const [modelSearch, setModelSearch] = useState<any>(
+    {
+      limit: 10,
+      page: 1,
+      time: new Date().getTime()
+    });
 
   useEffect(() => {
     getLstTrip();
@@ -18,11 +26,12 @@ export default function Trip() {
 
   function getLstTrip() {
     TripService.getInstance()
-      .getLstTrip({})
+      .getLstTrip(modelSearch)
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
-            const data = response.data.responseData;
+            const data = response.data.responseData.data;
+            totalElement.current = response.data.responseData.count;
             setListData(data);
           } else {
             toast.error(response.data.message);
@@ -81,6 +90,22 @@ export default function Trip() {
     getLstTrip();
   }
 
+
+  const handlePageChange = (page: number) => {
+    setModelSearch({
+      ...modelSearch,
+      page: page,
+      time: new Date().getTime()
+    });
+  };
+
+  const handleChangeSearch = (event: any) => {
+    setModelSearch({
+      ...modelSearch,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   return (
     <>
       <div className="container-fluid pt-4 px-4">
@@ -114,11 +139,11 @@ export default function Trip() {
               </thead>
               <tbody>
                 {listData.map((item: TripResponseModel, index: number) => (
-                  <tr key={item.maChuyen}>
+                  <tr key={index}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
-                    <td>{index + 1}</td>
+                    <td>{totalElement.current - (modelSearch.page - 1) * modelSearch.limit - index}</td>
                     <td>{item.maChuyen}</td>
                     <td>{item.xe?.maXe}</td>
                     <td>
@@ -158,6 +183,15 @@ export default function Trip() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          <div className="mt-2">
+            <PaginationCommon
+              currentPage={modelSearch.page}
+              count={totalElement.current}
+              onPageChange={handlePageChange}
+              rows={modelSearch.limit}
+            />
           </div>
         </div>
       </div>
