@@ -31,7 +31,7 @@ BEGIN
     DECLARE newCode VARCHAR(10);
 
     -- Lấy số lớn nhất hiện có (bỏ ký tự 'T')
-    SELECT IFNULL(MAX(CAST(SUBSTRING(maTuyen, 2) AS UNSIGNED)), 0) + 1 
+    SELECT IFNULL(MAX(CAST(SUBSTRING(maTuyen, 2) AS UNSIGNED)), 0) + 1
     INTO newId
     FROM TuyenDuong;
 
@@ -54,13 +54,13 @@ BEGIN
 
     -- Nếu người dùng không truyền maChuyen, thì tự sinh
     IF NEW.maChuyen IS NULL OR NEW.maChuyen = '' THEN
-        SELECT COALESCE(MAX(CAST(SUBSTRING(maChuyen, 3) AS UNSIGNED)), 0) + 1
+        SELECT COALESCE(MAX(CAST(SUBSTRING(maChuyen, 2) AS UNSIGNED)), 0) + 1
         INTO maxChuyen
         FROM ChuyenXe
         WHERE maXe = NEW.maXe AND maTuyen = NEW.maTuyen;
 
-        -- Gắn ký tự CX trước số
-        SET NEW.maChuyen = CONCAT('CX', LPAD(maxChuyen, 2, '0'));
+        -- Gắn tiền tố C và số 3 chữ số
+        SET NEW.maChuyen = CONCAT('C', LPAD(maxChuyen, 3, '0'));
     END IF;
 END$$
 
@@ -149,7 +149,7 @@ BEFORE INSERT ON LuongTuyenDuong
 FOR EACH ROW
 BEGIN
     IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
-        SIGNAL SQLSTATE '45000' 
+        SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
     END IF;
 END$$
@@ -159,7 +159,7 @@ BEFORE UPDATE ON LuongTuyenDuong
 FOR EACH ROW
 BEGIN
     IF NEW.khoangCachTu >= NEW.khoangCachDen THEN
-        SIGNAL SQLSTATE '45000' 
+        SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Khoảng cách từ phải nhỏ hơn khoảng cách đến';
     END IF;
 END$$
@@ -175,7 +175,7 @@ BEFORE INSERT ON LuongTuyenDuong
 FOR EACH ROW
 BEGIN
     IF EXISTS (
-        SELECT 1 
+        SELECT 1
         FROM LuongTuyenDuong
         WHERE doPhucTap = NEW.doPhucTap
           AND NOT (NEW.khoangCachDen <= khoangCachTu OR NEW.khoangCachTu >= khoangCachDen)
@@ -190,7 +190,7 @@ BEFORE UPDATE ON LuongTuyenDuong
 FOR EACH ROW
 BEGIN
     IF EXISTS (
-        SELECT 1 
+        SELECT 1
         FROM LuongTuyenDuong
         WHERE doPhucTap = NEW.doPhucTap
           AND maLuongTuyen <> NEW.maLuongTuyen
@@ -487,7 +487,7 @@ BEGIN
       AND maTuyen = NEW.maTuyen;
 
     IF NEW.ngayMua > ngayKhoiHanh THEN
-        SIGNAL SQLSTATE '45000' 
+        SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Ngày mua không được sau ngày khởi hành';
     END IF;
 END $$
@@ -626,7 +626,7 @@ BEGIN
     DECLARE soPhuXe INT DEFAULT 0;
 
     -- Đếm số người đã phân công cho chuyến xe này
-    SELECT 
+    SELECT
         SUM(CASE WHEN vaiTro = 'Lái xe' THEN 1 ELSE 0 END),
         SUM(CASE WHEN vaiTro = 'Phụ xe' THEN 1 ELSE 0 END)
     INTO soLaiXe, soPhuXe
@@ -664,16 +664,16 @@ BEGIN
     DECLARE kmLamViec DECIMAL(10,2);
     DECLARE tongKm DECIMAL(10,2);
     DECLARE ngayConLai INT;
-    
+
     -- Chỉ xử lý khi chuyến xe được đánh dấu Hoàn thành
     IF NEW.tinhTrangChuyen = 'Hoàn thành' THEN
-    
+
         -- Tính km làm việc của chuyến này
         SELECT T.khoangCach * T.heSoDuongKho
         INTO kmLamViec
         FROM TuyenDuong T
         WHERE T.maTuyen = NEW.maTuyen;
-        
+
         -- Tính tổng km từ lần bảo dưỡng gần nhất
         SELECT SUM(C.khoangCach * T.heSoDuongKho)
         INTO tongKm
@@ -686,10 +686,10 @@ BEGIN
               WHERE B.maXe = NEW.maXe
           )
           AND C.tinhTrangChuyen = 'Hoàn thành';
-          
+
         -- Tính số ngày còn lại
         SET ngayConLai = 360 - FLOOR(tongKm / 100);
-        
+
         -- Cập nhật tình trạng xe
         IF ngayConLai > 30 THEN
             UPDATE Xe SET tinhTrang = 'Đang hoạt động' WHERE maXe = NEW.maXe;
@@ -706,7 +706,7 @@ DELIMITER ;
 -- khoangCach trong TuyenDuong phải nằm trong khoảng (khoangCachTu, khoangCachDen) của LuongTuyenDuong mà nó tham chiếu (maLuongTuyen).
 DELIMITER $$
 
-CREATE TRIGGER trg_check_khoangCach
+CREATE TRIGGER trg_check_tuyenduong_khoangCach
 BEFORE INSERT ON TuyenDuong
 FOR EACH ROW
 BEGIN
@@ -730,7 +730,7 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE TRIGGER trg_check_khoangCach_update
+CREATE TRIGGER trg_check_tuyenduong_khoangCach_update
 BEFORE UPDATE ON TuyenDuong
 FOR EACH ROW
 BEGIN

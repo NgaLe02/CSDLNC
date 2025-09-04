@@ -1,5 +1,7 @@
+import { SeasonModel } from "../SeasonModel";
 import { CarResponseModel } from "./CarResponseModel";
 import { RouteResponseModel } from "./RouteResponseModel";
+import { TicketPriceResponseModel } from "./TicketPriceResponseModel";
 
 export class TripResponseModel {
   maChuyen?: string;
@@ -13,6 +15,8 @@ export class TripResponseModel {
 
   xe?: CarResponseModel;
   tuyenDuong?: RouteResponseModel;
+  mua?: SeasonModel;
+  giaVe?: TicketPriceResponseModel
 
   constructor(init?: Partial<TripResponseModel>) {
     Object.assign(this, init);

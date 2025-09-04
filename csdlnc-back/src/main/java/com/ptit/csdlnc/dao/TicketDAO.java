@@ -18,4 +18,6 @@ public interface TicketDAO {
 
 	int deleteTicket(int id) throws Exception;
 
+	int countLstTicket(Map<String, Object> params);
+
 }

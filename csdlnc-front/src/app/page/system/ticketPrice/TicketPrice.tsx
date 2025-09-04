@@ -146,7 +146,7 @@ export default function TicketPrice() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel ? "Sửa giá vé" : "Thêm giá vé"}
+                  {editingModel.maGiaVe ? "Sửa giá vé" : "Thêm giá vé"}
                 </h5>
                 <button
                   type="button"

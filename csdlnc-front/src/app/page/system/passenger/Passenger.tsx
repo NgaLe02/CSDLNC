@@ -94,7 +94,6 @@ export default function Passenger() {
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
-                  <th scope="col">Mã hành khách</th>
                   <th scope="col">Họ tên</th>
                   <th scope="col">CMND</th>
                   <th scope="col">Số điện thoại</th>
@@ -108,7 +107,6 @@ export default function Passenger() {
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{item.maHanhKhach}</td>
                     <td>{item.hoTen}</td>
                     <td>{item.cmnd}</td>
                     <td>{item.soDienThoai}</td>
@@ -140,7 +138,7 @@ export default function Passenger() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel ? "Sửa loại xe" : "Thêm loại xe"}
+                  {editingModel.maHanhKhach ? "Sửa hành khách" : "Thêm hành khách"}
                 </h5>
                 <button
                   type="button"

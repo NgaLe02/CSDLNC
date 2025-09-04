@@ -135,7 +135,7 @@ export default function Season() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel ? "Sửa mùa lễ" : "Thêm mùa lễ"}
+                  {editingModel.maMua ? "Sửa mùa lễ" : "Thêm mùa lễ"}
                 </h5>
                 <button
                   type="button"

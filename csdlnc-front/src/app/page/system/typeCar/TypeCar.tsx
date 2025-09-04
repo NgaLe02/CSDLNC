@@ -88,7 +88,6 @@ export default function TypeCar() {
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
-                  <th scope="col">Mã loại xe</th>
                   <th scope="col">Tên</th>
                   <th scope="col">Số ghế ngồi</th>
                   <th scope="col"></th>
@@ -131,7 +130,7 @@ export default function TypeCar() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel ? "Sửa loại xe" : "Thêm loại xe"}
+                  {editingModel.maLoaiXe ? "Sửa loại xe" : "Thêm loại xe"}
                 </h5>
                 <button
                   type="button"

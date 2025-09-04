@@ -97,11 +97,11 @@ export default function RouteSystem() {
                     STT
                   </th>
                   <th scope="col">Mã tuyến đường</th>
-                  <th scope="col">Độ phức tạp</th>
-                  <th scope="col">Hệ số đường khó</th>
                   <th scope="col">Điểm khởi hành</th>
                   <th scope="col">Điểm đến</th>
-                  <th scope="col">Lương tài xế</th>
+                  <th scope="col">Độ phức tạp</th>
+                  <th scope="col">Hệ số đường khó</th>
+                  <th scope="col">Lương phụ xe</th>
                   {/* <th scope="col">Ngày bắt đầu</th>
                   <th scope="col">Ngày kết thúc</th> */}
                   <th scope="col"></th>
@@ -115,10 +115,10 @@ export default function RouteSystem() {
                     </td>
                     <td>{index + 1}</td>
                     <td>{item.maTuyen}</td>
-                    <td>{item.doPhucTap}</td>
-                    <td>{item.heSoDuongKho}</td>
                     <td>{item.diemKhoiHanh}</td>
                     <td>{item.diemDen}</td>
+                    <td>{item.doPhucTap}</td>
+                    <td>{item.heSoDuongKho}</td>
                     <td>{item.luongTuyenDuong?.luongCoBan}</td>
 
                     {/* <td>{dayjs(item.ngayBatDau).format("YYYY-MM-DD")}</td> */}
@@ -151,7 +151,7 @@ export default function RouteSystem() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel ? "Sửa tuyến đường" : "Thêm tuyến đường"}
+                  {editingModel.maTuyen ? "Sửa tuyến đường" : "Thêm tuyến đường"}
                 </h5>
                 <button
                   type="button"

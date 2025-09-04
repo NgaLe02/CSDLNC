@@ -145,7 +145,7 @@ export default function Car() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel ? "Sửa loại xe" : "Thêm loại xe"}
+                  {editingModel.maXe ? "Sửa loại xe" : "Thêm loại xe"}
                 </h5>
                 <button
                   type="button"

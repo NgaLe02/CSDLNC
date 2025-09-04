@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { TicketPriceModel } from "../../../../model/TicketPriceModel";
-import { TicketPriceService } from "../../../../services/TicketPriceService";
+import { TicketModel } from "../../../../model/TicketModel";
+import { TicketService } from "../../../../services/TicketService";
 import { RouteResponseModel } from "../../../../model/response/RouteResponseModel";
 import { RouteService } from "../../../../services/RouteService";
 import { HttpStatusCode } from "axios";
 import { SeasonModel } from "../../../../model/SeasonModel";
 import { SeasonService } from "../../../../services/SeasonService";
 
-export default function TicketPriceForm(props: any) {
-  const [model, setModel] = useState<TicketPriceModel>(
-    props.model ?? new TicketPriceModel()
+export default function TicketForm(props: any) {
+  const [model, setModel] = useState<TicketModel>(
+    props.model ?? new TicketModel()
   );
   const [listRoute, setListRoute] = useState<RouteResponseModel[]>([]);
   const [listSeason, setListSeason] = useState<SeasonModel[]>([]);
@@ -78,9 +78,9 @@ export default function TicketPriceForm(props: any) {
     if (!check()) {
       return;
     }
-    if (model.maGiaVe) {
-      TicketPriceService.getInstance()
-        .updateTicketPrice(model)
+    if (model.maVe) {
+      TicketService.getInstance()
+        .updateTicket(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -97,8 +97,8 @@ export default function TicketPriceForm(props: any) {
           }
         });
     } else {
-      TicketPriceService.getInstance()
-        .insertTicketPrice(model)
+      TicketService.getInstance()
+        .insertTicket(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -141,67 +141,6 @@ export default function TicketPriceForm(props: any) {
             </select>
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="maMua" className="form-label">
-              Mùa lễ
-            </label>
-            <select
-              className="form-select"
-              id="maMua"
-              name="maMua"
-              value={model.maMua ?? ""}
-              onChange={(e: any) => handleChange(e)}
-            >
-              <option value="">-- Chọn mùa lễ --</option>
-              {listSeason.map((item) => (
-                <option key={item.maMua} value={item.maMua}>
-                  {item.tenMua}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="giaVe" className="form-label">
-              Giá vé
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              id="giaVe"
-              name="giaVe"
-              value={model.giaVe ?? ""}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="ngayBatDau" className="form-label">
-              Ngày bắt đầu
-            </label>
-            <input
-              type="date"
-              className="form-control"
-              id="ngayBatDau"
-              name="ngayBatDau"
-              value={model.ngayBatDau ?? ""}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="ngayKetThuc" className="form-label">
-              Ngày kết thúc
-            </label>
-            <input
-              type="date"
-              className="form-control"
-              id="ngayKetThuc"
-              name="ngayKetThuc"
-              value={model.ngayKetThuc ?? ""}
-              onChange={handleChange}
-            />
-          </div>
 
           <button
             type="button"
@@ -212,7 +151,7 @@ export default function TicketPriceForm(props: any) {
           </button>
 
           <button type="submit" className="btn btn-primary ms-2">
-            {model.maGiaVe ? "Cập nhật" : "Thêm"}
+            {model.maVe ? "Cập nhật" : "Thêm"}
           </button>
         </form>
       </div>

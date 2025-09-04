@@ -2,13 +2,14 @@ package com.ptit.csdlnc.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,8 +38,7 @@ public class Trip {
 	private Double chiPhiVanHanh;
 
 	@NotNull(message = "Tỉ lệ thù lao không được null")
-	@DecimalMin(value = "0.0", message = "Tỉ lệ thù lao phải >= 0")
-	@DecimalMax(value = "100.0", message = "Tỉ lệ thù lao phải <= 100")
+	@DecimalMin(value = "1.0", message = "Tỉ lệ thù lao phải > 2")
 	private Double tiLeThuLao;
 
 	@NotNull(message = "Mã xe không được null")

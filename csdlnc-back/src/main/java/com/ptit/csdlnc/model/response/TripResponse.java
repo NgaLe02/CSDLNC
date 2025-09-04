@@ -27,4 +27,7 @@ public class TripResponse {
 	private CarResponse xe;
 	private RouteResponse tuyenDuong;
 
+	private TicketPriceResponse giaVe;
+	private SeasonResponse mua;
+
 }

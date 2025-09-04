@@ -105,8 +105,10 @@ export default function Trip() {
                   <th scope="col">Ngày giờ khởi hành</th>
                   <th scope="col">Ngày giờ đến</th>
                   <th scope="col">Khoảng cách (km)</th>
-                  <th scope="col">Thù lao lái xe</th>
                   <th scope="col">Thù lao phụ xe</th>
+                  <th scope="col">Thù lao lái xe</th>
+                  <th scope="col">Chi phí vận hành</th>
+                  <th scope="col">Giá vé</th>
                   <th scope="col">Tình trạng chuyến</th>
                 </tr>
               </thead>
@@ -133,9 +135,10 @@ export default function Trip() {
                     </td>
                     <td>
                       {(item.tuyenDuong?.luongTuyenDuong?.luongCoBan || 0) *
-                        ((item.tiLeThuLao || 0) / 100)}{" "}
+                        (item.tiLeThuLao || 0)}{" "}
                       VNĐ
                     </td>
+                    <td>{item.giaVe?.giaVe}</td>
                     <td>{item.tinhTrangChuyen}</td>
                     <td>
                       <button

@@ -95,7 +95,6 @@ export default function RouteSalary() {
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
-                  <th scope="col">Mã lương tuyến đường</th>
                   <th scope="col">Độ phức tạp</th>
                   <th scope="col">Khoảng cách từ</th>
                   <th scope="col">Khoảng cách đến</th>
@@ -147,7 +146,7 @@ export default function RouteSalary() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel ? "Sửa lương tuyến đường" : "Thêm lương tuyến đường"}
+                  {editingModel.maLuongTuyen ? "Sửa lương tuyến đường" : "Thêm lương tuyến đường"}
                 </h5>
                 <button
                   type="button"

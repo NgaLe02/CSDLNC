@@ -34,7 +34,7 @@ public class TicketController {
 	public ResponseEntity<AjaxResult> getLstTicket(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			List<TicketResponse> result = ticketService.getLstTicket(params);
+			Map<String, Object> result = ticketService.getLstTicket(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 		} catch (Exception e) {
@@ -46,8 +46,7 @@ public class TicketController {
 	}
 
 	@PostMapping("insertTicket")
-	public ResponseEntity<AjaxResult> insertTicket(@Validated @RequestBody Ticket model,
-			BindingResult bindingResult) {
+	public ResponseEntity<AjaxResult> insertTicket(@Validated @RequestBody Ticket model, BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
 		if (bindingResult.hasErrors()) {
@@ -72,8 +71,7 @@ public class TicketController {
 	}
 
 	@PutMapping("updateTicket")
-	public ResponseEntity<AjaxResult> updateTicket(@Validated @RequestBody Ticket model,
-			BindingResult bindingResult) {
+	public ResponseEntity<AjaxResult> updateTicket(@Validated @RequestBody Ticket model, BindingResult bindingResult) {
 		AjaxResult ajaxResult = new AjaxResult();
 
 		if (bindingResult.hasErrors()) {

@@ -44,9 +44,9 @@ function SideBarLeft() {
             </div>
           </div>
           <div className="navbar-nav w-100">
-            <a href="index.html" className="nav-item nav-link">
+            {/* <a href="index.html" className="nav-item nav-link">
               <i className="fa fa-tachometer-alt me-2"></i>Dashboard
-            </a>
+            </a> */}
             <div className="nav-item dropdown">
               <a
                 href="#"
@@ -146,40 +146,45 @@ function SideBarLeft() {
                 >
                   Chuyến xe
                 </a>
+                <a
+                  href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/system/ve");
+                  }}
+                >
+                  Vé
+                </a>
               </div>
             </div>
-            <a href="widget.html" className="nav-item nav-link">
-              <i className="fa fa-th me-2"></i>Widgets
-            </a>
-            <a href="form.html" className="nav-item nav-link">
-              <i className="fa fa-keyboard me-2"></i>Forms
-            </a>
-            <a href="table.html" className="nav-item nav-link">
-              <i className="fa fa-table me-2"></i>Tables
-            </a>
-            <a href="chart.html" className="nav-item nav-link">
-              <i className="fa fa-chart-bar me-2"></i>Charts
-            </a>
+
             <div className="nav-item dropdown">
               <a
                 href="#"
                 className="nav-link dropdown-toggle active"
                 data-bs-toggle="dropdown"
               >
-                <i className="far fa-file-alt me-2"></i>Pages
+                <i className="far fa-file-alt me-2"></i>Các yêu cầu
               </a>
               <div className="dropdown-menu bg-transparent border-0">
                 <a href="signin.html" className="dropdown-item">
-                  Sign In
+                  Lương tháng lái xe
                 </a>
                 <a href="signup.html" className="dropdown-item">
-                  Sign Up
+                  Doanh thu của xe
                 </a>
                 <a href="404.html" className="dropdown-item">
-                  404 Error
+                  Doanh thu tuyến đường
                 </a>
-                <a href="blank.html" className="dropdown-item active">
-                  Blank Page
+                <a href="blank.html" className="dropdown-item">
+                  Doanh thu loại xe
+                </a>
+                <a href="blank.html" className="dropdown-item">
+                  Ngày bảo dưỡng, đăng kiểm
+                </a>
+                <a href="blank.html" className="dropdown-item">
+                  Quá hạn bảo dưỡng
                 </a>
               </div>
             </div>

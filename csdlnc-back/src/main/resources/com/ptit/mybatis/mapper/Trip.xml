@@ -18,62 +18,117 @@
 	        <result property="bienSo" column="bienSo"/>
 	    </association>
 	    
-	    <association property="tuyenDuong" javaType="com.ptit.csdlnc.model.response.RouteResponse">
+	    <association property="giaVe" javaType="com.ptit.csdlnc.model.response.TicketPriceResponse">
+	        <id property="maGiaVe" column="maGiaVe"/>
 	        <id property="maTuyen" column="maTuyen"/>
-	        <result property="diemKhoiHanh" column="diemKhoiHanh"/>
-	        <result property="diemDen" column="diemDen"/>
-	        <result property="khoangCach" column="khoangCach"/>
+	        <id property="maMua" column="maMua"/>
 	        
-	        <association property="luongTuyenDuong" javaType="com.ptit.csdlnc.model.response.RouteSalaryResponse">
-	        <id property="maLuongTuyen" column="ltd_maLuongTuyen"/>
-	        <result property="luongCoBan" column="ltd_luongCoBan"/>
+	        <result property="giaVe" column="gv_giaVe"/>
+	        <result property="ngayBatDau" column="gv_ngayBatDau"/>
+	        <result property="ngayKetThuc" column="gv_ngayKetThuc"/>
 	    </association>
-	    </association>
+	    
+	    <association property="mua" javaType="com.ptit.csdlnc.model.response.SeasonResponse">
+		        <id property="maMua" column="maMua"/>
+		        <result property="tenMua" column="tenMua"/>
+		</association>
+		
+	    <association property="tuyenDuong" javaType="com.ptit.csdlnc.model.response.RouteResponse">
+		        <id property="maTuyen" column="maTuyen"/>
+		        <result property="diemDen" column="diemDen"/>
+		        <result property="diemKhoiHanh" column="diemKhoiHanh"/>
+		        <result property="khoangCach" column="khoangCach"/>
+		        
+		        <association property="luongTuyenDuong" javaType="com.ptit.csdlnc.model.response.RouteSalaryResponse">
+			        <id property="maLuongTuyen" column="ltd_maLuongTuyen"/>
+			        <result property="luongCoBan" column="ltd_luongCoBan"/>
+			    </association>
+		</association>
+	    
     </resultMap>
 
 	<select id="getLstTrip" resultMap="tripMap">
 	    SELECT cx.maChuyen, 
-	    	   cx.tinhTrangChuyen, 
-	    	   cx.ngayGioKhoiHanh, 
-	    	   cx.ngayGioDen, 
+	           cx.tinhTrangChuyen, 
+	           cx.ngayGioKhoiHanh, 
+	           cx.ngayGioDen, 
 	           cx.chiPhiVanHanh, 
 	           cx.tiLeThuLao, 
 	           cx.maXe, 
+	           
 	           x.bienSo,
 	           cx.maTuyen, 
+	           
+	           gv.giaVe as gv_giaVe,
+	           gv.maTuyen,
+	           gv.maMua,
+	           gv.ngayBatDau as gv_ngayBatDau,
+	           gv.ngayKetThuc as gv_ngayKetThuc,
+	           
+	           m.tenMua,
+	           
+	           td.maTuyen,
 	           td.diemKhoiHanh, 
 	           td.diemDen, 
 	           td.khoangCach,
-	           
-	           ltd.luongCoBan as ltd_luongCoBan,
-	           ltd.maLuongTuyen as ltd_maLuongTuyen
+	           ltd.luongCoBan AS ltd_luongCoBan,
+	           ltd.maLuongTuyen AS ltd_maLuongTuyen
 	    FROM ChuyenXe cx
-	    JOIN Xe x ON cx.maXe = x.maXe
-	    JOIN TuyenDuong td ON cx.maTuyen = td.maTuyen
-	    JOIN luongtuyenduong ltd ON td.maLuongTuyen = ltd.maLuongTuyen
+	    JOIN Xe x 
+	        ON cx.maXe = x.maXe
+	    JOIN GiaVe gv 
+	        ON cx.maTuyen = gv.maTuyen
+	       AND cx.maMua   = gv.maMua 
+	       AND cx.maGiaVe = gv.maGiaVe
+	    JOIN TuyenDuong td 
+	        ON cx.maTuyen = td.maTuyen 	    
+	    JOIN LuongTuyenDuong ltd 
+	        ON td.maLuongTuyen = ltd.maLuongTuyen
+		JOIN Mua m 
+		    ON gv.maMua = m.maMua
 	</select>
+
 	
-	<select id="getTripById" parameterType="string" resultMap="tripMap">
+	<select id="getTripById" parameterType="map" resultMap="tripMap">
 	    SELECT cx.maChuyen, 
-	    	   cx.tinhTrangChuyen, 
-	    	   cx.ngayGioKhoiHanh, 
-	    	   cx.ngayGioDen, 
+	           cx.tinhTrangChuyen, 
+	           cx.ngayGioKhoiHanh, 
+	           cx.ngayGioDen, 
 	           cx.chiPhiVanHanh, 
 	           cx.tiLeThuLao, 
 	           cx.maXe, 
+	           
 	           x.bienSo,
 	           cx.maTuyen, 
+	           
+	           gv.giaVe as gv_giaVe,
+	           gv.maTuyen,
+	           gv.maMua,
+	           gv.ngayBatDau as gv_ngayBatDau,
+	           gv.ngayKetThuc as gv_ngayKetThuc,
+	           
+	           m.tenMua,
+	           
+	           td.maTuyen,
 	           td.diemKhoiHanh, 
 	           td.diemDen, 
 	           td.khoangCach,
-	           
-	           ltd.luongCoBan as ltd_luongCoBan,
-	           ltd.maLuongTuyen as ltd_maLuongTuyen
+	           ltd.luongCoBan AS ltd_luongCoBan,
+	           ltd.maLuongTuyen AS ltd_maLuongTuyen
 	    FROM ChuyenXe cx
-	    JOIN Xe x ON cx.maXe = x.maXe
-	    JOIN TuyenDuong td ON cx.maTuyen = td.maTuyen
-	    JOIN luongtuyenduong ltd ON td.maLuongTuyen = ltd.maLuongTuyen
-	    WHERE cx.maChuyen = #{maChuyen}
+	    JOIN Xe x 
+	        ON cx.maXe = x.maXe
+	    JOIN GiaVe gv 
+	        ON cx.maTuyen = gv.maTuyen
+	       AND cx.maMua   = gv.maMua 
+	       AND cx.maGiaVe = gv.maGiaVe
+	    JOIN TuyenDuong td 
+	        ON cx.maTuyen = td.maTuyen 	    
+	    JOIN LuongTuyenDuong ltd 
+	        ON td.maLuongTuyen = ltd.maLuongTuyen
+		JOIN Mua m 
+		    ON gv.maMua = m.maMua
+	    WHERE cx.maChuyen = #{maChuyen} and cx.maTuyen = #{maTuyen} and cx.maXe = #{maXe}
 	</select>
 	
 	<insert id="insertTrip" parameterType="com.ptit.csdlnc.model.Trip" useGeneratedKeys="true" keyProperty="maChuyen">
