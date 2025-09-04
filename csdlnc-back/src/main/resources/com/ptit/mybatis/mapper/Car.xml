@@ -26,6 +26,11 @@
 	        t.soGhe as soGhe
 	    FROM xe c
 	    LEFT JOIN loaixe t ON c.maLoaiXe = t.maLoaiXe
+	    where 
+	    	1=1
+	    	<if test="tinhTrang != null and tinhTrang != ''">
+			   AND c.tinhTrang = #{tinhTrang}
+			</if>
 	</select>
 	
 	<select id="checkBienSoExist"

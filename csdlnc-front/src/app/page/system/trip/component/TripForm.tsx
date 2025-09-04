@@ -37,7 +37,7 @@ export default function TripForm(props: any) {
 
   function getLstCar() {
     CarService.getInstance()
-      .getLstCar({})
+      .getLstCar({ tinhTrang: "Đang hoạt động" })
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
