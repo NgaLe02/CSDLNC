@@ -190,7 +190,7 @@ export default function Ticket() {
 
             {/* Điểm khởi hành */}
             <div className="col-md-3">
-              <label className="form-label" htmlFor="khoiHanhTuNgay">Điểm khởi hành</label>
+              <label className="form-label" htmlFor="diemKhoiHanh">Điểm khởi hành</label>
               <input
                 type="text"
                 className="form-control"
@@ -211,7 +211,7 @@ export default function Ticket() {
 
             {/* Điểm đến */}
             <div className="col-md-3">
-              <label className="form-label" htmlFor="khoiHanhTuNgay">Điểm đến</label>
+              <label className="form-label" htmlFor="diemDen">Điểm đến</label>
               <input
                 type="text"
                 className="form-control"

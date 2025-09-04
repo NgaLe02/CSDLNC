@@ -6,28 +6,26 @@ import dayjs from "dayjs";
 import { RequestService } from "../../services/RequestService";
 
 
-export default function Request01() {
+export default function Request03() {
     const [modelSearch, setModelSearch] = useState<any>(
         {
             limit: 10,
             page: 1,
             time: new Date().getTime(),
-            role: "Lái xe",
             fromDate: '2025-08-01',
             toDate: '2025-09-01',
-            keyword: ''
         });
     const [listData, setListData] = useState<any[]>([]);
     const totalElement = useRef(0);
 
     useEffect(() => {
-        getSalary();
+        getRouteRevenue();
     }, [modelSearch.time]);
 
 
-    function getSalary() {
+    function getRouteRevenue() {
         RequestService.getInstance()
-            .getSalary(modelSearch)
+            .getRouteRevenue(modelSearch)
             .then((response) => {
                 if (response.status === HttpStatusCode.Ok) {
                     if (response.data.status) {
@@ -66,13 +64,14 @@ export default function Request01() {
                 <div className="bg-light rounded p-4">
                     <form className="row g-3">
                         {/* Tìm theo họ tên / số điện thoại */}
-                        <div className="col-md-4">
-                            <label className="form-label" htmlFor="keyword">Hành khách</label>
+                        {/* Điểm khởi hành */}
+                        <div className="col-md-3">
+                            <label className="form-label" htmlFor="diemKhoiHanh">Điểm khởi hành</label>
                             <input
-                                type="search"
+                                type="text"
                                 className="form-control"
-                                placeholder="Nhập họ tên hoặc số điện thoại"
-                                name="keyword"
+                                placeholder="Điểm khởi hành"
+                                name="diemKhoiHanh"
                                 onChange={(e) => handleChangeSearch(e)}
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
@@ -85,6 +84,28 @@ export default function Request01() {
                                 }}
                             />
                         </div>
+
+                        {/* Điểm đến */}
+                        <div className="col-md-3">
+                            <label className="form-label" htmlFor="diemDen">Điểm đến</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Điểm đến"
+                                name="diemDen"
+                                onChange={(e) => handleChangeSearch(e)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        setModelSearch((prev: any) => ({
+                                            ...prev,
+                                            time: new Date().getTime()
+                                        }));
+                                    }
+                                }}
+                            />
+                        </div>
+
 
                         {/* Thời gian (theo tháng) */}
                         <div className="col-md-4">
@@ -110,19 +131,6 @@ export default function Request01() {
                                     handleChangeSearch({ target: { name: "toDate", value: toDate } });
                                 }}
                             />
-                        </div>
-
-                        {/* Vai trò */}
-                        <div className="col-md-2">
-                            <label className="form-label" htmlFor="role">Vai trò</label>
-                            <select className="form-select" name="role"
-                                onChange={(e) => handleChangeSearch(e)}
-                                value={modelSearch.role}
-                            >
-                                <option value="">-- Vai trò --</option>
-                                <option value="Lái xe">Lái xe</option>
-                                <option value="Phụ xe">Phụ xe</option>
-                            </select>
                         </div>
 
                         <div className="col-md-2 d-flex align-items-end">
@@ -155,8 +163,8 @@ export default function Request01() {
                                     <th scope="col" style={{ width: "5%" }}>
                                         STT
                                     </th>
-                                    <th scope="col">Nhân viên</th>
-                                    <th scope="col">Tiền lương</th>
+                                    <th scope="col">Tuyến đường</th>
+                                    <th scope="col">Doanh thu</th>
                                     <th scope="col">Số chuyến</th>
                                 </tr>
                             </thead>
@@ -165,8 +173,8 @@ export default function Request01() {
                                     (item: any, index: number) => (
                                         <tr key={index}>
                                             <td>{index + 1}</td>
-                                            <td>{item.hoTen}</td>
-                                            <td>{item.tongLuong}</td>
+                                            <td>{item.diemKhoiHanh} - {item.diemDen}</td>
+                                            <td>{item.doanhThu}</td>
                                             <td>{item.tongSoChuyen}</td>
                                         </tr>
                                     )

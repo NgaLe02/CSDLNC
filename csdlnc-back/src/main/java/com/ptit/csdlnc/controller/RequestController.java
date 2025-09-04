@@ -34,4 +34,79 @@ public class RequestController {
 		}
 		return ResponseEntity.ok(ajaxResult);
 	}
+	
+	@GetMapping("car/getRevenue")
+	public ResponseEntity<AjaxResult> getCarRevenue(@RequestParam Map<String, Object> params) {
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			Map<String, Object> result = requestService.getCarRevenue(params);
+			ajaxResult.setStatus(true);
+			ajaxResult.setResponseData(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Tìm kiếm không thành công!");
+		}
+		return ResponseEntity.ok(ajaxResult);
+	}
+	
+	@GetMapping("route/getRevenue")
+	public ResponseEntity<AjaxResult> getRouteRevenue(@RequestParam Map<String, Object> params) {
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			Map<String, Object> result = requestService.getRouteRevenue(params);
+			ajaxResult.setStatus(true);
+			ajaxResult.setResponseData(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Tìm kiếm không thành công!");
+		}
+		return ResponseEntity.ok(ajaxResult);
+	}
+	
+	@GetMapping("typeCar/getRevenue")
+	public ResponseEntity<AjaxResult> getTypeCarRevenue(@RequestParam Map<String, Object> params) {
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			Map<String, Object> result = requestService.getTypeCarRevenue(params);
+			ajaxResult.setStatus(true);
+			ajaxResult.setResponseData(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Tìm kiếm không thành công!");
+		}
+		return ResponseEntity.ok(ajaxResult);
+	}
+	
+	@GetMapping("baoduong/getTimeBaoDuong")
+	public ResponseEntity<AjaxResult> getTimeBaoDuong(@RequestParam Map<String, Object> params) {
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			Map<String, Object> result = requestService.getTimeBaoDuong(params);
+			ajaxResult.setStatus(true);
+			ajaxResult.setResponseData(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Tìm kiếm không thành công!");
+		}
+		return ResponseEntity.ok(ajaxResult);
+	}
+	
+	@GetMapping("baoduong/getTimeBaoDuongQuaHan")
+	public ResponseEntity<AjaxResult> getTimeBaoDuongQuaHan(@RequestParam Map<String, Object> params) {
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			Map<String, Object> result = requestService.getTimeBaoDuongQuaHan(params);
+			ajaxResult.setStatus(true);
+			ajaxResult.setResponseData(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Tìm kiếm không thành công!");
+		}
+		return ResponseEntity.ok(ajaxResult);
+	}
 }

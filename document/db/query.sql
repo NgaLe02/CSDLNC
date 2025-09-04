@@ -1,5 +1,6 @@
 -- # 1. Hiển thị tên của các lái xe cùng với lương tháng của họ của một tháng cụ thể.
 SELECT nv.hoTen,
+       COUNT(DISTINCT cx.maChuyen) AS tongSoChuyen,
        SUM(ltd.luongCoBan * cx.tiLeThuLao) AS tongLuong
 FROM NhanVien nv
 JOIN PhanCong pc
@@ -22,6 +23,7 @@ GROUP BY nv.hoTen;
 SELECT
     x.maXe,
     x.bienSo,
+    COUNT(DISTINCT cx.maChuyen) AS tongSoChuyen,
     SUM(gv.giaVe) AS doanhThu
 FROM Xe x
 JOIN ChuyenXe cx
@@ -46,7 +48,8 @@ GROUP BY x.maXe, x.bienSo;
 SELECT td.maTuyen,
        td.diemKhoiHanh,
        td.diemDen,
-       SUM(gv.giaVe) AS doanhThu
+       SUM(gv.giaVe) AS doanhThu,
+       COUNT(DISTINCT cx.maChuyen) AS tongSoChuyen
 FROM Ve v
 JOIN ChuyenXe cx
   ON v.maChuyen = cx.maChuyen
@@ -95,9 +98,10 @@ WITH BaoDuongGanNhat AS (
 ),
 BaoDuong AS (
     SELECT x.maXe,
-           DATE_ADD(bd.ngayBaoDuongGanNhat,
-                    INTERVAL (360 - FLOOR(SUM(COALESCE(td.khoangCach,0) * td.heSoDuongKho) / 100)) DAY
-                   ) AS ngayBaoDuongTiepTheo
+           DATE_ADD(
+               bd.ngayBaoDuongGanNhat,
+               INTERVAL (360 - FLOOR(SUM(COALESCE(td.khoangCach,0) * td.heSoDuongKho) / 100)) DAY
+           ) AS ngayBaoDuongTiepTheo
     FROM BaoDuongGanNhat bd
     JOIN Xe x ON x.maXe = bd.maXe
     LEFT JOIN ChuyenXe cx
@@ -107,11 +111,18 @@ BaoDuong AS (
     LEFT JOIN TuyenDuong td ON td.maTuyen = cx.maTuyen
     GROUP BY x.maXe, bd.ngayBaoDuongGanNhat
 ),
+DangKiemGanNhat AS (
+    SELECT hd1.maXe, hd1.ngayDangKiem, hd1.hieuLuc
+    FROM HanDangKiem hd1
+    LEFT JOIN HanDangKiem hd2
+           ON hd1.maXe = hd2.maXe
+          AND hd1.ngayDangKiem < hd2.ngayDangKiem
+    WHERE hd2.maXe IS NULL   -- chỉ giữ bản ghi mới nhất
+),
 DangKiem AS (
-    SELECT hd.maXe,
-           DATE_ADD(MAX(hd.ngayDangKiem), INTERVAL 1 YEAR) AS hanDangKiemTiepTheo
-    FROM HanDangKiem hd
-    GROUP BY hd.maXe
+    SELECT maXe,
+           DATE_ADD(ngayDangKiem, INTERVAL hieuLuc MONTH) AS hanDangKiemTiepTheo
+    FROM DangKiemGanNhat
 )
 SELECT x.maXe,
        x.bienSo,

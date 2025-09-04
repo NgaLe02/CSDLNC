@@ -14,4 +14,14 @@ import com.ptit.csdlnc.model.response.PassengerResponse;
 public interface RequestDAO {
 	List<Map<String, Object>> getSalary(Map<String, Object> param) throws Exception;
 
+	List<Map<String, Object>> getCarRevenue(Map<String, Object> params) throws Exception;
+
+	List<Map<String, Object>> getRouteRevenue(Map<String, Object> params) throws Exception;
+
+	List<Map<String, Object>> getTypeCarRevenue(Map<String, Object> params) throws Exception;
+
+	List<Map<String, Object>> getTimeBaoDuong(Map<String, Object> params) throws Exception;
+
+	List<Map<String, Object>> getTimeBaoDuongQuaHan(Map<String, Object> params) throws Exception;
+
 }

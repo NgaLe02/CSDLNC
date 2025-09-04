@@ -6,28 +6,24 @@ import dayjs from "dayjs";
 import { RequestService } from "../../services/RequestService";
 
 
-export default function Request01() {
+export default function Request05() {
     const [modelSearch, setModelSearch] = useState<any>(
         {
             limit: 10,
             page: 1,
             time: new Date().getTime(),
-            role: "Lái xe",
-            fromDate: '2025-08-01',
-            toDate: '2025-09-01',
-            keyword: ''
         });
     const [listData, setListData] = useState<any[]>([]);
     const totalElement = useRef(0);
 
     useEffect(() => {
-        getSalary();
+        getTimeBaoDuong();
     }, [modelSearch.time]);
 
 
-    function getSalary() {
+    function getTimeBaoDuong() {
         RequestService.getInstance()
-            .getSalary(modelSearch)
+            .getTimeBaoDuong(modelSearch)
             .then((response) => {
                 if (response.status === HttpStatusCode.Ok) {
                     if (response.data.status) {
@@ -67,11 +63,11 @@ export default function Request01() {
                     <form className="row g-3">
                         {/* Tìm theo họ tên / số điện thoại */}
                         <div className="col-md-4">
-                            <label className="form-label" htmlFor="keyword">Hành khách</label>
+                            <label className="form-label" htmlFor="keyword">Xe</label>
                             <input
                                 type="search"
                                 className="form-control"
-                                placeholder="Nhập họ tên hoặc số điện thoại"
+                                placeholder="Mã xe, biển số"
                                 name="keyword"
                                 onChange={(e) => handleChangeSearch(e)}
                                 onKeyDown={(e) => {
@@ -84,45 +80,6 @@ export default function Request01() {
                                     }
                                 }}
                             />
-                        </div>
-
-                        {/* Thời gian (theo tháng) */}
-                        <div className="col-md-4">
-                            <label className="form-label" htmlFor="month">Tháng</label>
-                            <input
-                                type="month"
-                                className="form-control"
-                                value={
-                                    modelSearch.fromDate
-                                        ? modelSearch.fromDate.slice(0, 7) // chỉ lấy "YYYY-MM"
-                                        : ""
-                                }
-                                name="month"
-                                onChange={(e) => {
-                                    const value = e.target.value; // ví dụ: "2025-09"
-                                    const [year, month] = value.split("-");
-                                    const fromDate = `${year}-${month}-01`;
-                                    const toDate = new Date(Number(year), Number(month), 0) // ngày cuối tháng
-                                        .toISOString()
-                                        .split("T")[0];
-
-                                    handleChangeSearch({ target: { name: "fromDate", value: fromDate } });
-                                    handleChangeSearch({ target: { name: "toDate", value: toDate } });
-                                }}
-                            />
-                        </div>
-
-                        {/* Vai trò */}
-                        <div className="col-md-2">
-                            <label className="form-label" htmlFor="role">Vai trò</label>
-                            <select className="form-select" name="role"
-                                onChange={(e) => handleChangeSearch(e)}
-                                value={modelSearch.role}
-                            >
-                                <option value="">-- Vai trò --</option>
-                                <option value="Lái xe">Lái xe</option>
-                                <option value="Phụ xe">Phụ xe</option>
-                            </select>
                         </div>
 
                         <div className="col-md-2 d-flex align-items-end">
@@ -155,9 +112,10 @@ export default function Request01() {
                                     <th scope="col" style={{ width: "5%" }}>
                                         STT
                                     </th>
-                                    <th scope="col">Nhân viên</th>
-                                    <th scope="col">Tiền lương</th>
-                                    <th scope="col">Số chuyến</th>
+                                    <th scope="col">Mã xe</th>
+                                    <th scope="col">Biển số</th>
+                                    <th scope="col">Ngày bảo dưỡng tiếp theo</th>
+                                    <th scope="col">Hạn đăng kiểm tiếp theo</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -165,9 +123,27 @@ export default function Request01() {
                                     (item: any, index: number) => (
                                         <tr key={index}>
                                             <td>{index + 1}</td>
-                                            <td>{item.hoTen}</td>
-                                            <td>{item.tongLuong}</td>
-                                            <td>{item.tongSoChuyen}</td>
+                                            <td>{item.maXe}</td>
+                                            <td>{item.bienSo}</td>
+                                            <td>{item.ngayBaoDuongTiepTheo}</td>
+                                            {item.ngayBaoDuongTiepTheo}
+                                            {(() => {
+                                                if (item.ngayBaoDuongTiepTheo) {
+                                                    const ngayBD = new Date(item.ngayBaoDuongTiepTheo);
+                                                    const today = new Date();
+                                                    const diff = Math.floor(
+                                                        (today.getTime() - ngayBD.getTime()) / (1000 * 60 * 60 * 24)
+                                                    );
+                                                    if (diff > 0) {
+                                                        return (
+                                                            <span style={{ color: "red", marginLeft: "8px" }}>
+                                                                (Quá hạn {diff} ngày)
+                                                            </span>
+                                                        );
+                                                    }
+                                                }
+                                                return null;
+                                            })()}
                                         </tr>
                                     )
                                 )}

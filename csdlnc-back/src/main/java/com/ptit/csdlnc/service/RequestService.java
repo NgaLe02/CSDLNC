@@ -19,10 +19,44 @@ public class RequestService {
 	@Autowired
 	RequestDAO requestDAO;
 
-
 	public Map<String, Object> getSalary(Map<String, Object> params) throws Exception {
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("data", requestDAO.getSalary(params));
+
+		return resultMap;
+	}
+
+	public Map<String, Object> getCarRevenue(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("data", requestDAO.getCarRevenue(params));
+
+		return resultMap;
+	}
+
+	public Map<String, Object> getRouteRevenue(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("data", requestDAO.getRouteRevenue(params));
+
+		return resultMap;
+	}
+
+	public Map<String, Object> getTypeCarRevenue(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("data", requestDAO.getTypeCarRevenue(params));
+
+		return resultMap;
+	}
+
+	public Map<String, Object> getTimeBaoDuong(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("data", requestDAO.getTimeBaoDuong(params));
+
+		return resultMap;
+	}
+
+	public Map<String, Object> getTimeBaoDuongQuaHan(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("data", requestDAO.getTimeBaoDuongQuaHan(params));
 
 		return resultMap;
 	}

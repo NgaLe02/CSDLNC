@@ -168,22 +168,53 @@ function SideBarLeft() {
                 <i className="far fa-file-alt me-2"></i>Các yêu cầu
               </a>
               <div className="dropdown-menu bg-transparent border-0">
-                <a href="/request/re-01" className="dropdown-item">
+                <a href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/request/re-01");
+                  }}
+                >
                   Lương tháng lái xe
                 </a>
-                <a href="/request/re-02" className="dropdown-item">
+                <a href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/request/re-02");
+                  }}>
                   Doanh thu của xe
                 </a>
-                <a href="/request/re-03" className="dropdown-item">
+                <a href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/request/re-03");
+                  }}>
                   Doanh thu tuyến đường
                 </a>
-                <a href="/request/re-04" className="dropdown-item">
+                <a href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/request/re-04");
+                  }}>
                   Doanh thu loại xe
                 </a>
-                <a href="/request/re-05" className="dropdown-item">
+                <a href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/request/re-05");
+                  }}>
                   Ngày bảo dưỡng, đăng kiểm
                 </a>
-                <a href="/request/re-06" className="dropdown-item">
+                <a href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/request/re-06");
+                  }}>
                   Quá hạn bảo dưỡng
                 </a>
               </div>

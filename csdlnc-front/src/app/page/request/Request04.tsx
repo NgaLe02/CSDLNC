@@ -6,28 +6,26 @@ import dayjs from "dayjs";
 import { RequestService } from "../../services/RequestService";
 
 
-export default function Request01() {
+export default function Request04() {
     const [modelSearch, setModelSearch] = useState<any>(
         {
             limit: 10,
             page: 1,
             time: new Date().getTime(),
-            role: "Lái xe",
             fromDate: '2025-08-01',
             toDate: '2025-09-01',
-            keyword: ''
         });
     const [listData, setListData] = useState<any[]>([]);
     const totalElement = useRef(0);
 
     useEffect(() => {
-        getSalary();
+        getTypeCarRevenue();
     }, [modelSearch.time]);
 
 
-    function getSalary() {
+    function getTypeCarRevenue() {
         RequestService.getInstance()
-            .getSalary(modelSearch)
+            .getTypeCarRevenue(modelSearch)
             .then((response) => {
                 if (response.status === HttpStatusCode.Ok) {
                     if (response.data.status) {
@@ -112,19 +110,6 @@ export default function Request01() {
                             />
                         </div>
 
-                        {/* Vai trò */}
-                        <div className="col-md-2">
-                            <label className="form-label" htmlFor="role">Vai trò</label>
-                            <select className="form-select" name="role"
-                                onChange={(e) => handleChangeSearch(e)}
-                                value={modelSearch.role}
-                            >
-                                <option value="">-- Vai trò --</option>
-                                <option value="Lái xe">Lái xe</option>
-                                <option value="Phụ xe">Phụ xe</option>
-                            </select>
-                        </div>
-
                         <div className="col-md-2 d-flex align-items-end">
                             <label className="form-label" htmlFor="role"></label>
                             <button
@@ -155,8 +140,8 @@ export default function Request01() {
                                     <th scope="col" style={{ width: "5%" }}>
                                         STT
                                     </th>
-                                    <th scope="col">Nhân viên</th>
-                                    <th scope="col">Tiền lương</th>
+                                    <th scope="col">Loại xe</th>
+                                    <th scope="col">Doanh thu</th>
                                     <th scope="col">Số chuyến</th>
                                 </tr>
                             </thead>
@@ -165,8 +150,8 @@ export default function Request01() {
                                     (item: any, index: number) => (
                                         <tr key={index}>
                                             <td>{index + 1}</td>
-                                            <td>{item.hoTen}</td>
-                                            <td>{item.tongLuong}</td>
+                                            <td>{item.tenLoaiXe}</td>
+                                            <td>{item.doanhThu}</td>
                                             <td>{item.tongSoChuyen}</td>
                                         </tr>
                                     )

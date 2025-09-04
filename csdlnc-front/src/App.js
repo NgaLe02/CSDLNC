@@ -14,6 +14,11 @@ import TicketPrice from "./app/page/system/ticketPrice/TicketPrice";
 import Trip from "./app/page/system/trip/Trip";
 import Ticket from "./app/page/system/ticket/Ticket";
 import Request01 from "./app/page/request/Request01";
+import Request02 from "./app/page/request/Request02";
+import Request03 from "./app/page/request/Request03";
+import Request04 from "./app/page/request/Request04";
+import Request05 from "./app/page/request/Request05";
+import Request06 from "./app/page/request/Request06";
 
 function App() {
   return (
@@ -43,10 +48,11 @@ function App() {
 
               <Route path="/request" element={<System />}>
                 <Route path="re-01" element={<Request01 />} />
-                <Route path="re-02" element={<TypeCar />} />
-                <Route path="re-03" element={<Passenger />} />
-                <Route path="re-04" element={<Employee />} />
-                <Route path="re-05" element={<Season />} />
+                <Route path="re-02" element={<Request02 />} />
+                <Route path="re-03" element={<Request03 />} />
+                <Route path="re-04" element={<Request04 />} />
+                <Route path="re-05" element={<Request05 />} />
+                <Route path="re-06" element={<Request06 />} />
               </Route>
             </Routes>
           </div>
