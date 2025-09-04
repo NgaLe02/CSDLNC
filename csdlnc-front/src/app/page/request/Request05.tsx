@@ -125,7 +125,6 @@ export default function Request05() {
                                             <td>{index + 1}</td>
                                             <td>{item.maXe}</td>
                                             <td>{item.bienSo}</td>
-                                            <td>{item.ngayBaoDuongTiepTheo}</td>
                                             {item.ngayBaoDuongTiepTheo}
                                             {(() => {
                                                 if (item.ngayBaoDuongTiepTheo) {
@@ -144,6 +143,8 @@ export default function Request05() {
                                                 }
                                                 return null;
                                             })()}
+                                            <td>{item.hanDangKiemTiepTheo}</td>
+
                                         </tr>
                                     )
                                 )}

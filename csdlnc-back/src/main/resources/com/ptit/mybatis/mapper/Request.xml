@@ -166,10 +166,7 @@
 		LEFT JOIN DangKiem d ON d.maXe = x.maXe
 		where
 		   1=1
-		<if test="keyword != null and keyword != ''">
-		   AND (x.maXe LIKE CONCAT('%', #{keyword}, '%') 
-		        OR x.bienSo LIKE CONCAT('%', #{keyword}, '%'))
-		</if>
+		
     </select>
     
     <!-- # Hiển thị danh sách các xe quá hạn bảo dưỡng -->
@@ -191,7 +188,11 @@
 		SELECT x.maXe, x.bienSo, b.ngayBaoDuongTiepTheo
 		FROM Xe x
 		JOIN BaoDuong b ON b.maXe = x.maXe
-		WHERE b.ngayBaoDuongTiepTheo &lt; CURRENT_DATE;
+		WHERE b.ngayBaoDuongTiepTheo &lt; CURRENT_DATE
+		<if test="keyword != null and keyword != ''">
+		   AND (x.maXe LIKE CONCAT('%', #{keyword}, '%') 
+		        OR x.bienSo LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
 
     </select>
 	

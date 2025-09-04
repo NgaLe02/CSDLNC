@@ -32,7 +32,7 @@ function SideBarLeft() {
             <div className="position-relative">
               <img
                 className="rounded-circle"
-                src="img/ptit.png"
+                src="/img/ptit.png"
                 alt=""
                 style={{ width: "40px", height: "40px" }}
               />
