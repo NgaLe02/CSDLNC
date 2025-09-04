@@ -141,6 +141,25 @@ export default function TicketForm(props: any) {
             </select>
           </div>
 
+          <div className="mb-3">
+            <label htmlFor="maTuyen" className="form-label">
+              Hành khách
+            </label>
+            <select
+              className="form-select"
+              id="maTuyen"
+              name="maTuyen"
+              value={model.maTuyen ?? ""}
+              onChange={(e: any) => handleChange(e)}
+            >
+              <option value="">-- Chọn tuyến đường --</option>
+              {listRoute.map((item) => (
+                <option key={item.maTuyen} value={item.maTuyen}>
+                  {item.diemKhoiHanh} - {item.diemDen}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <button
             type="button"

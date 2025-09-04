@@ -750,6 +750,7 @@ END$$
 
 DELIMITER ;
 
+-- Không được tạo chuyến nếu: Xe đang bảo dưỡng, ngừng hoạt động, hoặc quá hạn đăng kiểm.
 DELIMITER $$
 
 CREATE TRIGGER trg_check_xe_chuyen
@@ -773,6 +774,8 @@ END$$
 
 DELIMITER ;
 
+
+-- Không thể hủy chuyến nếu đã bán vé
 DELIMITER $$
 
 CREATE TRIGGER trg_no_cancel_if_ticket_sold
