@@ -61,7 +61,11 @@ public class TicketPriceService {
 		return result;
 	}
 
-	public int deleteTicketPrice(int id) throws Exception {
-		return ticketPriceDAO.deleteTicketPrice(id);
+	public int deleteTicketPrice(Map<String, Object> params) throws Exception {
+		return ticketPriceDAO.deleteTicketPrice(params);
+	}
+
+	public TicketPriceResponse findByTuyenAndMua(Map<String, Object> params) throws Exception {
+		return ticketPriceDAO.findByTuyenAndMua(params);
 	}
 }

@@ -48,7 +48,10 @@
 		    ON cx.maTuyen = gv.maTuyen
 		   AND cx.maMua = gv.maMua
 		   AND cx.maGiaVe = gv.maGiaVe
-		WHERE x.tinhTrang = 'Đang hoạt động'
+		WHERE 1 = 1
+		 <if test="tinhTrang != null and tinhTrang != ''">
+		   AND x.tinhTrang = #{tinhTrang}
+		</if>
 		  AND cx.tinhTrangChuyen = 'Hoàn thành'
 		  AND DATE(cx.ngayGioDen) &gt;= #{fromDate} 
 		  AND DATE(cx.ngayGioDen) &lt; #{toDate}
@@ -118,6 +121,9 @@
 		  AND DATE(cx.ngayGioDen) &lt; #{toDate}
 		  AND cx.ngayGioKhoiHanh >= gv.ngayBatDau
 		  AND (gv.ngayKetThuc IS NULL OR cx.ngayGioKhoiHanh &lt;= gv.ngayKetThuc)
+		  <if test="keyword != null and keyword != ''">
+		   AND lx.tenLoaiXe LIKE CONCAT('%', #{keyword}, '%') 
+		</if>
 		GROUP BY x.maLoaiXe, lx.tenLoaiXe;
 
     </select>
@@ -171,28 +177,36 @@
     
     <!-- # Hiển thị danh sách các xe quá hạn bảo dưỡng -->
     <select id="getTimeBaoDuongQuaHan" parameterType="map" resultType="map">
-        WITH BaoDuong AS (
+		WITH BaoDuongGanNhat AS (
+		    SELECT lb.maXe, MAX(lb.ngayBaoDuong) AS ngayBaoDuongGanNhat
+		    FROM LichBaoDuong lb
+		    GROUP BY lb.maXe
+		),
+		BaoDuong AS (
 		    SELECT x.maXe,
-		           DATE_ADD(lb.ngayBaoDuong,
-		                    INTERVAL (360 - FLOOR(SUM(td.khoangCach * td.heSoDuongKho) / 100)) DAY
-		                   ) AS ngayBaoDuongTiepTheo
-		    FROM Xe x
-		    JOIN LichBaoDuong lb ON lb.maXe = x.maXe
+		           DATE_ADD(
+		               bd.ngayBaoDuongGanNhat,
+		               INTERVAL (360 - FLOOR(SUM(COALESCE(td.khoangCach,0) * td.heSoDuongKho) / 100)) DAY
+		           ) AS ngayBaoDuongTiepTheo
+		    FROM BaoDuongGanNhat bd
+		    JOIN Xe x ON x.maXe = bd.maXe
 		    LEFT JOIN ChuyenXe cx
 		           ON cx.maXe = x.maXe
-		          AND cx.ngayGioKhoiHanh >= lb.ngayBaoDuong
+		          AND cx.ngayGioKhoiHanh >= bd.ngayBaoDuongGanNhat
 		          AND cx.tinhTrangChuyen = 'Hoàn thành'
 		    LEFT JOIN TuyenDuong td ON td.maTuyen = cx.maTuyen
-		    GROUP BY x.maXe, lb.ngayBaoDuong
+		    GROUP BY x.maXe, bd.ngayBaoDuongGanNhat
 		)
-		SELECT x.maXe, x.bienSo, b.ngayBaoDuongTiepTheo
+		SELECT x.maXe,
+		       x.bienSo,
+		       b.ngayBaoDuongTiepTheo
 		FROM Xe x
-		JOIN BaoDuong b ON b.maXe = x.maXe
+		LEFT JOIN BaoDuong b ON b.maXe = x.maXe
 		WHERE b.ngayBaoDuongTiepTheo &lt; CURRENT_DATE
 		<if test="keyword != null and keyword != ''">
 		   AND (x.maXe LIKE CONCAT('%', #{keyword}, '%') 
 		        OR x.bienSo LIKE CONCAT('%', #{keyword}, '%'))
-		</if>
+		</if>;
 
     </select>
 	

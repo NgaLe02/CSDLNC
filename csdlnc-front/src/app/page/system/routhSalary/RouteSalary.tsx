@@ -82,7 +82,9 @@ export default function RouteSalary() {
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách lương tuyến đường</h6>
+            <h6 className="mb-0">
+              Danh sách lương tuyến đường (cần có tối thiểu 1 bản ghi)
+            </h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
               Thêm
             </button>
@@ -115,7 +117,7 @@ export default function RouteSalary() {
                     <td>{item.doPhucTap}</td>
                     <td>{item.khoangCachTu}</td>
                     <td>{item.khoangCachDen}</td>
-                    <td>{item.luongCoBan}</td>
+                    <td>{item.luongCoBan?.toLocaleString("vi-VN")} </td>
                     {/* <td>{dayjs(item.ngayBatDau).format("YYYY-MM-DD")}</td> */}
                     {/* <td>{item.ngayKetThuc ? dayjs(item.ngayKetThuc).format("YYYY-MM-DD") : ''}</td> */}
                     <td>
@@ -146,7 +148,9 @@ export default function RouteSalary() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel.maLuongTuyen ? "Sửa lương tuyến đường" : "Thêm lương tuyến đường"}
+                  {editingModel.maLuongTuyen
+                    ? "Sửa lương tuyến đường"
+                    : "Thêm lương tuyến đường"}
                 </h5>
                 <button
                   type="button"

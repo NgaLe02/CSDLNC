@@ -53,9 +53,9 @@ export default function TicketPrice() {
     setShowForm(true);
   }
 
-  function handleDelete(id: number) {
+  function handleDelete(item: any) {
     TicketPriceService.getInstance()
-      .deleteTicketPrice(id)
+      .deleteTicketPrice(item)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
@@ -116,7 +116,7 @@ export default function TicketPrice() {
                         {item.tuyenDuong?.diemKhoiHanh} -
                         {item.tuyenDuong?.diemDen}
                       </td>
-                      <td>{item.giaVe}</td>
+                      <td>{item.giaVe?.toLocaleString("vi-VN")} </td>
                       <td>
                         <button
                           className="btn btn-sm btn-info ms-2"
@@ -126,7 +126,7 @@ export default function TicketPrice() {
                         </button>
                         <button
                           className="btn btn-sm btn-danger ms-2"
-                          onClick={() => handleDelete(item.maMua!)}
+                          onClick={() => handleDelete(item)}
                         >
                           Xóa
                         </button>

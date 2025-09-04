@@ -23,6 +23,8 @@ public class TripResponse {
 	private Double tiLeThuLao;
 	private String maXe;
 	private String maTuyen;
+	private String maMua;
+	private String maGiaVe;
 
 	private CarResponse xe;
 	private RouteResponse tuyenDuong;

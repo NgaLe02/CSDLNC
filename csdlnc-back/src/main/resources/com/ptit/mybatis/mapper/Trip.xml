@@ -6,6 +6,8 @@
         <id property="maXe" column="maXe"/>
         <id property="maTuyen" column="maTuyen"/>
         
+        <result property="maMua" column="maMua"/>
+        <result property="maGiaVe" column="maGiaVe"/>
         <result property="tinhTrangChuyen" column="tinhTrangChuyen"/>
         <result property="ngayGioKhoiHanh" column="ngayGioKhoiHanh"/>
         <result property="ngayGioDen" column="ngayGioDen"/>
@@ -55,6 +57,8 @@
 	           cx.chiPhiVanHanh, 
 	           cx.tiLeThuLao, 
 	           cx.maXe, 
+	           cx.maMua,
+	           cx.maTuyen,
 	           
 	           x.bienSo,
 	           cx.maTuyen, 
@@ -86,6 +90,23 @@
 	        ON td.maLuongTuyen = ltd.maLuongTuyen
 		JOIN Mua m 
 		    ON gv.maMua = m.maMua
+		where 1 = 1
+			<if test="khoiHanhTuNgay != null and khoiHanhTuNgay != ''">
+			   AND DATE(cx.ngayGioKhoiHanh) &gt;= #{khoiHanhTuNgay}
+			</if>
+			<if test="khoiHanhDenNgay != null and khoiHanhDenNgay != ''">
+			   AND DATE(cx.ngayGioKhoiHanh) &lt;= #{khoiHanhDenNgay}
+			</if>
+			<if test="diemKhoiHanh != null and diemKhoiHanh != ''">
+			   AND td.diemKhoiHanh LIKE CONCAT('%', #{diemKhoiHanh}, '%')
+			</if>
+			<if test="diemDen != null and diemDen != ''">
+			   AND td.diemDen LIKE CONCAT('%', #{diemDen}, '%')
+			</if>
+			<if test="tinhTrangChuyen != null and tinhTrangChuyen != ''">
+			   AND cx.tinhTrangChuyen = #{tinhTrangChuyen}
+			</if>
+		order by cx.ngayGioKhoiHanh desc
 		<if test="limit != null and offset != null">
 		  LIMIT #{limit} OFFSET #{offset}
 		</if>
@@ -106,6 +127,22 @@
 	        ON td.maLuongTuyen = ltd.maLuongTuyen
 		JOIN Mua m 
 		    ON gv.maMua = m.maMua
+		where 1 = 1
+			<if test="khoiHanhTuNgay != null and khoiHanhTuNgay != ''">
+			   AND DATE(cx.ngayGioKhoiHanh) &gt;= #{khoiHanhTuNgay}
+			</if>
+			<if test="khoiHanhDenNgay != null and khoiHanhDenNgay != ''">
+			   AND DATE(cx.ngayGioKhoiHanh) &lt;= #{khoiHanhDenNgay}
+			</if>
+			<if test="diemKhoiHanh != null and diemKhoiHanh != ''">
+			   AND td.diemKhoiHanh LIKE CONCAT('%', #{diemKhoiHanh}, '%')
+			</if>
+			<if test="diemDen != null and diemDen != ''">
+			   AND td.diemDen LIKE CONCAT('%', #{diemDen}, '%')
+			</if>
+			<if test="tinhTrangChuyen != null and tinhTrangChuyen != ''">
+			   AND cx.tinhTrangChuyen = #{tinhTrangChuyen}
+			</if>
 	</select>
 
 	
@@ -148,12 +185,31 @@
 	        ON td.maLuongTuyen = ltd.maLuongTuyen
 		JOIN Mua m 
 		    ON gv.maMua = m.maMua
-	    WHERE cx.maChuyen = #{maChuyen} and cx.maTuyen = #{maTuyen} and cx.maXe = #{maXe}
+	    WHERE cx.maChuyen = #{maChuyen} 
+		    and cx.maTuyen = #{maTuyen} 
+		    and cx.maXe = #{maXe}
 	</select>
 	
 	<insert id="insertTrip" parameterType="com.ptit.csdlnc.model.Trip" useGeneratedKeys="true" keyProperty="maChuyen">
-	    INSERT INTO ChuyenXe(tinhTrangChuyen, ngayGioKhoiHanh, ngayGioDen, chiPhiVanHanh, tiLeThuLao, maXe, maTuyen)
-	    VALUES ( #{tinhTrangChuyen}, #{ngayGioKhoiHanh}, #{ngayGioDen}, #{chiPhiVanHanh}, #{tiLeThuLao}, #{maXe}, #{maTuyen})
+	    INSERT INTO ChuyenXe(
+				    tinhTrangChuyen, 
+				    ngayGioKhoiHanh, 
+				    ngayGioDen, 
+				    chiPhiVanHanh, 
+				    tiLeThuLao, 
+				    maXe, 
+				    maTuyen, 
+				    maMua, 
+				    maGiaVe)
+	    VALUES ( #{tinhTrangChuyen}, 
+			    #{ngayGioKhoiHanh}, 
+			    #{ngayGioDen}, 
+			    #{chiPhiVanHanh}, 
+			    #{tiLeThuLao}, 
+			    #{maXe}, 
+			    #{maTuyen}, 
+			    #{maMua}, 
+			    #{maGiaVe})
 	</insert>
 	
 	<update id="updateTrip" parameterType="com.ptit.csdlnc.model.Trip">
@@ -164,13 +220,19 @@
 	        chiPhiVanHanh = #{chiPhiVanHanh},
 	        tiLeThuLao = #{tiLeThuLao},
 	        maXe = #{maXe},
-	        maTuyen = #{maTuyen}
+	        maTuyen = #{maTuyen},
+	        maMua = #{maMua},
+	        maGiaVe = #{maGiaVe}
 	    WHERE maChuyen = #{maChuyen}
+	    and maTuyen = #{maTuyen} 
+	    and maXe = #{maXe}
 	</update>
 	
 	<delete id="deleteTrip" parameterType="string">
 	    DELETE FROM ChuyenXe
 	    WHERE maChuyen = #{maChuyen}
+	    and maTuyen = #{maTuyen} 
+	    and maXe = #{maXe}
 	</delete>
 	
 </mapper>

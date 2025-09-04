@@ -1,5 +1,5 @@
 export class SeasonModel {
-  maMua?: number;
+  maMua?: string;
   tenMua?: string;
 
   constructor(init?: Partial<SeasonModel>) {

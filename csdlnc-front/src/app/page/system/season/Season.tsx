@@ -52,7 +52,7 @@ export default function Season() {
     setShowForm(true);
   }
 
-  function handleDelete(id: number) {
+  function handleDelete(id: string) {
     SeasonService.getInstance()
       .deleteSeason(id)
       .then((resp) => {
@@ -81,7 +81,7 @@ export default function Season() {
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách mùa</h6>
+            <h6 className="mb-0">Danh sách mùa (cần có tối thiểu 1 mùa lễ)</h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
               Thêm mùa
             </button>

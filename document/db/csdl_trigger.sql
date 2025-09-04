@@ -749,3 +749,55 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_check_xe_chuyen
+BEFORE INSERT ON ChuyenXe
+FOR EACH ROW
+BEGIN
+    DECLARE v_tinhTrang VARCHAR(50);
+
+    -- Lấy tình trạng xe
+    SELECT tinhTrang
+    INTO v_tinhTrang
+    FROM Xe
+    WHERE maXe = NEW.maXe;
+
+    -- Nếu tình trạng không hợp lệ thì báo lỗi
+    IF v_tinhTrang IN ('Đang bảo dưỡng', 'Ngừng hoạt động', 'Quá hạn bảo dưỡng') THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Không thể tạo chuyến: Xe đang bảo dưỡng, ngừng hoạt động hoặc quá hạn đăng kiểm';
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_no_cancel_if_ticket_sold
+BEFORE UPDATE ON ChuyenXe
+FOR EACH ROW
+BEGIN
+    DECLARE v_count INT;
+
+    -- Chỉ kiểm tra khi cập nhật sang trạng thái 'Hủy'
+    IF NEW.tinhTrangChuyen = 'Hủy' AND OLD.tinhTrangChuyen <> 'Hủy' THEN
+        
+        -- Đếm số vé đã bán cho chuyến này
+        SELECT COUNT(*) INTO v_count
+        FROM Ve
+        WHERE maXe = OLD.maXe
+          AND maTuyen = OLD.maTuyen
+          AND maChuyen = OLD.maChuyen;
+
+        -- Nếu có vé thì chặn hủy chuyến
+        IF v_count > 0 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Không thể hủy chuyến: đã có vé được bán';
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
+

@@ -103,14 +103,19 @@ export default function CarForm(props: any) {
             <label htmlFor="soGhe" className="form-label">
               Tình trạng
             </label>
-            <input
-              type="text"
-              className="form-control"
-              id="tinhTrang"
+            <select
+              className="form-select"
               name="tinhTrang"
-              value={model.tinhTrang ?? ""}
-              onChange={handleChange}
-            />
+              onChange={(e: any) => handleChange(e)}
+              value={model.tinhTrang}
+            >
+              <option value="">-- Tình trạng xe --</option>
+              <option value="Đang hoạt động">Đang hoạt động</option>
+              <option value="Sắp bảo dưỡng">Sắp bảo dưỡng</option>
+              <option value="Đang bảo dưỡng">Đang bảo dưỡng</option>
+              <option value="Quá hạn bảo dưỡng">Quá hạn bảo dưỡng</option>
+              <option value="Ngừng hoạt động">Ngừng hoạt động</option>
+            </select>
           </div>
 
           <div className="mb-3">

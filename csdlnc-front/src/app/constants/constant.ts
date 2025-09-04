@@ -1,5 +1,5 @@
 export class Constant {
-  public static readonly TI_LE_THU_LAO = 60;
+  public static readonly TI_LE_THU_LAO = 1.2;
 
   public static readonly LIST_STATUS_TRIP = [
     { value: "Chưa khởi hành", label: "Chưa khởi hành" },

@@ -75,7 +75,9 @@ export default function TypeCar() {
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách loại xe</h6>
+            <h6 className="mb-0">
+              Danh sách loại xe (cần có tối thiểu 1 loại xe)
+            </h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
               Thêm loại xe
             </button>

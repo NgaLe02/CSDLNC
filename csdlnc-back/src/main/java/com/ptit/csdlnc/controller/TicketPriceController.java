@@ -10,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -98,11 +97,11 @@ public class TicketPriceController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@DeleteMapping("{id}/deleteTicketPrice")
-	public ResponseEntity<AjaxResult> deleteTicketPrice(@PathVariable("id") int id) {
+	@DeleteMapping("deleteTicketPrice")
+	public ResponseEntity<AjaxResult> deleteTicketPrice(@RequestBody Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			int result = ticketPriceService.deleteTicketPrice(id);
+			int result = ticketPriceService.deleteTicketPrice(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Xoá thành công");
@@ -110,6 +109,21 @@ public class TicketPriceController {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
 			ajaxResult.setMessage("Xoá thất bại");
+		}
+		return ResponseEntity.ok(ajaxResult);
+	}
+	
+	@GetMapping("findByTuyenAndMua")
+	public ResponseEntity<AjaxResult> findByTuyenAndMua(@RequestParam Map<String, Object> params) {
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			TicketPriceResponse result = ticketPriceService.findByTuyenAndMua(params);
+			ajaxResult.setStatus(true);
+			ajaxResult.setResponseData(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Tìm kiếm không thành công!");
 		}
 		return ResponseEntity.ok(ajaxResult);
 	}

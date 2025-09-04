@@ -235,7 +235,7 @@
 
 	<insert id="insertTicket" parameterType="com.ptit.csdlnc.model.Ticket" useGeneratedKeys="true" keyProperty="maVe">
 	    INSERT INTO Ve (gheNgoi, maHanhKhach, maChuyen, ngayMua)
-	    VALUES (#{gheNgoi}, #{maHanhKhach}, #{maChuyen}, #{ngayMua})
+	    VALUES (#{gheNgoi}, #{maHanhKhach}, #{maChuyen}, now())
 	</insert>
 	
 	<update id="updateTicket" parameterType="com.ptit.csdlnc.model.Ticket">

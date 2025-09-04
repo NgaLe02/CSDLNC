@@ -13,16 +13,15 @@ export default function Trip() {
   const [showForm, setShowForm] = useState(false);
   const [editingModel, setEditingModel] = useState<TripModel>(new TripModel());
   const totalElement = useRef(0);
-  const [modelSearch, setModelSearch] = useState<any>(
-    {
-      limit: 10,
-      page: 1,
-      time: new Date().getTime()
-    });
+  const [modelSearch, setModelSearch] = useState<any>({
+    limit: 10,
+    page: 1,
+    time: new Date().getTime(),
+  });
 
   useEffect(() => {
     getLstTrip();
-  }, []);
+  }, [modelSearch.time]);
 
   function getLstTrip() {
     TripService.getInstance()
@@ -50,14 +49,14 @@ export default function Trip() {
     setShowForm(true);
   }
 
-  function handleEdit(Trip: TripResponseModel) {
+  function handleEdit(trip: TripResponseModel) {
     // setEditingModel({
     //   maxe: Trip.maxe,
     //   bienSo: Trip.bienSo,
     //   tinhTrang: Trip.tinhTrang,
     //   maLoaiXe: Trip.loaiXe?.maLoaiXe
     // });
-    setEditingModel(Trip);
+    setEditingModel(trip);
     setShowForm(true);
   }
 
@@ -90,12 +89,11 @@ export default function Trip() {
     getLstTrip();
   }
 
-
   const handlePageChange = (page: number) => {
     setModelSearch({
       ...modelSearch,
       page: page,
-      time: new Date().getTime()
+      time: new Date().getTime(),
     });
   };
 
@@ -108,6 +106,115 @@ export default function Trip() {
 
   return (
     <>
+      <div className="container-fluid pt-4 px-4">
+        <div className="bg-light rounded p-4">
+          <form className="row g-3">
+            {/* Ngày khởi hành */}
+            <div className="col-md-4">
+              <label className="form-label" htmlFor="khoiHanhTuNgay">
+                Ngày khởi hành
+              </label>
+              <div className="d-flex align-items-center">
+                <input
+                  type="date"
+                  className="form-control"
+                  name="khoiHanhTuNgay"
+                  onChange={(e) => handleChangeSearch(e)}
+                />
+                <span className="mx-2">~</span>
+                <input
+                  type="date"
+                  className="form-control"
+                  name="khoiHanhDenNgay"
+                  onChange={(e) => handleChangeSearch(e)}
+                />
+              </div>
+            </div>
+
+            {/* Điểm khởi hành */}
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="diemKhoiHanh">
+                Điểm khởi hành
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Điểm khởi hành"
+                name="diemKhoiHanh"
+                onChange={(e) => handleChangeSearch(e)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    setModelSearch((prev: any) => ({
+                      ...prev,
+                      time: new Date().getTime(),
+                    }));
+                  }
+                }}
+              />
+            </div>
+
+            {/* Điểm đến */}
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="diemDen">
+                Điểm đến
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Điểm đến"
+                name="diemDen"
+                onChange={(e) => handleChangeSearch(e)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    setModelSearch((prev: any) => ({
+                      ...prev,
+                      time: new Date().getTime(),
+                    }));
+                  }
+                }}
+              />
+            </div>
+
+            {/* Tình trạng chuyến */}
+            <div className="col-md-2">
+              <label className="form-label" htmlFor="khoiHanhTuNgay">
+                Tình trạng chuyến
+              </label>
+              <select
+                className="form-select"
+                name="tinhTrangChuyen"
+                onChange={(e) => handleChangeSearch(e)}
+                value={modelSearch.tinhTrangChuyen}
+              >
+                <option value="">-- Tình trạng --</option>
+                <option value="Chưa khởi hành">Chưa khởi hành</option>
+                <option value="Đang chạy">Đang chạy</option>
+                <option value="Hoàn thành">Hoàn thành</option>
+                <option value="Hủy">Hủy</option>
+              </select>
+            </div>
+
+            {/* Nút tìm kiếm */}
+            <div className="col-md-2 d-flex">
+              <button
+                type="button" // dùng type="button" để tránh reload form
+                className="btn btn-primary w-100"
+                onClick={() => {
+                  setModelSearch((prev: any) => ({
+                    ...prev,
+                    time: new Date().getTime(),
+                  }));
+                }}
+              >
+                Tìm kiếm
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
@@ -143,7 +250,11 @@ export default function Trip() {
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
-                    <td>{totalElement.current - (modelSearch.page - 1) * modelSearch.limit - index}</td>
+                    <td>
+                      {totalElement.current -
+                        (modelSearch.page - 1) * modelSearch.limit -
+                        index}
+                    </td>
                     <td>{item.maChuyen}</td>
                     <td>{item.xe?.maXe}</td>
                     <td>
@@ -156,14 +267,18 @@ export default function Trip() {
                     <td>{dayjs(item.ngayGioDen).format("DD-MM-YYYY HH:mm")}</td>
                     <td>{item.tuyenDuong?.khoangCach}</td>
                     <td>
-                      {item.tuyenDuong?.luongTuyenDuong?.luongCoBan || 0} VNĐ
+                      {item.tuyenDuong?.luongTuyenDuong?.luongCoBan?.toLocaleString(
+                        "vi-VN"
+                      )}
                     </td>
                     <td>
-                      {(item.tuyenDuong?.luongTuyenDuong?.luongCoBan || 0) *
-                        (item.tiLeThuLao || 0)}{" "}
-                      VNĐ
+                      {(
+                        (item.tuyenDuong?.luongTuyenDuong?.luongCoBan || 0) *
+                        (item.tiLeThuLao || 0)
+                      ).toLocaleString("vi-VN")}
                     </td>
-                    <td>{item.giaVe?.giaVe}</td>
+                    <td>{item.chiPhiVanHanh?.toLocaleString("vi-VN")}</td>
+                    <td>{item.giaVe?.giaVe?.toLocaleString("vi-VN")}</td>
                     <td>{item.tinhTrangChuyen}</td>
                     <td>
                       <button

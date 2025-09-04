@@ -36,7 +36,7 @@
         LEFT JOIN tuyenduong TD on TD.maTuyen = G.maTuyen
     </select>
 
-    <select id="getTicketPriceById" parameterType="int" resultMap="ticketPriceMap">
+    <select id="getTicketPriceById" parameterType="map" resultMap="ticketPriceMap">
         SELECT G.maGiaVe, 
         G.giaVe, 
         G.maTuyen, 
@@ -50,6 +50,8 @@
         LEFT JOIN mua M on G.maMua = M.maMua
         LEFT JOIN tuyenduong TD on TD.maTuyen = G.maTuyen
         WHERE G.maGiaVe = #{maGiaVe}
+        AND G.maMua = #{maMua}
+        AND G.maTuyen = #{maTuyen}
     </select>
 
     <insert id="insertTicketPrice" parameterType="com.ptit.csdlnc.model.TicketPrice"
@@ -70,9 +72,20 @@
         WHERE maGiaVe = #{maGiaVe}
     </update>
 
-    <delete id="deleteTicketPrice" parameterType="int">
+    <delete id="deleteTicketPrice" parameterType="map">
         DELETE FROM GiaVe
         WHERE maGiaVe = #{maGiaVe}
+        AND maMua = #{maMua}
+        AND maTuyen = #{maTuyen}
     </delete>
+    
+    <select id="findByTuyenAndMua" parameterType="map" resultMap="ticketPriceMap">
+        SELECT *
+		FROM GiaVe
+		WHERE maTuyen = #{maTuyen}
+		  AND maMua = #{maMua}
+		  AND ngayBatDau &lt;= CURDATE()
+		  AND (ngayKetThuc IS NULL OR CURDATE() &lt;= ngayKetThuc)
+    </select>
 
 </mapper>

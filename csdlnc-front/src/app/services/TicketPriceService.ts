@@ -43,15 +43,23 @@ export class TicketPriceService {
     });
   }
 
-  public deleteTicketPrice(id: number) {
+  public deleteTicketPrice(request: any) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL +
-        "/ticketPrice/" +
-        id +
-        "/deleteTicketPrice"
+      process.env.REACT_APP_API_URL + "/ticketPrice/deleteTicketPrice"
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),
+      data: request,
     });
+  }
+
+  public findTicketPriceByTuyenAndMua(maTuyen: string, maMua: string) {
+    return axios.get(
+      `${process.env.REACT_APP_API_URL}/ticketPrice/findByTuyenAndMua`,
+      {
+        params: { maTuyen, maMua },
+        headers: HeadersUtil.getHeaders(),
+      }
+    );
   }
 }

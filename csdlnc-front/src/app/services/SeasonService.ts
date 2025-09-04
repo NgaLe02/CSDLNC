@@ -43,7 +43,7 @@ export class SeasonService {
     });
   }
 
-  public deleteSeason(id: number) {
+  public deleteSeason(id: string) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/season/" + id + "/deleteSeason"
     );

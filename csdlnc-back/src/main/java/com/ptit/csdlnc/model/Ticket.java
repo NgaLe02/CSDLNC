@@ -34,7 +34,5 @@ public class Ticket {
 	@Size(max = 4, message = "Mã chuyến tối đa 4 ký tự")
 	private String maChuyen;
 
-	@NotNull(message = "Ngày mua không được null")
-	@PastOrPresent(message = "Ngày mua không được lớn hơn ngày hiện tại")
 	private Date ngayMua;
 }

@@ -15,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TicketPriceResponse {
-	private Integer maGiaVe;
+	private String maGiaVe;
 	private Double giaVe;
 	private String maTuyen;
 	private String maMua;

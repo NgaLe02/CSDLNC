@@ -119,7 +119,11 @@ export default function RouteSystem() {
                     <td>{item.diemDen}</td>
                     <td>{item.doPhucTap}</td>
                     <td>{item.heSoDuongKho}</td>
-                    <td>{item.luongTuyenDuong?.luongCoBan}</td>
+                    <td>
+                      {item.luongTuyenDuong?.luongCoBan?.toLocaleString(
+                        "vi-VN"
+                      )}{" "}
+                    </td>
 
                     {/* <td>{dayjs(item.ngayBatDau).format("YYYY-MM-DD")}</td> */}
                     {/* <td>{item.ngayKetThuc ? dayjs(item.ngayKetThuc).format("YYYY-MM-DD") : ''}</td> */}
@@ -151,7 +155,9 @@ export default function RouteSystem() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel.maTuyen ? "Sửa tuyến đường" : "Thêm tuyến đường"}
+                  {editingModel.maTuyen
+                    ? "Sửa tuyến đường"
+                    : "Thêm tuyến đường"}
                 </h5>
                 <button
                   type="button"

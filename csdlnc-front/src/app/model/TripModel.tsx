@@ -7,6 +7,8 @@ export class TripModel {
   tiLeThuLao?: number;
   maXe?: string;
   maTuyen?: string;
+  maMua?: string;
+  maGiaVe?: string;
 
   constructor(init?: Partial<TripModel>) {
     Object.assign(this, init);

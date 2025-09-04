@@ -12,10 +12,14 @@ import com.ptit.csdlnc.model.response.TicketPriceResponse;
 public interface TicketPriceDAO {
 	List<TicketPriceResponse> getLstTicketPrice(Map<String, Object> params) throws Exception;
 
+	TicketPriceResponse getTicketPriceById(Map<String, Object> params) throws Exception;
+
 	int insertTicketPrice(TicketPrice model) throws Exception;
 
 	int updateTicketPrice(TicketPrice model) throws Exception;
 
-	int deleteTicketPrice(int id) throws Exception;
+	int deleteTicketPrice(Map<String, Object> params) throws Exception;
+
+	TicketPriceResponse findByTuyenAndMua(Map<String, Object> params) throws Exception;
 
 }

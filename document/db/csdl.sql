@@ -28,7 +28,6 @@ CREATE TABLE Xe (
         'Sắp bảo dưỡng',
         'Đang bảo dưỡng',
         'Quá hạn bảo dưỡng',
-        'Hết hạn đăng kiểm',
         'Ngừng hoạt động'
     )),
     maLoaiXe INT NOT NULL,
