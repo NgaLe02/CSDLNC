@@ -6,6 +6,7 @@
         <result property="maXe" column="maXe"/>
         <result property="chiPhi" column="chiPhi"/>
         <result property="ngayDangKiem" column="ngayDangKiem"/>
+        <result property="hieuLuc" column="hieuLuc"/>
         <association property="xe" javaType="com.ptit.csdlnc.model.response.CarResponse">
 	        <id property="maXe" column="maXe"/>
 	        <result property="bienSo" column="bienSo"/>
@@ -17,6 +18,7 @@
 	    hdk.maXe, 
 	    hdk.chiPhi, 
 	    hdk.ngayDangKiem,
+	    hdk.hieuLuc,
 	    x.maXe AS "xe.maXe", 
 	    x.bienSo AS "xe.bienSo"
 	    FROM HanDangKiem hdk
@@ -28,6 +30,7 @@
 	    hdk.maXe, 
 	    hdk.chiPhi, 
 	    hdk.ngayDangKiem,
+	    hdk.hieuLuc,
 	    x.maXe AS "xe.maXe", 
 	    x.bienSo AS "xe.bienSo"
 	    FROM HanDangKiem hdk
@@ -36,15 +39,16 @@
 	</select>
 	
 	<insert id="insertRegistrationExpiry" parameterType="com.ptit.csdlnc.model.RegistrationExpiry" useGeneratedKeys="true" keyProperty="maHanDangKiem">
-	    INSERT INTO HanDangKiem (maXe, chiPhi, ngayDangKiem)
-	    VALUES (#{maXe}, #{chiPhi}, #{ngayDangKiem})
+	    INSERT INTO HanDangKiem (maXe, chiPhi, ngayDangKiem, hieuLuc)
+	    VALUES (#{maXe}, #{chiPhi}, #{ngayDangKiem}, #{hieuLuc})
 	</insert>
 	
 	<update id="updateRegistrationExpiry" parameterType="com.ptit.csdlnc.model.RegistrationExpiry">
 	    UPDATE HanDangKiem
 	    SET maXe = #{maXe},
 	        chiPhi = #{chiPhi},
-	        ngayDangKiem = #{ngayDangKiem}
+	        ngayDangKiem = #{ngayDangKiem},
+	        hieuLuc = #{hieuLuc}
 	    WHERE maHanDangKiem = #{maHanDangKiem}
 	</update>
 	

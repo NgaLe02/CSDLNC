@@ -19,7 +19,8 @@ public class RegistrationExpiryResponse {
 	private String maXe;
 	private Double chiPhi;
 	private Date ngayDangKiem;
-
+	private Long hieuLuc;
+	
 	private CarResponse xe;
 
 }
