@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
 
 import com.ptit.csdlnc.dao.TicketDAO;
@@ -20,7 +21,7 @@ public class TicketService {
 
 	public Map<String, Object> getLstTicket(Map<String, Object> params) throws Exception {
 		Map<String, Object> resultMap = new HashMap<>();
-		
+
 		if (params.get("limit") != null && params.get("page") != null) {
 			int limit = Integer.parseInt(params.get("limit").toString());
 			int page = Integer.parseInt(params.get("page").toString());
@@ -45,7 +46,8 @@ public class TicketService {
 			// lỗi trùng khóa duy nhất (ví dụ UNIQUE gheNgoi + maChuyen)
 			throw new RuntimeException("Ghế này đã có người mua trong chuyến xe!");
 
-		} catch (DataIntegrityViolationException e) {
+		} catch (UncategorizedSQLException e) {
+			// lỗi vi phạm trigger, foreign key, check constraint
 			Throwable root = e.getRootCause();
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
@@ -55,8 +57,6 @@ public class TicketService {
 				throw new RuntimeException("Lỗi dữ liệu không xác định!");
 			}
 
-		} catch (Exception e) {
-			throw new RuntimeException("Lỗi hệ thống: " + e.getMessage());
 		}
 		return result;
 	}
@@ -70,7 +70,7 @@ public class TicketService {
 			// lỗi trùng khóa duy nhất (ví dụ UNIQUE gheNgoi + maChuyen)
 			throw new RuntimeException("Ghế này đã có người mua trong chuyến xe!");
 
-		} catch (DataIntegrityViolationException e) {
+		} catch (UncategorizedSQLException e) {
 			// lỗi vi phạm trigger, foreign key, check constraint
 			Throwable root = e.getRootCause();
 			String msg = root != null ? root.getMessage() : e.getMessage();
@@ -81,8 +81,6 @@ public class TicketService {
 				throw new RuntimeException("Lỗi dữ liệu không xác định!");
 			}
 
-		} catch (Exception e) {
-			throw new RuntimeException("Lỗi hệ thống: " + e.getMessage());
 		}
 		return result;
 	}

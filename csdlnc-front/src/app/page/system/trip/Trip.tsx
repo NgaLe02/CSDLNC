@@ -50,12 +50,6 @@ export default function Trip() {
   }
 
   function handleEdit(trip: TripResponseModel) {
-    // setEditingModel({
-    //   maxe: Trip.maxe,
-    //   bienSo: Trip.bienSo,
-    //   tinhTrang: Trip.tinhTrang,
-    //   maLoaiXe: Trip.loaiXe?.maLoaiXe
-    // });
     setEditingModel(trip);
     setShowForm(true);
   }
@@ -148,6 +142,7 @@ export default function Trip() {
                     setModelSearch((prev: any) => ({
                       ...prev,
                       time: new Date().getTime(),
+                      page: 1
                     }));
                   }
                 }}
@@ -171,6 +166,7 @@ export default function Trip() {
                     setModelSearch((prev: any) => ({
                       ...prev,
                       time: new Date().getTime(),
+                      page: 1
                     }));
                   }
                 }}
@@ -205,6 +201,7 @@ export default function Trip() {
                   setModelSearch((prev: any) => ({
                     ...prev,
                     time: new Date().getTime(),
+                    page: 1
                   }));
                 }}
               >
@@ -218,7 +215,7 @@ export default function Trip() {
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách chuyến xe</h6>
+            <h6 className="mb-0">Danh sách chuyến xe ({totalElement.current} chuyến xe)</h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
               Thêm chuyến xe
             </button>
@@ -227,21 +224,22 @@ export default function Trip() {
             <table className="table text-start align-middle table-bordered table-hover mb-0">
               <thead>
                 <tr className="text-dark">
-                  <th scope="col" style={{ width: "5%" }}></th>
+                  <th scope="col" ></th>
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
-                  <th scope="col">Mã chuyến xe</th>
+                  <th scope="col">Chuyến xe</th>
                   <th scope="col">Xe</th>
                   <th scope="col">Tuyến đường</th>
                   <th scope="col">Ngày giờ khởi hành</th>
                   <th scope="col">Ngày giờ đến</th>
-                  <th scope="col">Khoảng cách (km)</th>
+                  {/* <th scope="col">Khoảng cách (km)</th> */}
                   <th scope="col">Thù lao phụ xe</th>
                   <th scope="col">Thù lao lái xe</th>
-                  <th scope="col">Chi phí vận hành</th>
+                  {/* <th scope="col">Chi phí vận hành</th> */}
                   <th scope="col">Giá vé</th>
                   <th scope="col">Tình trạng chuyến</th>
+                  <th scope="col">Số vé đã bán</th>
                 </tr>
               </thead>
               <tbody>
@@ -265,21 +263,22 @@ export default function Trip() {
                       {dayjs(item.ngayGioKhoiHanh).format("DD-MM-YYYY HH:mm")}
                     </td>
                     <td>{dayjs(item.ngayGioDen).format("DD-MM-YYYY HH:mm")}</td>
-                    <td>{item.tuyenDuong?.khoangCach}</td>
-                    <td>
+                    {/* <td>{item.tuyenDuong?.khoangCach}</td> */}
+                    <td className="text-end">
                       {item.tuyenDuong?.luongTuyenDuong?.luongCoBan?.toLocaleString(
                         "vi-VN"
                       )}
                     </td>
-                    <td>
+                    <td className="text-end">
                       {(
                         (item.tuyenDuong?.luongTuyenDuong?.luongCoBan || 0) *
                         (item.tiLeThuLao || 0)
                       ).toLocaleString("vi-VN")}
                     </td>
-                    <td>{item.chiPhiVanHanh?.toLocaleString("vi-VN")}</td>
-                    <td>{item.giaVe?.giaVe?.toLocaleString("vi-VN")}</td>
+                    {/* <td>{item.chiPhiVanHanh?.toLocaleString("vi-VN")}</td> */}
+                    <td className="text-end">{item.giaVe?.giaVe?.toLocaleString("vi-VN")}</td>
                     <td>{item.tinhTrangChuyen}</td>
+                    <td className="text-end">{item.soVeDaBan}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-info ms-2"

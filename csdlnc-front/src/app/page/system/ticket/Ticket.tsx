@@ -120,7 +120,8 @@ export default function Ticket() {
                     e.preventDefault();
                     setModelSearch((prev: any) => ({
                       ...prev,
-                      time: new Date().getTime()
+                      time: new Date().getTime(),
+                      page: 1
                     }));
                   }
                 }}
@@ -141,7 +142,8 @@ export default function Ticket() {
                     e.preventDefault();
                     setModelSearch((prev: any) => ({
                       ...prev,
-                      time: new Date().getTime()
+                      time: new Date().getTime(),
+                      page: 1
                     }));
                   }
                 }}
@@ -202,7 +204,8 @@ export default function Ticket() {
                     e.preventDefault();
                     setModelSearch((prev: any) => ({
                       ...prev,
-                      time: new Date().getTime()
+                      time: new Date().getTime(),
+                      page: 1
                     }));
                   }
                 }}
@@ -223,7 +226,8 @@ export default function Ticket() {
                     e.preventDefault();
                     setModelSearch((prev: any) => ({
                       ...prev,
-                      time: new Date().getTime()
+                      time: new Date().getTime(),
+                      page: 1
                     }));
                   }
                 }}
@@ -253,7 +257,8 @@ export default function Ticket() {
                 onClick={() => {
                   setModelSearch((prev: any) => ({
                     ...prev,
-                    time: new Date().getTime()
+                    time: new Date().getTime(),
+                    page: 1
                   }));
                 }}
               >
@@ -269,7 +274,7 @@ export default function Ticket() {
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách vé</h6>
+            <h6 className="mb-0">Danh sách vé ({totalElement.current} vé)</h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
               Thêm vé
             </button>
@@ -285,7 +290,7 @@ export default function Ticket() {
                   <th scope="col">Mã vé</th>
                   <th scope="col">Tên tuyến đường</th>
                   <th scope="col">Ngày mua</th>
-                  <th scope="col">Giá vé</th>
+                  <th scope="col">Giá vé (VNĐ)</th>
                   <th scope="col">Ghế ngồi</th>
                   <th scope="col">Hành khách</th>
                   <th scope="col"></th>
@@ -305,7 +310,7 @@ export default function Ticket() {
                         {item.tuyenDuong?.diemDen}
                       </td>
                       <td>{dayjs(item.ngayMua).format('DD-MM-YYYY')}</td>
-                      <td>{item.chuyenXe?.giaVe?.giaVe}</td>
+                      <td>{item.chuyenXe?.giaVe?.giaVe?.toLocaleString('vi-vn')} </td>
                       <td>{item.gheNgoi}</td>
                       <td>{item.hanhKhach?.hoTen}</td>
 

@@ -17,6 +17,7 @@ export class TripResponseModel {
   tuyenDuong?: RouteResponseModel;
   mua?: SeasonModel;
   giaVe?: TicketPriceResponseModel
+  soVeDaBan?: number;
 
   constructor(init?: Partial<TripResponseModel>) {
     Object.assign(this, init);

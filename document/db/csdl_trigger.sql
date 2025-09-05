@@ -208,57 +208,58 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE TRIGGER trg_giave_before_insert
+
+-- Trigger chặn overlap khi INSERT
+CREATE DEFINER=`root`@`localhost` TRIGGER trg_giave_before_insert
 BEFORE INSERT ON GiaVe
 FOR EACH ROW
 BEGIN
-    -- 1. Kiểm tra ngayKetThuc >= ngayBatDau nếu ngayKetThuc không null
+    -- 1. Kiểm tra ngày
     IF NEW.ngayKetThuc IS NOT NULL AND NEW.ngayKetThuc < NEW.ngayBatDau THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Ngày kết thúc phải lớn hơn ngày bắt đầu';
     END IF;
 
-    -- 2. Kiểm tra trùng khoảng thời gian cho cùng maTuyen và maMua
+    -- 2. Kiểm tra overlap
     IF EXISTS (
         SELECT 1
-        FROM GiaVe
-        WHERE maTuyen = NEW.maTuyen
-          AND maMua = NEW.maMua
-          AND (
-                (NEW.ngayBatDau BETWEEN ngayBatDau AND IFNULL(ngayKetThuc, '9999-12-31'))
-             OR (NEW.ngayKetThuc IS NOT NULL AND ngayBatDau BETWEEN NEW.ngayBatDau AND NEW.ngayKetThuc)
-              )
+        FROM GiaVe g
+        WHERE g.maTuyen = NEW.maTuyen
+          AND g.maMua   = NEW.maMua
+          AND NEW.ngayBatDau <= COALESCE(g.ngayKetThuc, '9999-12-31')
+          AND g.ngayBatDau   <= COALESCE(NEW.ngayKetThuc, '9999-12-31')
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Khoảng thời gian bị trùng với giá vé đã tồn tại';
+        SET MESSAGE_TEXT = 'Khoảng thời gian giá vé bị trùng (INSERT)';
     END IF;
 END$$
 
--- Trigger BEFORE UPDATE
-CREATE TRIGGER trg_giave_before_update
+
+-- Trigger chặn overlap khi UPDATE
+CREATE DEFINER=`root`@`localhost` TRIGGER trg_giave_before_update
 BEFORE UPDATE ON GiaVe
 FOR EACH ROW
 BEGIN
-    -- 1. Kiểm tra ngayKetThuc >= ngayBatDau nếu ngayKetThuc không null
+    -- 1. Kiểm tra ngày
     IF NEW.ngayKetThuc IS NOT NULL AND NEW.ngayKetThuc < NEW.ngayBatDau THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Ngày kết thúc phải lớn hơn ngày bắt đầu';
     END IF;
 
-    -- 2. Kiểm tra trùng khoảng thời gian cho cùng maTuyen và maMua (ngoại trừ chính bản ghi này)
+    -- 2. Kiểm tra overlap (loại bỏ chính bản ghi đang update)
     IF EXISTS (
         SELECT 1
-        FROM GiaVe
-        WHERE maTuyen = NEW.maTuyen
-          AND maMua = NEW.maMua
-          AND maGiaVe <> OLD.maGiaVe
-          AND (
-                (NEW.ngayBatDau BETWEEN ngayBatDau AND IFNULL(ngayKetThuc, '9999-12-31'))
-             OR (NEW.ngayKetThuc IS NOT NULL AND ngayBatDau BETWEEN NEW.ngayBatDau AND NEW.ngayKetThuc)
-              )
+        FROM GiaVe g
+        WHERE g.maTuyen = NEW.maTuyen
+          AND g.maMua   = NEW.maMua
+          AND NOT (g.maTuyen = OLD.maTuyen 
+                   AND g.maMua = OLD.maMua 
+                   AND g.maGiaVe = OLD.maGiaVe)
+          AND NEW.ngayBatDau <= COALESCE(g.ngayKetThuc, '9999-12-31')
+          AND g.ngayBatDau   <= COALESCE(NEW.ngayKetThuc, '9999-12-31')
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Khoảng thời gian bị trùng với giá vé đã tồn tại';
+        SET MESSAGE_TEXT = 'Khoảng thời gian giá vé bị trùng (UPDATE)';
     END IF;
 END$$
 
@@ -804,3 +805,31 @@ END$$
 
 DELIMITER ;
 
+-- Chặn nếu ngayKetThuc mới < ngayKhoiHanh của bất kỳ ChuyenXe đang tham chiếu.
+DELIMITER $$
+
+CREATE TRIGGER trg_check_update_giave
+BEFORE UPDATE ON GiaVe
+FOR EACH ROW
+BEGIN
+    DECLARE v_count INT;
+
+    -- Chỉ kiểm tra khi ngayKetThuc được thay đổi và khác NULL
+    IF NEW.ngayKetThuc IS NOT NULL AND NEW.ngayKetThuc <> OLD.ngayKetThuc THEN
+
+        -- Kiểm tra xem có chuyến xe nào dùng giá vé này và có ngayKhoiHanh > ngayKetThuc mới không
+        SELECT COUNT(*) INTO v_count
+        FROM ChuyenXe
+        WHERE maTuyen = NEW.maTuyen
+          AND maMua = NEW.maMua
+          AND maGiaVe = NEW.maGiaVe
+          AND DATE(ngayGioKhoiHanh) > NEW.ngayKetThuc;
+
+        IF v_count > 0 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Không thể cập nhật: ngày kết thúc giá vé nhỏ hơn ngày khởi hành của chuyến xe đang tham chiếu';
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;  

@@ -2,13 +2,13 @@ package com.ptit.csdlnc.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,4 +35,12 @@ public class Ticket {
 	private String maChuyen;
 
 	private Date ngayMua;
+
+	@NotNull(message = "Mã xe không được null")
+	@Size(min = 4, max = 4, message = "Mã xe phải có đúng 4 ký tự")
+	private String maXe;
+
+	@NotNull(message = "Mã tuyến không được null")
+	@Size(min = 4, max = 4, message = "Mã tuyến phải có đúng 4 ký tự")
+	private String maTuyen;
 }

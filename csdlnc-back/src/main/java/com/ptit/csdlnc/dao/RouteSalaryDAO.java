@@ -20,4 +20,6 @@ public interface RouteSalaryDAO {
 
 	Integer findMaLuongTuyen(Integer doPhucTap, Double khoangCach) throws Exception;
 
+	RouteSalaryResponse findRouteSalayByDoPhucTapAndKc(Map<String, Object> params) throws Exception;
+
 }

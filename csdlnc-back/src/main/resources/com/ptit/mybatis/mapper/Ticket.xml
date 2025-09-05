@@ -4,7 +4,7 @@
 	<resultMap id="ticketResponseMap" type="com.ptit.csdlnc.model.response.TicketResponse">
         <id property="maVe" column="maVe"/>
         <id property="maChuyen" column="maChuyen"/>
-        <id property="maXe" column="maXe"/>
+        <id property="maXe" column="ve_maXe"/>
         <id property="maTuyen" column="maTuyen"/>
         <result property="gheNgoi" column="gheNgoi"/>
         <result property="maHanhKhach" column="maHanhKhach"/>
@@ -40,7 +40,7 @@
         </association>
         
         <association property="xe" javaType="com.ptit.csdlnc.model.response.CarResponse">
-	        <id property="maXe" column="maXe"/>
+	        <id property="maXe" column="xe_maXe"/>
 	        <result property="bienSo" column="bienSo"/>
 	    </association>
 	    
@@ -65,6 +65,7 @@
 	        v.maHanhKhach,
 	        v.maChuyen,
 	        v.ngayMua,
+	        v.maXe as ve_maXe,
 			CONCAT_WS('-', v.maTuyen, v.maXe, v.maChuyen, v.maVe) AS maVeFull,
 			
 	        -- Hành khách
@@ -90,7 +91,7 @@
 	        gv.ngayKetThuc AS gv_ngayKetThuc,
 	
 	        -- Xe
-	        x.maXe,
+	        x.maXe as xe_maXe,
 	        x.bienSo,
 	
 	        -- Tuyến đường
@@ -214,7 +215,8 @@
             v.maHanhKhach,
             v.maChuyen,
             v.ngayMua,
-
+			v.maXe,
+			
             p.maHanhKhach as p_maHanhKhach,
             p.hoTen as p_hoTen,
             p.soDienThoai as p_soDienThoai,
@@ -231,25 +233,32 @@
         LEFT JOIN hanhkhach p ON v.maHanhKhach = p.maHanhKhach
         LEFT JOIN chuyenxe t ON v.maChuyen = t.maChuyen
         WHERE v.maVe = #{maVe}
+        AND v.maXe = #{maXe}
+        AND v.maTuyen = #{maTuyen}
+        AND v.maChuyen = #{maChuyen}
     </select>
 
 	<insert id="insertTicket" parameterType="com.ptit.csdlnc.model.Ticket" useGeneratedKeys="true" keyProperty="maVe">
-	    INSERT INTO Ve (gheNgoi, maHanhKhach, maChuyen, ngayMua)
-	    VALUES (#{gheNgoi}, #{maHanhKhach}, #{maChuyen}, now())
+	    INSERT INTO Ve (gheNgoi, maHanhKhach, maChuyen, ngayMua, maXe, maTuyen)
+	    VALUES (#{gheNgoi}, #{maHanhKhach}, #{maChuyen}, now(), #{maXe}, #{maTuyen})
 	</insert>
 	
 	<update id="updateTicket" parameterType="com.ptit.csdlnc.model.Ticket">
 	    UPDATE Ve
 	    SET gheNgoi = #{gheNgoi},
-	        maHanhKhach = #{maHanhKhach},
-	        maChuyen = #{maChuyen},
-	        ngayMua = #{ngayMua}
+	        ngayMua = now()
 	    WHERE maVe = #{maVe}
+	    AND maXe = #{maXe}
+        AND maTuyen = #{maTuyen}
+        AND maChuyen = #{maChuyen}
 	</update>
 	
 	<delete id="deleteTicket" parameterType="int">
 	    DELETE FROM Ve
 	    WHERE maVe = #{maVe}
+        AND maXe = #{maXe}
+        AND maTuyen = #{maTuyen}
+        AND maChuyen = #{maChuyen}
 	</delete>
 	
 </mapper>

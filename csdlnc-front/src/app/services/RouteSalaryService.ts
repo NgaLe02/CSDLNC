@@ -46,12 +46,23 @@ export class RouteSalaryService {
   public deleteRouteSalary(id: number) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL +
-        "/routeSalary/" +
-        id +
-        "/deleteRoutehSalary"
+      "/routeSalary/" +
+      id +
+      "/deleteRoutehSalary"
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),
     });
   }
+
+  public findRouteSalayByDoPhucTapAndKc(doPhucTap: number, khoangCach: number) {
+    return axios.get(
+      `${process.env.REACT_APP_API_URL}/routeSalary/findRouteSalayByDoPhucTapAndKc`,
+      {
+        params: { doPhucTap, khoangCach },
+        headers: HeadersUtil.getHeaders(),
+      }
+    );
+  }
+
 }

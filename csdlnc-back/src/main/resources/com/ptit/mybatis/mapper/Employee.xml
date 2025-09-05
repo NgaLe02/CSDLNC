@@ -8,10 +8,30 @@
         <result property="soDienThoai" column="soDienThoai"/>
     </resultMap>
 
-	<select id="getLstEmployee" resultMap="employeeMap">
+	<select id="getLstEmployee" parameterType="map" resultMap="employeeMap">
         SELECT maNhanVien, hoTen, cmnd, soDienThoai
         FROM nhanvien
+        where 1=1
+        <if test="keyword != null and keyword != ''">
+		   AND (hoTen LIKE CONCAT('%', #{keyword}, '%') 
+		        OR soDienThoai LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+		ORDER BY 
+			 maNhanVien DESC
+		<if test="limit != null and offset != null">
+		  LIMIT #{limit} OFFSET #{offset}
+		</if>
     </select>
+    
+	<select id="countLstEmployee" parameterType="map" resultType="int">
+        SELECT count(*)
+        FROM nhanvien
+        where 1 = 1
+        <if test="keyword != null and keyword != ''">
+		   AND (hoTen LIKE CONCAT('%', #{keyword}, '%') 
+		        OR soDienThoai LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+    </select>    
 
     <select id="getEmployeeById" parameterType="int" resultMap="employeeMap">
         SELECT maNhanVien, hoTen, cmnd, soDienThoai

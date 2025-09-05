@@ -22,4 +22,10 @@ public interface TicketPriceDAO {
 
 	TicketPriceResponse findByTuyenAndMua(Map<String, Object> params) throws Exception;
 
+	List<String> getBookedSeat(Map<String, Object> params) throws Exception;
+
+	List<String> getAllSeat(Map<String, Object> params) throws Exception;
+
+	int countLstTicketPrice(Map<String, Object> params) throws Exception;
+
 }

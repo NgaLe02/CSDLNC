@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.csdlnc.model.RouteSalary;
 import com.ptit.csdlnc.model.response.RouteSalaryResponse;
+import com.ptit.csdlnc.model.response.TicketPriceResponse;
 import com.ptit.csdlnc.service.RouteSalaryService;
 import com.ptit.csdlnc.util.AjaxResult;
 
@@ -109,12 +110,32 @@ public class RouteSalaryController {
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Xoá thành công");
+		} catch (RuntimeException e) {
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
-			ajaxResult.setMessage("Xoá thất bại");
+			ajaxResult.setMessage("Lưu thất bại");
 		}
 		return ResponseEntity.ok(ajaxResult);
 	}
 
+	@GetMapping("findRouteSalayByDoPhucTapAndKc")
+	public ResponseEntity<AjaxResult> findRouteSalayByDoPhucTapAndKc(@RequestParam Map<String, Object> params) {
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			RouteSalaryResponse result = routeSalaryService.findRouteSalayByDoPhucTapAndKc(params);
+			ajaxResult.setStatus(true);
+			ajaxResult.setResponseData(result);
+		} catch (RuntimeException e) {
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Lưu thất bại");
+		}
+		return ResponseEntity.ok(ajaxResult);
+	}
 }

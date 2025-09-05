@@ -20,7 +20,7 @@
     </resultMap>
 	
 
-    <select id="getLstRoute" resultMap="routeMap">
+    <select id="getLstRoute" parameterType="map" resultMap="routeMap">
         SELECT TD.maTuyen, 
         TD.diemKhoiHanh, 
         TD.diemDen, 
@@ -32,7 +32,30 @@
         LTD.luongCoBan
         FROM tuyenduong TD
         LEFT JOIN luongtuyenduong LTD on TD.maLuongTuyen = LTD.maLuongTuyen
-        ORDER BY maTuyen
+        where 1 = 1
+        	<if test="diemKhoiHanh != null and diemKhoiHanh != ''">
+			   AND TD.diemKhoiHanh LIKE CONCAT('%', #{diemKhoiHanh}, '%')
+			</if>
+			<if test="diemDen != null and diemDen != ''">
+			   AND TD.diemDen LIKE CONCAT('%', #{diemDen}, '%')
+			</if>
+        ORDER BY TD.maTuyen desc
+        <if test="limit != null and offset != null">
+		  LIMIT #{limit} OFFSET #{offset}
+		</if>
+    </select>
+    
+    <select id="countLstRoute" parameterType="map" resultType="int">
+        SELECT count(*)
+        FROM tuyenduong TD
+        LEFT JOIN luongtuyenduong LTD on TD.maLuongTuyen = LTD.maLuongTuyen
+        where 1 = 1
+        	<if test="diemKhoiHanh != null and diemKhoiHanh != ''">
+			   AND TD.diemKhoiHanh LIKE CONCAT('%', #{diemKhoiHanh}, '%')
+			</if>
+			<if test="diemDen != null and diemDen != ''">
+			   AND TD.diemDen LIKE CONCAT('%', #{diemDen}, '%')
+			</if>
     </select>
     
     <select id="getRouteById" parameterType="java.lang.String" resultType="com.ptit.csdlnc.model.Route">

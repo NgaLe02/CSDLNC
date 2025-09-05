@@ -1,11 +1,12 @@
 import { HttpStatusCode } from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import { RouteResponseModel } from "../../../model/response/RouteResponseModel";
 import { RouteModel } from "../../../model/RouteModel";
 import { RouteService } from "../../../services/RouteService";
 import RouteForm from "./component/RouteForm";
+import PaginationCommon from "../../../common/PaginationCommon";
 
 export default function RouteSystem() {
   const [listData, setListData] = useState<RouteResponseModel[]>([]);
@@ -13,18 +14,24 @@ export default function RouteSystem() {
   const [editingModel, setEditingModel] = useState<RouteModel>(
     new RouteModel()
   );
-
+  const totalElement = useRef(0);
+  const [modelSearch, setModelSearch] = useState<any>({
+    limit: 10,
+    page: 1,
+    time: new Date().getTime(),
+  });
   useEffect(() => {
     getLstRoute();
-  }, []);
+  }, [modelSearch.time]);
 
   function getLstRoute() {
     RouteService.getInstance()
-      .getLstRoute({})
+      .getLstRoute(modelSearch)
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
-            const data = response.data.responseData;
+            const data = response.data.responseData.data;
+            totalElement.current = response.data.responseData.count;
             setListData(data);
           } else {
             toast.error(response.data.message);
@@ -44,12 +51,6 @@ export default function RouteSystem() {
   }
 
   function handleEdit(model: RouteModel) {
-    // setEditingModel({
-    //   maxe: car.maxe,
-    //   bienSo: car.bienSo,
-    //   tinhTrang: car.tinhTrang,
-    //   maLoaiXe: car.loaiXe?.maLoaiXe
-    // });
     setEditingModel(model);
     setShowForm(true);
   }
@@ -78,12 +79,99 @@ export default function RouteSystem() {
     setShowForm(false);
     getLstRoute();
   }
+
+  const handlePageChange = (page: number) => {
+    setModelSearch({
+      ...modelSearch,
+      page: page,
+      time: new Date().getTime(),
+    });
+  };
+
+  const handleChangeSearch = (event: any) => {
+    setModelSearch({
+      ...modelSearch,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   return (
     <>
       <div className="container-fluid pt-4 px-4">
+        <div className="bg-light rounded p-4">
+          <form className="row g-3">
+            {/* Điểm khởi hành */}
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="diemKhoiHanh">
+                Điểm khởi hành
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Điểm khởi hành"
+                name="diemKhoiHanh"
+                onChange={(e) => handleChangeSearch(e)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    setModelSearch((prev: any) => ({
+                      ...prev,
+                      time: new Date().getTime(),
+                      page: 1
+                    }));
+                  }
+                }}
+              />
+            </div>
+
+            {/* Điểm đến */}
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="diemDen">
+                Điểm đến
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Điểm đến"
+                name="diemDen"
+                onChange={(e) => handleChangeSearch(e)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    setModelSearch((prev: any) => ({
+                      ...prev,
+                      time: new Date().getTime(),
+                      page: 1
+                    }));
+                  }
+                }}
+              />
+            </div>
+
+            {/* Nút tìm kiếm */}
+            <div className="col-md-2 d-flex align-items-end">
+              <button
+                type="button" // dùng type="button" để tránh reload form
+                className="btn btn-primary w-100"
+                onClick={() => {
+                  setModelSearch((prev: any) => ({
+                    ...prev,
+                    time: new Date().getTime(),
+                    page: 1
+                  }));
+                }}
+              >
+                Tìm kiếm
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách tuyến đường</h6>
+            <h6 className="mb-0">Danh sách tuyến đường ({totalElement.current} tuyến đường)</h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
               Thêm tuyến đường
             </button>
@@ -109,11 +197,13 @@ export default function RouteSystem() {
               </thead>
               <tbody>
                 {listData.map((item: RouteResponseModel, index: number) => (
-                  <tr key={item.maTuyen}>
+                  <tr key={index}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
-                    <td>{index + 1}</td>
+                    <td>{totalElement.current -
+                      (modelSearch.page - 1) * modelSearch.limit -
+                      index}</td>
                     <td>{item.maTuyen}</td>
                     <td>{item.diemKhoiHanh}</td>
                     <td>{item.diemDen}</td>
@@ -145,6 +235,14 @@ export default function RouteSystem() {
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="mt-2">
+            <PaginationCommon
+              currentPage={modelSearch.page}
+              count={totalElement.current}
+              onPageChange={handlePageChange}
+              rows={modelSearch.limit}
+            />
           </div>
         </div>
       </div>

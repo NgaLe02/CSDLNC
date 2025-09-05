@@ -1,9 +1,10 @@
 import { HttpStatusCode } from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { PassengerModel } from "../../../model/PassengerModel";
 import { PassengerService } from "../../../services/PassengerService";
 import PassengerForm from "./component/PassengerForm";
+import PaginationCommon from "../../../common/PaginationCommon";
 
 export default function Passenger() {
   const [listData, setListData] = useState<PassengerModel[]>([]);
@@ -11,18 +12,25 @@ export default function Passenger() {
   const [editingModel, setEditingModel] = useState<PassengerModel>(
     new PassengerModel()
   );
+  const totalElement = useRef(0);
+  const [modelSearch, setModelSearch] = useState<any>({
+    limit: 10,
+    page: 1,
+    time: new Date().getTime(),
+  });
 
   useEffect(() => {
     getLstPassenger();
-  }, []);
+  }, [modelSearch.time]);
 
   function getLstPassenger() {
     PassengerService.getInstance()
-      .getLstPassenger({})
+      .getLstPassenger(modelSearch)
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
-            const data = response.data.responseData;
+            const data = response.data.responseData.data;
+            totalElement.current = response.data.responseData.count;
             setListData(data);
           } else {
             toast.error(response.data.message);
@@ -42,12 +50,6 @@ export default function Passenger() {
   }
 
   function handleEdit(model: PassengerModel) {
-    // setEditingModel({
-    //   maxe: car.maxe,
-    //   bienSo: car.bienSo,
-    //   tinhTrang: car.tinhTrang,
-    //   maLoaiXe: car.loaiXe?.maLoaiXe
-    // });
     setEditingModel(model);
     setShowForm(true);
   }
@@ -76,12 +78,73 @@ export default function Passenger() {
     setShowForm(false);
     getLstPassenger();
   }
+
+  const handlePageChange = (page: number) => {
+    setModelSearch({
+      ...modelSearch,
+      page: page,
+      time: new Date().getTime(),
+    });
+  };
+
+  const handleChangeSearch = (event: any) => {
+    setModelSearch({
+      ...modelSearch,
+      [event.target.name]: event.target.value,
+    });
+  };
   return (
     <>
       <div className="container-fluid pt-4 px-4">
+        <div className="bg-light rounded p-4">
+          <form className="row g-3">
+            {/* Tìm theo họ tên / số điện thoại */}
+            <div className="col-md-4">
+              <label className="form-label" htmlFor="muaTuNgay">Hành khách</label>
+              <input
+                type="search"
+                className="form-control"
+                placeholder="Nhập họ tên hoặc số điện thoại"
+                name="keyword"
+                onChange={(e) => handleChangeSearch(e)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    setModelSearch((prev: any) => ({
+                      ...prev,
+                      time: new Date().getTime(),
+                      page: 1
+                    }));
+                  }
+                }}
+              />
+            </div>
+
+            {/* Nút tìm kiếm */}
+            <div className="col-md-2 d-flex align-items-end">
+              <button
+                type="button" // dùng type="button" để tránh reload form
+                className="btn btn-primary w-100"
+                onClick={() => {
+                  setModelSearch((prev: any) => ({
+                    ...prev,
+                    time: new Date().getTime(),
+                    page: 1
+                  }));
+                }}
+              >
+                Tìm kiếm
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+      <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Danh sách hành khách</h6>
+            <h6 className="mb-0">Danh sách hành khách ({totalElement.current} hành khách) </h6>
             <button className="btn btn-sm btn-primary" onClick={handleAdd}>
               Thêm hành khách
             </button>
@@ -106,7 +169,7 @@ export default function Passenger() {
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
-                    <td>{index + 1}</td>
+                    <td>{totalElement.current - (modelSearch.page - 1) * modelSearch.limit - index}</td>
                     <td>{item.hoTen}</td>
                     <td>{item.cmnd}</td>
                     <td>{item.soDienThoai}</td>
@@ -128,6 +191,15 @@ export default function Passenger() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          <div className="mt-2">
+            <PaginationCommon
+              currentPage={modelSearch.page}
+              count={totalElement.current}
+              onPageChange={handlePageChange}
+              rows={modelSearch.limit}
+            />
           </div>
         </div>
       </div>

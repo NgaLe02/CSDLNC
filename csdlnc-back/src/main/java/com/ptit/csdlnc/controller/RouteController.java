@@ -34,7 +34,7 @@ public class RouteController {
 	public ResponseEntity<AjaxResult> getLstRoute(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			List<RouteResponse> result = routeService.getLstRoute(params);
+			Map<String, Object> result = routeService.getLstRoute(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 		} catch (Exception e) {

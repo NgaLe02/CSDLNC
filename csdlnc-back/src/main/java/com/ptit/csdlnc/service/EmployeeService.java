@@ -18,9 +18,21 @@ public class EmployeeService {
 	@Autowired
 	EmployeeDAO employeeDAO;
 
-	public List<EmployeeResponse> getLstEmployee(Map<String, Object> params) throws Exception {
+	public Map<String, Object> getLstEmployee(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if (params.get("limit") != null && params.get("page") != null) {
+			int limit = Integer.parseInt(params.get("limit").toString());
+			int page = Integer.parseInt(params.get("page").toString());
+			int offset = (page - 1) * limit;
+			params.put("offset", offset);
+			params.put("limit", limit);
+		}
+
 		List<EmployeeResponse> result = employeeDAO.getLstEmployee(params);
-		return result;
+		resultMap.put("data", result);
+		resultMap.put("count", employeeDAO.countLstEmployee(params));
+		return resultMap;
 	}
 
 	public int insertEmployee(Employee model) throws Exception {

@@ -1,5 +1,6 @@
 package com.ptit.csdlnc.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,9 +19,21 @@ public class PassengerService {
 	@Autowired
 	PassengerDAO passengerDAO;
 
-	public List<PassengerResponse> getLstPassenger(Map<String, Object> params) throws Exception {
+	public Map<String, Object> getLstPassenger(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if (params.get("limit") != null && params.get("page") != null) {
+			int limit = Integer.parseInt(params.get("limit").toString());
+			int page = Integer.parseInt(params.get("page").toString());
+			int offset = (page - 1) * limit;
+			params.put("offset", offset);
+			params.put("limit", limit);
+		}
+
 		List<PassengerResponse> result = passengerDAO.getLstPassenger(params);
-		return result;
+		resultMap.put("data", result);
+		resultMap.put("count", passengerDAO.countLstPassenger(params));
+		return resultMap;
 	}
 
 	public int insertPassenger(Passenger model) throws Exception {

@@ -43,7 +43,8 @@ public class RouteSalaryService {
 				throw new RuntimeException(msg);
 			} else {
 				throw new RuntimeException("Dữ liệu không hợp lệ!");
-			}		} catch (DataAccessException ex) {
+			}
+		} catch (DataAccessException ex) {
 			String errorMessage = "Lỗi không xác định";
 			if (ex.getRootCause() != null) {
 				errorMessage = ex.getRootCause().getMessage();
@@ -74,11 +75,20 @@ public class RouteSalaryService {
 				throw new RuntimeException(msg);
 			} else {
 				throw new RuntimeException("Dữ liệu không hợp lệ!");
-			}		}
+			}
+		}
 		return result;
 	}
 
 	public int deleteRouteSalary(int id) throws Exception {
 		return routeSalaryDAO.deleteRouteSalary(id);
+	}
+
+	public RouteSalaryResponse findRouteSalayByDoPhucTapAndKc(Map<String, Object> params) throws Exception {
+		RouteSalaryResponse result = routeSalaryDAO.findRouteSalayByDoPhucTapAndKc(params);
+		if (result == null) {
+			throw new RuntimeException("Không tìm thấy lương tuyến phù hợp với độ phức tạp và khoảng cách!");
+		}
+		return result;
 	}
 }

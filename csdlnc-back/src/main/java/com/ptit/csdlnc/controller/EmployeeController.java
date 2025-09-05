@@ -34,7 +34,7 @@ public class EmployeeController {
 	public ResponseEntity<AjaxResult> getLstEmployee(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			List<EmployeeResponse> result = employeeService.getLstEmployee(params);
+			Map<String, Object> result = employeeService.getLstEmployee(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 		} catch (Exception e) {

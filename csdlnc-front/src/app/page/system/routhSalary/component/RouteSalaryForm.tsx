@@ -77,6 +77,7 @@ export default function RouteSalaryForm(props: any) {
               className="form-control"
               id="doPhucTap"
               name="doPhucTap"
+              disabled={model.maLuongTuyen ? true : false}
               value={model.doPhucTap ?? ""}
               step="1"
               onKeyDown={(e) => {
@@ -95,6 +96,7 @@ export default function RouteSalaryForm(props: any) {
               type="number"
               className="form-control"
               id="khoangCachTu"
+              disabled={model.maLuongTuyen ? true : false}
               name="khoangCachTu"
               value={model.khoangCachTu ?? ""}
               onChange={handleChange}
@@ -109,7 +111,23 @@ export default function RouteSalaryForm(props: any) {
               className="form-control"
               id="khoangCachDen"
               name="khoangCachDen"
+              disabled={model.maLuongTuyen ? true : false}
               value={model.khoangCachDen ?? ""}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="luongCoBan" className="form-label">
+              Lương cơ bản
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              id="luongCoBan"
+              name="luongCoBan"
+              disabled={model.maLuongTuyen ? true : false}
+              value={model.luongCoBan ?? ""}
               onChange={handleChange}
             />
           </div>

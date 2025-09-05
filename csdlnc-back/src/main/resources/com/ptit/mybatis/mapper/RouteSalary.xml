@@ -16,6 +16,7 @@
     <select id="getLstRouteSalary" resultMap="routeSalaryMap">
         SELECT maLuongTuyen, doPhucTap, khoangCachTu, khoangCachDen, luongCoBan
         FROM LuongTuyenDuong
+        order by maLuongTuyen desc
     </select>
 
 
@@ -56,4 +57,14 @@
         AND khoangCachDen >= #{khoangCach}
         AND #{khoangCach} >= khoangCachTu
     </select>
+    
+    <select id="findRouteSalayByDoPhucTapAndKc" parameterType="map" resultMap="routeSalaryMap">
+        SELECT *
+        FROM LuongTuyenDuong
+        WHERE doPhucTap = #{doPhucTap}
+        AND khoangCachDen >= #{khoangCach}
+        AND #{khoangCach} >= khoangCachTu
+    </select>
+    
+    
 </mapper>

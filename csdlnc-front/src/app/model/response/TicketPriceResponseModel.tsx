@@ -6,6 +6,8 @@ export class TicketPriceResponseModel {
   maTuyen?: string;
   maMua?: number;
   giaVe?: number;
+  ngayBatDau?: string;
+  ngayKetThuc?: string;
 
   mua?: SeasonModel;
   tuyenDuong?: RouteResponseModel;

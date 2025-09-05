@@ -18,5 +18,6 @@ public interface RouteDAO {
 
 	int deleteRoute(int id) throws Exception;
 
+	int countLstRoute(Map<String, Object> params) throws Exception;
 
 }

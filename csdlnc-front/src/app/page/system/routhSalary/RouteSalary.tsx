@@ -121,12 +121,12 @@ export default function RouteSalary() {
                     {/* <td>{dayjs(item.ngayBatDau).format("YYYY-MM-DD")}</td> */}
                     {/* <td>{item.ngayKetThuc ? dayjs(item.ngayKetThuc).format("YYYY-MM-DD") : ''}</td> */}
                     <td>
-                      <button
+                      {/* <button
                         className="btn btn-sm btn-info ms-2"
                         onClick={() => handleEdit(item)}
                       >
                         Sửa
-                      </button>
+                      </button> */}
                       <button
                         className="btn btn-sm btn-danger ms-2"
                         onClick={() => handleDelete(item.maLuongTuyen!)}

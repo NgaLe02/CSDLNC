@@ -8,11 +8,31 @@
         <result property="soDienThoai" column="soDienThoai"/>
     </resultMap>
 
-	<select id="getLstPassenger" resultMap="passengerMap">
+	<select id="getLstPassenger" parameterType="map" resultMap="passengerMap">
         SELECT maHanhKhach, hoTen, cmnd, soDienThoai
         FROM HanhKhach
+        where 1=1
+        <if test="keyword != null and keyword != ''">
+		   AND (hoTen LIKE CONCAT('%', #{keyword}, '%') 
+		        OR soDienThoai LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+        ORDER BY 
+			 maHanhKhach DESC
+		<if test="limit != null and offset != null">
+		  LIMIT #{limit} OFFSET #{offset}
+		</if>
     </select>
 
+	<select id="countLstPassenger" parameterType="map" resultType="int">
+        SELECT count(*)
+        FROM HanhKhach
+        where 1=1
+        <if test="keyword != null and keyword != ''">
+		   AND (hoTen LIKE CONCAT('%', #{keyword}, '%') 
+		        OR soDienThoai LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+    </select> 
+    
     <select id="getPassengerById" parameterType="int" resultMap="passengerMap">
         SELECT maHanhKhach, hoTen, cmnd, soDienThoai
         FROM HanhKhach

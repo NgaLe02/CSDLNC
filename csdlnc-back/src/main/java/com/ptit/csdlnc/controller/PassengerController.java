@@ -37,7 +37,7 @@ public class PassengerController {
 	public ResponseEntity<AjaxResult> getLstPassenger(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			List<PassengerResponse> result = passengerService.getLstPassenger(params);
+			Map<String, Object> result = passengerService.getLstPassenger(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 		} catch (Exception e) {

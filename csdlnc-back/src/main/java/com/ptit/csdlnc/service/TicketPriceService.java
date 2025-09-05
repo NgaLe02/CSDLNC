@@ -1,5 +1,6 @@
 package com.ptit.csdlnc.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,9 +19,21 @@ public class TicketPriceService {
 	@Autowired
 	TicketPriceDAO ticketPriceDAO;
 
-	public List<TicketPriceResponse> getLstTicketPrice(Map<String, Object> params) throws Exception {
+	public Map<String, Object> getLstTicketPrice(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		
+		if (params.get("limit") != null && params.get("page") != null) {
+			int limit = Integer.parseInt(params.get("limit").toString());
+			int page = Integer.parseInt(params.get("page").toString());
+			int offset = (page - 1) * limit;
+			params.put("offset", offset);
+			params.put("limit", limit);
+		}
+		
 		List<TicketPriceResponse> result = ticketPriceDAO.getLstTicketPrice(params);
-		return result;
+		resultMap.put("data", result);
+		resultMap.put("count", ticketPriceDAO.countLstTicketPrice(params));
+		return resultMap;
 	}
 
 	public int insertTicketPrice(TicketPrice model) throws Exception {
@@ -66,6 +79,17 @@ public class TicketPriceService {
 	}
 
 	public TicketPriceResponse findByTuyenAndMua(Map<String, Object> params) throws Exception {
-		return ticketPriceDAO.findByTuyenAndMua(params);
+		TicketPriceResponse result = ticketPriceDAO.findByTuyenAndMua(params);
+		if(result == null) {
+			throw new RuntimeException("Không tìm thấy giá vé phù hợp!");
+		}
+		return result;
+	}
+
+	public Map<String, Object> getSellSeat(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("bookedSeat", ticketPriceDAO.getBookedSeat(params));
+		resultMap.put("allSeat", ticketPriceDAO.getAllSeat(params));
+		return resultMap;
 	}
 }

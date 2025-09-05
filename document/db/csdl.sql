@@ -154,3 +154,5 @@ CREATE TABLE Ve (
     CONSTRAINT uq_ve_chuyen_ghe UNIQUE (maXe, maTuyen, maChuyen, gheNgoi),
     CONSTRAINT uq_hanhkhach_chuyen UNIQUE (maXe, maTuyen, maChuyen, maHanhKhach)
 );
+
+

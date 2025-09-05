@@ -1,5 +1,6 @@
 package com.ptit.csdlnc.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +22,21 @@ public class RouteService {
 	@Autowired
 	RouteSalaryDAO routeSalaryDAO;
 
-	public List<RouteResponse> getLstRoute(Map<String, Object> params) throws Exception {
+	public Map<String, Object> getLstRoute(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if (params.get("limit") != null && params.get("page") != null) {
+			int limit = Integer.parseInt(params.get("limit").toString());
+			int page = Integer.parseInt(params.get("page").toString());
+			int offset = (page - 1) * limit;
+			params.put("offset", offset);
+			params.put("limit", limit);
+		}
+
 		List<RouteResponse> result = routeDAO.getLstRoute(params);
-		return result;
+		resultMap.put("data", result);
+		resultMap.put("count", routeDAO.countLstRoute(params));
+		return resultMap;
 	}
 
 	public int insertRoute(Route model) throws Exception {
@@ -39,6 +52,9 @@ public class RouteService {
 			Integer maLuongTuyen = routeSalaryDAO.findMaLuongTuyen(model.getDoPhucTap(), model.getKhoangCach());
 			if (maLuongTuyen == null) {
 				throw new RuntimeException("Không tìm thấy lương tuyến phù hợp với độ phức tạp và khoảng cách!");
+			}
+			if (maLuongTuyen != model.getMaLuongTuyen()) {
+				throw new RuntimeException("Lương tuyến có sự thay đổi. Hãy cập nhật lại!");
 			}
 			model.setMaLuongTuyen(maLuongTuyen);
 
@@ -75,6 +91,9 @@ public class RouteService {
 			Integer maLuongTuyen = routeSalaryDAO.findMaLuongTuyen(model.getDoPhucTap(), model.getKhoangCach());
 			if (maLuongTuyen == null) {
 				throw new RuntimeException("Không tìm thấy lương tuyến phù hợp với độ phức tạp và khoảng cách!");
+			}
+			if (maLuongTuyen != model.getMaLuongTuyen()) {
+				throw new RuntimeException("Lương tuyến có sự thay đổi. Hãy cập nhật lại!");
 			}
 			model.setMaLuongTuyen(maLuongTuyen);
 

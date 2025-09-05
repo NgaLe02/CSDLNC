@@ -21,7 +21,7 @@
 	    </association>
     </resultMap>
 
-    <select id="getLstTicketPrice" resultMap="ticketPriceMap">
+    <select id="getLstTicketPrice" parameterType="map" resultMap="ticketPriceMap">
         SELECT G.maGiaVe, 
         G.giaVe, 
         G.maTuyen, 
@@ -34,6 +34,37 @@
         FROM GiaVe G
         LEFT JOIN mua M on G.maMua = M.maMua
         LEFT JOIN tuyenduong TD on TD.maTuyen = G.maTuyen
+        where 1 = 1
+			<if test="diemKhoiHanh != null and diemKhoiHanh != ''">
+			   AND td.diemKhoiHanh LIKE CONCAT('%', #{diemKhoiHanh}, '%')
+			</if>
+			<if test="diemDen != null and diemDen != ''">
+			   AND td.diemDen LIKE CONCAT('%', #{diemDen}, '%')
+			</if>
+			<if test="tenMua != null and tenMua != ''">
+			   AND M.tenMua LIKE CONCAT('%', #{tenMua}, '%')
+			</if>
+		ORDER BY G.maGiaVe desc, G.maTuyen desc, G.maMua desc
+		<if test="limit != null and offset != null">
+		  LIMIT #{limit} OFFSET #{offset}
+		</if>
+    </select>
+    
+    <select id="countLstTicketPrice" parameterType="map" resultType="int">
+        SELECT count(*)
+        FROM GiaVe G
+        LEFT JOIN mua M on G.maMua = M.maMua
+        LEFT JOIN tuyenduong TD on TD.maTuyen = G.maTuyen
+        where 1 = 1
+			<if test="diemKhoiHanh != null and diemKhoiHanh != ''">
+			   AND td.diemKhoiHanh LIKE CONCAT('%', #{diemKhoiHanh}, '%')
+			</if>
+			<if test="diemDen != null and diemDen != ''">
+			   AND td.diemDen LIKE CONCAT('%', #{diemDen}, '%')
+			</if>
+			<if test="tenMua != null and tenMua != ''">
+			   AND M.tenMua LIKE CONCAT('%', #{tenMua}, '%')
+			</if>
     </select>
 
     <select id="getTicketPriceById" parameterType="map" resultMap="ticketPriceMap">
@@ -63,13 +94,13 @@
     <update id="updateTicketPrice" parameterType="com.ptit.csdlnc.model.TicketPrice">
         UPDATE GiaVe
         SET giaVe = #{giaVe},
-            ngayHieuLuc = #{ngayHieuLuc},
-            ngayKetThuc = #{ngayKetThuc},
             maTuyen = #{maTuyen},
             maMua = #{maMua},
             ngayBatDau = #{ngayBatDau},
             ngayKetThuc = #{ngayKetThuc}
         WHERE maGiaVe = #{maGiaVe}
+        AND maMua = #{maMua}
+        AND maTuyen = #{maTuyen}
     </update>
 
     <delete id="deleteTicketPrice" parameterType="map">
@@ -84,8 +115,49 @@
 		FROM GiaVe
 		WHERE maTuyen = #{maTuyen}
 		  AND maMua = #{maMua}
-		  AND ngayBatDau &lt;= CURDATE()
-		  AND (ngayKetThuc IS NULL OR CURDATE() &lt;= ngayKetThuc)
+		  AND ngayBatDau &lt;= #{ngayGioKhoiHanh}
+		  AND (ngayKetThuc IS NULL OR #{ngayGioKhoiHanh} &lt;= ngayKetThuc)
+    </select>
+    
+    <select id="getBookedSeat" parameterType="map" resultType="int">
+        WITH RECURSIVE seat_numbers AS (
+		    SELECT 1 AS gheNgoi
+		    UNION ALL
+		    SELECT gheNgoi + 1
+		    FROM seat_numbers
+		    WHERE gheNgoi &lt; (
+		        SELECT lx.soGhe
+		        FROM Xe x
+		        JOIN LoaiXe lx ON x.maLoaiXe = lx.maLoaiXe
+		        WHERE x.maXe = 'X001'
+		    )
+		)
+		SELECT s.gheNgoi
+		FROM seat_numbers s
+		LEFT JOIN Ve v
+		       ON v.gheNgoi = s.gheNgoi
+		      AND v.maXe = #{maXe}
+		      AND v.maTuyen = #{maTuyen}
+		      AND v.maChuyen = #{maChuyen}
+		WHERE v.gheNgoi IS NOT NULL;
+
+    </select>
+    
+    <select id="getAllSeat" parameterType="map" resultType="int">
+        WITH RECURSIVE seat_numbers AS (
+		    SELECT 1 AS gheNgoi
+		    UNION ALL
+		    SELECT gheNgoi + 1
+		    FROM seat_numbers
+		    WHERE gheNgoi &lt; (
+		        SELECT lx.soGhe
+		        FROM Xe x
+		        JOIN LoaiXe lx ON x.maLoaiXe = lx.maLoaiXe
+		        WHERE x.maXe = 'X001'
+		    )
+		)
+		SELECT s.gheNgoi
+		FROM seat_numbers s
     </select>
 
 </mapper>

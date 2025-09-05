@@ -8,6 +8,7 @@ import { RouteService } from "../../../../services/RouteService";
 import { HttpStatusCode } from "axios";
 import { SeasonModel } from "../../../../model/SeasonModel";
 import { SeasonService } from "../../../../services/SeasonService";
+import dayjs from "dayjs";
 
 export default function TicketPriceForm(props: any) {
   const [model, setModel] = useState<TicketPriceModel>(
@@ -27,7 +28,7 @@ export default function TicketPriceForm(props: any) {
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
-            const data = response.data.responseData;
+            const data = response.data.responseData.data;
             setListRoute(data);
           } else {
             toast.error(response.data.message);
@@ -68,7 +69,6 @@ export default function TicketPriceForm(props: any) {
       [name]: value,
     }));
   };
-
   function check() {
     return true;
   }
@@ -129,6 +129,7 @@ export default function TicketPriceForm(props: any) {
               className="form-select"
               id="maTuyen"
               name="maTuyen"
+              disabled={model.maGiaVe ? true : false}
               value={model.maTuyen ?? ""}
               onChange={(e: any) => handleChange(e)}
             >
@@ -149,6 +150,7 @@ export default function TicketPriceForm(props: any) {
               className="form-select"
               id="maMua"
               name="maMua"
+              disabled={model.maGiaVe ? true : false}
               value={model.maMua ?? ""}
               onChange={(e: any) => handleChange(e)}
             >
@@ -169,6 +171,7 @@ export default function TicketPriceForm(props: any) {
               type="number"
               className="form-control"
               id="giaVe"
+              disabled={model.maGiaVe ? true : false}
               name="giaVe"
               value={model.giaVe ?? ""}
               onChange={handleChange}
@@ -183,10 +186,12 @@ export default function TicketPriceForm(props: any) {
               type="date"
               className="form-control"
               id="ngayBatDau"
+              disabled={model.maGiaVe ? true : false}
               name="ngayBatDau"
-              value={model.ngayBatDau ?? ""}
+              value={model.ngayBatDau ? dayjs(model.ngayBatDau).format("YYYY-MM-DD") : ""}
               onChange={handleChange}
             />
+
           </div>
 
           <div className="mb-3">
@@ -198,7 +203,7 @@ export default function TicketPriceForm(props: any) {
               className="form-control"
               id="ngayKetThuc"
               name="ngayKetThuc"
-              value={model.ngayKetThuc ?? ""}
+              value={model.ngayKetThuc ? dayjs(model.ngayKetThuc).format("YYYY-MM-DD") : ""}
               onChange={handleChange}
             />
           </div>

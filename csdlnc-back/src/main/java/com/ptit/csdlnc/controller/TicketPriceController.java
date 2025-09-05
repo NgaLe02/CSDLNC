@@ -33,7 +33,7 @@ public class TicketPriceController {
 	public ResponseEntity<AjaxResult> getLstTicketPrice(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			List<TicketPriceResponse> result = ticketPriceService.getLstTicketPrice(params);
+			Map<String, Object> result = ticketPriceService.getLstTicketPrice(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 		} catch (Exception e) {
@@ -112,7 +112,7 @@ public class TicketPriceController {
 		}
 		return ResponseEntity.ok(ajaxResult);
 	}
-	
+
 	@GetMapping("findByTuyenAndMua")
 	public ResponseEntity<AjaxResult> findByTuyenAndMua(@RequestParam Map<String, Object> params) {
 		AjaxResult ajaxResult = new AjaxResult();
@@ -120,6 +120,27 @@ public class TicketPriceController {
 			TicketPriceResponse result = ticketPriceService.findByTuyenAndMua(params);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
+		} catch (RuntimeException e) {
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Tìm kiếm không thành công!");
+		}
+		return ResponseEntity.ok(ajaxResult);
+	}
+
+	@GetMapping("getSellSeat")
+	public ResponseEntity<AjaxResult> getSellSeat(@RequestParam Map<String, Object> params) {
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			Map<String, Object> result = ticketPriceService.getSellSeat(params);
+			ajaxResult.setStatus(true);
+			ajaxResult.setResponseData(result);
+		} catch (RuntimeException e) {
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);

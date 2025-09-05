@@ -126,6 +126,7 @@ export default function CarForm(props: any) {
               className="form-select"
               id="maLoaiXe"
               name="maLoaiXe"
+              disabled={model.maXe ? true : false}
               value={model.maLoaiXe ?? ""}
               onChange={(e: any) => handleChange(e)}
             >

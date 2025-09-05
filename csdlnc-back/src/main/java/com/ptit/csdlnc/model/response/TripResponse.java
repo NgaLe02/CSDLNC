@@ -32,4 +32,6 @@ public class TripResponse {
 	private TicketPriceResponse giaVe;
 	private SeasonResponse mua;
 
+	private Integer soVeDaBan;
+
 }

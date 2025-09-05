@@ -89,7 +89,7 @@ export default function TripForm(props: any) {
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
-            const data = response.data.responseData;
+            const data = response.data.responseData.data;
             setListRoute(data);
           } else {
             toast.error(response.data.message);
@@ -123,9 +123,9 @@ export default function TripForm(props: any) {
       });
   }
 
-  function findTicketPriceByTuyenAndMua(maTuyen: string, maMua: string) {
+  function findTicketPriceByTuyenAndMua(maTuyen: string, maMua: string, ngayGioKhoiHanh: string) {
     TicketPriceService.getInstance()
-      .findTicketPriceByTuyenAndMua(maTuyen, maMua)
+      .findTicketPriceByTuyenAndMua(maTuyen, maMua, dayjs(ngayGioKhoiHanh).format('YYYY-MM-DD'))
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
@@ -199,12 +199,16 @@ export default function TripForm(props: any) {
   };
 
   useEffect(() => {
-    if (model.maTuyen && model.maMua) {
+    if (model.maTuyen && model.maMua && model.ngayGioKhoiHanh) {
       //find maGiaVe
-      findTicketPriceByTuyenAndMua(model.maTuyen, model.maMua);
+      findTicketPriceByTuyenAndMua(model.maTuyen, model.maMua, model.ngayGioKhoiHanh);
     } else {
       setGiaVe(0);
     }
+
+  }, [model.maTuyen, model.maMua, model.ngayGioKhoiHanh]);
+
+  useEffect(() => {
     if (model.maTuyen) {
       const tuyenDuong = listRoute.find(
         (item: any) => item.maTuyen === model.maTuyen
@@ -213,7 +217,7 @@ export default function TripForm(props: any) {
     } else {
       setThuLaoPhuXe(0);
     }
-  }, [model.maTuyen, model.maMua]);
+  }, [model.maTuyen])
 
   useEffect(() => {
     if (model.maTuyen) {
@@ -237,6 +241,7 @@ export default function TripForm(props: any) {
                 className="form-select"
                 id="maXe"
                 name="maXe"
+                disabled={model.maChuyen ? true : false}
                 value={model.maXe ?? ""}
                 onChange={(e: any) => handleChange(e)}
               >
@@ -256,13 +261,14 @@ export default function TripForm(props: any) {
                 className="form-select"
                 id="maTuyen"
                 name="maTuyen"
+                disabled={model.maChuyen ? true : false}
                 value={model.maTuyen ?? ""}
                 onChange={(e: any) => handleChange(e)}
               >
                 <option value="">-- Chọn tuyến đường --</option>
                 {listRoute.map((item) => (
                   <option key={item.maTuyen} value={item.maTuyen}>
-                    {item.diemKhoiHanh} - {item.diemDen}
+                    {item.diemKhoiHanh} - {item.diemDen} ({item.khoangCach}km)
                   </option>
                 ))}
               </select>
@@ -278,6 +284,7 @@ export default function TripForm(props: any) {
                 type="datetime-local"
                 className="form-control"
                 id="ngayGioKhoiHanh"
+                disabled={model.maChuyen ? true : false}
                 name="ngayGioKhoiHanh"
                 value={
                   model.ngayGioKhoiHanh
@@ -297,6 +304,7 @@ export default function TripForm(props: any) {
                 className="form-control"
                 id="ngayGioDen"
                 name="ngayGioDen"
+                disabled={model.maChuyen ? true : false}
                 value={
                   model.ngayGioDen
                     ? dayjs(model.ngayGioDen).format("YYYY-MM-DDTHH:mm")
@@ -345,6 +353,7 @@ export default function TripForm(props: any) {
               <select
                 className="form-select"
                 id="maMua"
+                disabled={model.maChuyen ? true : false}
                 name="maMua"
                 value={model.maMua ?? ""}
                 onChange={(e: any) => handleChange(e)}

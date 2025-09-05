@@ -19,4 +19,6 @@ public interface EmployeeDAO {
 	int updateEmployee(Employee model) throws Exception;
 
 	int deleteEmployee(int id) throws Exception;
+
+	int countLstEmployee(Map<String, Object> params) throws Exception;
 }

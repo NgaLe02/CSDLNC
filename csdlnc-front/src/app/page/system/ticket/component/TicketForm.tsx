@@ -6,19 +6,26 @@ import { TicketService } from "../../../../services/TicketService";
 import { RouteResponseModel } from "../../../../model/response/RouteResponseModel";
 import { RouteService } from "../../../../services/RouteService";
 import { HttpStatusCode } from "axios";
-import { SeasonModel } from "../../../../model/SeasonModel";
-import { SeasonService } from "../../../../services/SeasonService";
+import { PassengerModel } from "../../../../model/PassengerModel";
+import { PassengerService } from "../../../../services/PassengerService";
+import { TripService } from "../../../../services/TripService";
+import { TripResponseModel } from "../../../../model/response/TripResponseModel";
+import dayjs from "dayjs";
+import { TicketPriceService } from "../../../../services/TicketPriceService";
 
 export default function TicketForm(props: any) {
   const [model, setModel] = useState<TicketModel>(
     props.model ?? new TicketModel()
   );
   const [listRoute, setListRoute] = useState<RouteResponseModel[]>([]);
-  const [listSeason, setListSeason] = useState<SeasonModel[]>([]);
+  const [listPassenger, setListPassenger] = useState<PassengerModel[]>([]);
+  const [listTrip, setListTrip] = useState<TripResponseModel[]>([]);
+  const [listBookedSeat, setBookedSeat] = useState<string[]>([]);
+  const [listSeat, setListSeat] = useState<string[]>([]);
 
   useEffect(() => {
     getLstRoute();
-    getLstSeason();
+    getLstPassenger();
   }, []);
 
   function getLstRoute() {
@@ -41,14 +48,14 @@ export default function TicketForm(props: any) {
       });
   }
 
-  function getLstSeason() {
-    SeasonService.getInstance()
-      .getLstSeason({})
+  function getLstPassenger() {
+    PassengerService.getInstance()
+      .getLstPassenger({})
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
             const data = response.data.responseData;
-            setListSeason(data);
+            setListPassenger(data);
           } else {
             toast.error(response.data.message);
           }
@@ -61,13 +68,16 @@ export default function TicketForm(props: any) {
       });
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setModel((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (name === "maChuyen") {
+      const [maChuyen, maXe, maTuyen] = value.split("|");
+      setModel({ ...model, maChuyen, maXe });
+    } else {
+      setModel({ ...model, [name]: value });
+    }
   };
+
 
   function check() {
     return true;
@@ -117,10 +127,145 @@ export default function TicketForm(props: any) {
     }
   };
 
+
+  function getLstTrip() {
+    const tuyenDuong = listRoute.find(
+      (item: RouteResponseModel) => item.maTuyen === model.maTuyen
+    );
+    const search = {
+      diemKhoiHanh: tuyenDuong?.diemKhoiHanh,
+      diemDen: tuyenDuong?.diemDen,
+      khoiHanhTuNgay: dayjs(new Date()).format('YYYY-MM-DD')
+    }
+
+    TripService.getInstance()
+      .getLstTrip(search)
+      .then((response) => {
+        if (response.status === HttpStatusCode.Ok) {
+          if (response.data.status) {
+            const data = response.data.responseData.data;
+            setListTrip(data);
+          } else {
+            toast.error(response.data.message);
+          }
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch(() => {
+        toast.error("Có lỗi xảy ra");
+      });
+  }
+
+  function getSeat(maXe: string, maTuyen: string, maChuyen: string) {
+    TicketPriceService.getInstance()
+      .getSellSeat(maXe, maTuyen, maChuyen)
+      .then((response) => {
+        if (response.status === HttpStatusCode.Ok) {
+          if (response.data.status) {
+            const bookedSeat = response.data.responseData.bookedSeat;
+            const allSeat = response.data.responseData.allSeat;
+            setBookedSeat(bookedSeat)
+            setListSeat(allSeat)
+          } else {
+            setBookedSeat([])
+            setListSeat([])
+            toast.error(response.data.message);
+          }
+        } else {
+          setBookedSeat([])
+          setListSeat([])
+          toast.error(response.data.message);
+        }
+      })
+      .catch(() => {
+        toast.error("Có lỗi xảy ra");
+      });
+  }
+
+  useEffect(() => {
+    if (!model.maTuyen) {
+      // Nếu chưa chọn tuyến -> reset hết
+      setListTrip([]);
+      setListSeat([]);
+      setBookedSeat([]);
+      setModel((prev) => ({
+        ...prev,
+        maChuyen: "",
+        maXe: "",
+        gheNgoi: ""
+      }));
+      return;
+    }
+
+    getLstTrip();
+
+    // Nếu là thêm mới vé thì khi đổi tuyến phải reset
+    if (!model.maVe) {
+      setModel((prev) => ({
+        ...prev,
+        maChuyen: "",
+        maXe: "",
+        gheNgoi: ""
+      }));
+      setListSeat([]);
+      setBookedSeat([]);
+    }
+  }, [model.maTuyen]);
+
+
+  useEffect(() => {
+    if (model.maChuyen && model.maXe && model.maTuyen) {
+      setListSeat([]);
+      setBookedSeat([]);
+    } else {
+      setModel((prev) => ({
+        ...prev,
+        maXe: "",
+        gheNgoi: ""
+      }));
+    }
+  }, [model.maChuyen]);
+
+
+  useEffect(() => {
+    console.log(model)
+    if (model.maTuyen && model.maXe && model.maChuyen) {
+      getSeat(model.maXe, model.maTuyen, model.maChuyen)
+    }
+    else {
+      setListSeat([])
+      setBookedSeat([])
+    }
+  }, [model.maTuyen, model.maXe, model.maChuyen])
+
+
   return (
     <div className="col-sm-12 col-xl-12">
       <div className="bg-light rounded h-100 p-4">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => e.preventDefault()}>
+
+          <div className="mb-3">
+            <label htmlFor="maHanhKhach" className="form-label">
+              Hành khách
+            </label>
+            <select
+              className="form-select"
+              id="maHanhKhach"
+              name="maHanhKhach"
+              value={model.maHanhKhach ?? ""}
+              disabled={model.maVe ? true : false}
+              onChange={(e: any) => handleChange(e)}
+            >
+              <option value="">-- Chọn hành khách --</option>
+              {listPassenger.map((item) => (
+                <option key={item.maHanhKhach} value={item.maHanhKhach}>
+                  {item.hoTen} - {item.soDienThoai}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="mb-3">
             <label htmlFor="maTuyen" className="form-label">
               Tuyến đường
@@ -129,37 +274,78 @@ export default function TicketForm(props: any) {
               className="form-select"
               id="maTuyen"
               name="maTuyen"
+              disabled={model.maVe ? true : false}
               value={model.maTuyen ?? ""}
               onChange={(e: any) => handleChange(e)}
             >
               <option value="">-- Chọn tuyến đường --</option>
               {listRoute.map((item) => (
                 <option key={item.maTuyen} value={item.maTuyen}>
-                  {item.diemKhoiHanh} - {item.diemDen}
+                  {item.diemKhoiHanh} - {item.diemDen} ({item.khoangCach}km)
                 </option>
               ))}
             </select>
           </div>
 
           <div className="mb-3">
-            <label htmlFor="maTuyen" className="form-label">
-              Hành khách
+            <label htmlFor="maChuyen" className="form-label">
+              Chuyến xe
             </label>
             <select
               className="form-select"
-              id="maTuyen"
-              name="maTuyen"
-              value={model.maTuyen ?? ""}
-              onChange={(e: any) => handleChange(e)}
+              id="maChuyen"
+              name="maChuyen"
+              disabled={model.maVe ? true : false}
+              value={
+                model.maChuyen && model.maXe && model.maTuyen
+                  ? `${model.maChuyen}|${model.maXe}|${model.maTuyen}`
+                  : ""
+              } onChange={(e: any) => handleChange(e)}
             >
-              <option value="">-- Chọn tuyến đường --</option>
-              {listRoute.map((item) => (
-                <option key={item.maTuyen} value={item.maTuyen}>
-                  {item.diemKhoiHanh} - {item.diemDen}
+              <option value="">-- Chọn chuyến xe --</option>
+              {listTrip.map((item, index) => (
+                <option
+                  key={index}
+                  value={`${item.maChuyen}|${item.maXe}|${item.maTuyen}`}
+                >
+                  {item.maXe} - {dayjs(item.ngayGioKhoiHanh).format('DD/MM/YYYY HH:mm')} - {item.giaVe?.giaVe?.toLocaleString('vi-vn')} VNĐ
                 </option>
+
               ))}
             </select>
           </div>
+
+          <div className="mb-3">
+            <label className="form-label">Chọn ghế</label>
+            <div className="d-flex flex-wrap" style={{ gap: "10px" }}>
+              {listSeat.map((seat: string) => {
+                const isSelected = model.gheNgoi == seat;
+                const isBooked = listBookedSeat.includes(seat) && !isSelected;
+
+                return (
+                  <button
+                    key={seat}
+                    className={`btn 
+                      ${isSelected ? "btn-success" : isBooked ? "btn-danger" : "btn-outline-primary"}`}
+                    disabled={isBooked}
+                    onClick={() => {
+                      const oldSeat = model.gheNgoi;
+                      const newSeat = seat;
+
+                      setModel({ ...model, gheNgoi: newSeat });
+
+                      if (oldSeat && !listBookedSeat.includes(oldSeat)) {
+                        setBookedSeat((prev) => prev.filter((s) => s != oldSeat));
+                      }
+                    }}
+                  >
+                    {seat}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
 
           <button
             type="button"
@@ -169,7 +355,7 @@ export default function TicketForm(props: any) {
             Huỷ
           </button>
 
-          <button type="submit" className="btn btn-primary ms-2">
+          <button type="submit" className="btn btn-primary ms-2" onClick={handleSubmit}>
             {model.maVe ? "Cập nhật" : "Thêm"}
           </button>
         </form>

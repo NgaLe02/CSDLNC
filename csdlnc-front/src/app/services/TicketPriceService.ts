@@ -53,11 +53,21 @@ export class TicketPriceService {
     });
   }
 
-  public findTicketPriceByTuyenAndMua(maTuyen: string, maMua: string) {
+  public findTicketPriceByTuyenAndMua(maTuyen: string, maMua: string, ngayGioKhoiHanh: string) {
     return axios.get(
       `${process.env.REACT_APP_API_URL}/ticketPrice/findByTuyenAndMua`,
       {
-        params: { maTuyen, maMua },
+        params: { maTuyen, maMua, ngayGioKhoiHanh },
+        headers: HeadersUtil.getHeaders(),
+      }
+    );
+  }
+
+  public getSellSeat(maXe: string, maTuyen: string, maChuyen: string) {
+    return axios.get(
+      `${process.env.REACT_APP_API_URL}/ticketPrice/getSellSeat`,
+      {
+        params: { maXe, maTuyen, maChuyen },
         headers: HeadersUtil.getHeaders(),
       }
     );

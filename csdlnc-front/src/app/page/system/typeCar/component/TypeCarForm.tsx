@@ -83,6 +83,7 @@ export default function TypeCarForm(props: any) {
               className="form-control"
               id="soGhe"
               name="soGhe"
+              disabled={model.maLoaiXe ? true : false}
               value={model.soGhe ?? ""}
               onChange={handleChange}
             />
