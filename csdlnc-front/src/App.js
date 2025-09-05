@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import SideBarLeft from "./app/page/layout/SideBarLeft";
-import System from "./app/page/system/System";
 import Car from "./app/page/system/car/Car";
 import TypeCar from "./app/page/system/typeCar/TypeCar";
 import { ToastContainer } from "react-toastify";
@@ -33,7 +32,7 @@ function App() {
           {/* <!-- Blank Start --> */}
           <div className="container-fluid pt-4 px-4">
             <Routes>
-              <Route path="/system" element={<System />}>
+              <Route path="/system">
                 <Route path="xe" element={<Car />} />
                 <Route path="loai-xe" element={<TypeCar />} />
                 <Route path="hanh-khach" element={<Passenger />} />
@@ -46,7 +45,7 @@ function App() {
                 <Route path="ve" element={<Ticket />} />
               </Route>
 
-              <Route path="/request" element={<System />}>
+              <Route path="/request">
                 <Route path="re-01" element={<Request01 />} />
                 <Route path="re-02" element={<Request02 />} />
                 <Route path="re-03" element={<Request03 />} />
@@ -70,7 +69,7 @@ function App() {
           pauseOnHover
         />
       </div>
-    </Router>
+    </Router >
   );
 }
 

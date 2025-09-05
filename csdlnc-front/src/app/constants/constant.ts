@@ -7,4 +7,8 @@ export class Constant {
     { value: "Hoàn thành", label: "Hoàn thành" },
     { value: "Hủy", label: "Hủy" },
   ];
+
+  public static readonly VAI_TRO_PHU_XE = "Phụ xe";
+  public static readonly VAI_TRO_LAI_XE = 'Lái xe';
+
 }

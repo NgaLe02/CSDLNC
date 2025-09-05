@@ -43,12 +43,6 @@ export default function RouteSalary() {
   }
 
   function handleEdit(model: RouteSalaryModel) {
-    // setEditingModel({
-    //   maxe: car.maxe,
-    //   bienSo: car.bienSo,
-    //   tinhTrang: car.tinhTrang,
-    //   maLoaiXe: car.loaiXe?.maLoaiXe
-    // });
     setEditingModel(model);
     setShowForm(true);
   }

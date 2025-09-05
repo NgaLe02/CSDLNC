@@ -57,4 +57,16 @@
 	    WHERE maHanDangKiem = #{maHanDangKiem}
 	</delete>
 	
+	<select id="getLstRegistrationExpiryToCar" parameterType="string" resultMap="registrationExpiryMap">
+	    SELECT hdk.maHanDangKiem, 
+	    hdk.maXe, 
+	    hdk.chiPhi, 
+	    hdk.ngayDangKiem,
+	    hdk.hieuLuc,
+	    x.maXe AS "xe.maXe", 
+	    x.bienSo AS "xe.bienSo"
+	    FROM HanDangKiem hdk
+	    LEFT JOIN Xe x ON hdk.maXe = x.maXe
+	    where hdk.maXe = #{maXe}
+	</select>
 </mapper>

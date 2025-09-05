@@ -3,6 +3,7 @@ import { ParamUtil } from "../utils/paramUtil";
 import { HeadersUtil } from "../utils/headersUtil";
 import { ApiUrlUtil } from "../utils/apiUrlUtil";
 import { TripModel } from "../model/TripModel";
+import { AssigmentModel } from "../model/AssigmentModel";
 
 export class TripService {
   private static _seasonService: TripService;
@@ -48,6 +49,31 @@ export class TripService {
       process.env.REACT_APP_API_URL + "/trip/" + id + "/deleteTrip"
     );
     return axios.delete(url, {
+      headers: HeadersUtil.getHeaders(),
+    });
+  }
+
+  public assignEmployeesToTrip(payLoad: AssigmentModel[]) {
+    const url = ApiUrlUtil.buildQueryString(
+      process.env.REACT_APP_API_URL + "/trip/assignEmployeesToTrip"
+    );
+    return axios.post(url, payLoad, {
+      headers: HeadersUtil.getHeaders(),
+    });
+  }
+
+  public getAssignEmployeesToTrip(trip: TripModel) {
+    const info = {
+      maChuyen: trip.maChuyen,
+      maXe: trip.maXe,
+      maTuyen: trip.maTuyen
+    }
+    const params = ParamUtil.toRequestParams(info);
+    const url = ApiUrlUtil.buildQueryString(
+      process.env.REACT_APP_API_URL + "/trip/getAssignEmployeesToTrip",
+      params
+    );
+    return axios.get(url, {
       headers: HeadersUtil.getHeaders(),
     });
   }

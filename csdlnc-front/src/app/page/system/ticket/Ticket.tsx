@@ -51,12 +51,6 @@ export default function Ticket() {
   }
 
   function handleEdit(model: TicketModel) {
-    // setEditingModel({
-    //   maxe: car.maxe,
-    //   bienSo: car.bienSo,
-    //   tinhTrang: car.tinhTrang,
-    //   maLoaiXe: car.loaiXe?.maLoaiXe
-    // });
     setEditingModel(model);
     setShowForm(true);
   }

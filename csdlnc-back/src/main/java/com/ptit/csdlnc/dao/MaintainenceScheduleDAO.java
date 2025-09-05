@@ -18,4 +18,6 @@ public interface MaintainenceScheduleDAO {
 
 	int deleteMaintainenceSchedule(int id) throws Exception;
 
+	List<MaintainenceScheduleResponse> getLstMaintainenceScheduleToCar(String maXe) throws Exception;
+
 }

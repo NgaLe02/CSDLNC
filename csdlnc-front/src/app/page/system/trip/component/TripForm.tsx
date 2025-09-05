@@ -12,7 +12,6 @@ import dayjs from "dayjs";
 import { TicketPriceService } from "../../../../services/TicketPriceService";
 import { SeasonModel } from "../../../../model/SeasonModel";
 import { SeasonService } from "../../../../services/SeasonService";
-import { escape } from "querystring";
 
 export default function TripForm(props: any) {
   const [model, setModel] = useState<TripModel>(props.model ?? new TripModel());
@@ -21,7 +20,6 @@ export default function TripForm(props: any) {
   const [listStatusTrip, setStatusTrip] = useState<any[]>(
     Constant.LIST_STATUS_TRIP
   );
-  const [listTicketPrice, setTicketPrice] = useState<any[]>([]);
   const [listSeason, setListSeason] = useState<SeasonModel[]>([]);
 
   const [giaVe, setGiaVe] = useState<number>(0);
@@ -39,7 +37,6 @@ export default function TripForm(props: any) {
   useEffect(() => {
     getLstCar();
     getLstRoute();
-    getLstTicketPrice();
     getLstSeason();
   }, []);
 
@@ -91,26 +88,6 @@ export default function TripForm(props: any) {
           if (response.data.status) {
             const data = response.data.responseData.data;
             setListRoute(data);
-          } else {
-            toast.error(response.data.message);
-          }
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch(() => {
-        toast.error("Có lỗi xảy ra");
-      });
-  }
-
-  function getLstTicketPrice() {
-    TicketPriceService.getInstance()
-      .getLstTicketPrice({})
-      .then((response) => {
-        if (response.status === HttpStatusCode.Ok) {
-          if (response.data.status) {
-            const data = response.data.responseData;
-            setTicketPrice(data);
           } else {
             toast.error(response.data.message);
           }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.csdlnc.model.MaintainenceSchedule;
 import com.ptit.csdlnc.model.response.MaintainenceScheduleResponse;
+import com.ptit.csdlnc.model.response.RegistrationExpiryResponse;
 import com.ptit.csdlnc.service.MaintainenceScheduleService;
 import com.ptit.csdlnc.util.AjaxResult;
 
@@ -114,4 +115,18 @@ public class MaintainenceScheduleController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
+	@GetMapping("getLstMaintainenceScheduleToCar")
+	public ResponseEntity<AjaxResult> getLstMaintainenceScheduleToCar(@RequestParam String maXe) {
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			List<MaintainenceScheduleResponse> result = maintainenceScheduleService.getLstMaintainenceScheduleToCar(maXe);
+			ajaxResult.setStatus(true);
+			ajaxResult.setResponseData(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Tìm kiếm không thành công!");
+		}
+		return ResponseEntity.ok(ajaxResult);
+	}
 }

@@ -129,5 +129,26 @@
           AND maXe     = #{maXe}
           AND maNhanVien = #{maNhanVien}
     </delete>
+    
+     <delete id="deleteAssignmentToTrip" parameterType="map">
+        DELETE FROM PhanCong
+        WHERE maChuyen = #{maChuyen}
+          AND maTuyen  = #{maTuyen}
+          AND maXe     = #{maXe}
+    </delete>
 	
+	<select id="getAssignEmployeesToTrip" resultMap="assigmentMap">
+        SELECT 
+            pc.maChuyen, pc.maTuyen, pc.maXe, pc.maNhanVien, pc.vaiTro
+        FROM PhanCong pc
+        LEFT JOIN ChuyenXe cx 
+            ON pc.maChuyen = cx.maChuyen
+           AND pc.maTuyen  = cx.maTuyen
+           AND pc.maXe     = cx.maXe
+        LEFT JOIN NhanVien nv 
+            ON pc.maNhanVien = nv.maNhanVien
+         WHERE pc.maChuyen = #{maChuyen}
+          AND pc.maTuyen  = #{maTuyen}
+          AND pc.maXe     = #{maXe}
+    </select>
 </mapper>

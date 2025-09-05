@@ -42,12 +42,6 @@ export default function Season() {
   }
 
   function handleEdit(model: SeasonModel) {
-    // setEditingModel({
-    //   maxe: car.maxe,
-    //   bienSo: car.bienSo,
-    //   tinhTrang: car.tinhTrang,
-    //   maLoaiXe: car.loaiXe?.maLoaiXe
-    // });
     setEditingModel(model);
     setShowForm(true);
   }

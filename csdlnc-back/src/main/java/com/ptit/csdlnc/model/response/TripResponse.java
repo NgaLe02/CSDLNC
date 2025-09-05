@@ -33,5 +33,4 @@ public class TripResponse {
 	private SeasonResponse mua;
 
 	private Integer soVeDaBan;
-
 }

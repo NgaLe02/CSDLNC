@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ptit.csdlnc.model.Trip;
+import com.ptit.csdlnc.model.response.AssigmentResponse;
 import com.ptit.csdlnc.model.response.TripResponse;
 
 @Mapper

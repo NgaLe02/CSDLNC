@@ -17,14 +17,14 @@
         SELECT lbd.maLichBaoDuong, lbd.chiPhi, lbd.ngayBaoDuong, lbd.maXe, 
         	   x.bienSo
         FROM lichbaoduong lbd
-        JOIN Xe x ON cx.maXe = x.maXe
+        JOIN Xe x ON lbd.maXe = x.maXe
     </select>
 
     <select id="getMaintainenceScheduleById" parameterType="int" resultMap="maintainenceScheduleMap">
          SELECT lbd.maLichBaoDuong, lbd.chiPhi, lbd.ngayBaoDuong, lbd.maXe, 
         	   x.bienSo
         FROM lichbaoduong lbd
-        JOIN Xe x ON cx.maXe = x.maXe
+        JOIN Xe x ON lbd.maXe = x.maXe
         WHERE maLichBaoDuong = #{maLichBaoDuong}
     </select>
 
@@ -45,5 +45,12 @@
         DELETE lichbaoduong
         WHERE maLichBaoDuong = #{maLichBaoDuong}
     </delete>
+    
+    <select id="getLstMaintainenceScheduleToCar" resultMap="maintainenceScheduleMap">
+        SELECT lbd.maLichBaoDuong, lbd.chiPhi, lbd.ngayBaoDuong, lbd.maXe, x.bienSo
+        FROM lichbaoduong lbd
+        JOIN Xe x ON lbd.maXe = x.maXe
+        where lbd.maXe = #{maXe}
+    </select>
 	
 </mapper>

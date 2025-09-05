@@ -3,7 +3,7 @@ import { CarResponseModel } from "./CarResponseModel";
 import { RouteResponseModel } from "./RouteResponseModel";
 import { TripResponseModel } from "./TripResponseModel";
 
-export class AssigmentModel {
+export class AssigmentResponseModel {
   maChuyen?: string;
   maNhanVien?: number;
   maTuyen?: string;
@@ -15,7 +15,7 @@ export class AssigmentModel {
   tuyenDuong?: RouteResponseModel;
   xe?: CarResponseModel
 
-  constructor(init?: Partial<AssigmentModel>) {
+  constructor(init?: Partial<AssigmentResponseModel>) {
     Object.assign(this, init);
   }
 }

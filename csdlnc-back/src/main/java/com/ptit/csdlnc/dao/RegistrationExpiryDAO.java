@@ -18,4 +18,6 @@ public interface RegistrationExpiryDAO {
 
 	int deleteRegistrationExpiry(int id) throws Exception;
 
+	List<RegistrationExpiryResponse> getLstRegistrationExpiryToCar(String maXe) throws Exception;
+
 }

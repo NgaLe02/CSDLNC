@@ -55,4 +55,9 @@ public class RegistrationExpiryService {
 	public int deleteRegistrationExpiry(int id) throws Exception {
 		return rgistrationExpiryDAO.deleteRegistrationExpiry(id);
 	}
+
+	public List<RegistrationExpiryResponse> getLstRegistrationExpiryToCar(String maXe) throws Exception {
+		List<RegistrationExpiryResponse> result = rgistrationExpiryDAO.getLstRegistrationExpiryToCar(maXe);
+		return result;
+	}
 }

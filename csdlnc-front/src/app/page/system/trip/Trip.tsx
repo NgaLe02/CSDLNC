@@ -7,6 +7,7 @@ import { TripResponseModel } from "../../../model/response/TripResponseModel";
 import TripForm from "./component/TripForm";
 import dayjs from "dayjs";
 import PaginationCommon from "../../../common/PaginationCommon";
+import AssignTripForm from "./component/AssignTripForm";
 
 export default function Trip() {
   const [listData, setListData] = useState<TripResponseModel[]>([]);
@@ -18,6 +19,9 @@ export default function Trip() {
     page: 1,
     time: new Date().getTime(),
   });
+
+  const [showAssignForm, setShowAssignForm] = useState(false);
+  const [assignModel, setAssignModel] = useState<TripModel>(new TripModel());
 
   useEffect(() => {
     getLstTrip();
@@ -54,6 +58,11 @@ export default function Trip() {
     setShowForm(true);
   }
 
+  function handleAssign(trip: TripResponseModel) {
+    setAssignModel(trip);
+    setShowAssignForm(true);
+  }
+
   function handleDelete(id: string) {
     TripService.getInstance()
       .deleteTrip(id)
@@ -80,6 +89,11 @@ export default function Trip() {
 
   function closeModal(status: boolean) {
     setShowForm(false);
+    getLstTrip();
+  }
+
+  function closeAssignModal(status: boolean) {
+    setShowAssignForm(false);
     getLstTrip();
   }
 
@@ -232,7 +246,7 @@ export default function Trip() {
                   <th scope="col">Xe</th>
                   <th scope="col">Tuyến đường</th>
                   <th scope="col">Ngày giờ khởi hành</th>
-                  <th scope="col">Ngày giờ đến</th>
+                  {/* <th scope="col">Ngày giờ đến</th> */}
                   {/* <th scope="col">Khoảng cách (km)</th> */}
                   <th scope="col">Thù lao phụ xe</th>
                   <th scope="col">Thù lao lái xe</th>
@@ -240,6 +254,7 @@ export default function Trip() {
                   <th scope="col">Giá vé</th>
                   <th scope="col">Tình trạng chuyến</th>
                   <th scope="col">Số vé đã bán</th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
@@ -262,7 +277,7 @@ export default function Trip() {
                     <td>
                       {dayjs(item.ngayGioKhoiHanh).format("DD-MM-YYYY HH:mm")}
                     </td>
-                    <td>{dayjs(item.ngayGioDen).format("DD-MM-YYYY HH:mm")}</td>
+                    {/* <td>{dayjs(item.ngayGioDen).format("DD-MM-YYYY HH:mm")}</td> */}
                     {/* <td>{item.tuyenDuong?.khoangCach}</td> */}
                     <td className="text-end">
                       {item.tuyenDuong?.luongTuyenDuong?.luongCoBan?.toLocaleString(
@@ -285,6 +300,12 @@ export default function Trip() {
                         onClick={() => handleEdit(item)}
                       >
                         Sửa
+                      </button>
+                      <button
+                        className="btn btn-sm btn-warning ms-2"
+                        onClick={() => handleAssign(item)}
+                      >
+                        Phân công
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
@@ -337,7 +358,37 @@ export default function Trip() {
           </div>
         </div>
       )}
-      {showForm && <div className="modal-backdrop fade show"></div>}
+
+      {showAssignForm && (
+        <div className="modal fade show d-block" tabIndex={-1}>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  Phân công nhân viên cho chuyến xe: {assignModel.maXe + '-' + assignModel.maTuyen + '-' + assignModel.maChuyen}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowAssignForm(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <AssignTripForm
+                  model={assignModel}
+                  closeModal={(status: boolean) => {
+                    closeAssignModal(status);
+                  }}
+                  type={editingModel.maChuyen ? "E" : "C"}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {(showForm || showAssignForm) && <div className="modal-backdrop fade show"></div>}
+
     </>
   );
 }

@@ -114,4 +114,18 @@ public class RegistrationExpiryController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
+	@GetMapping("getLstRegistrationExpiryToCar")
+	public ResponseEntity<AjaxResult> getLstRegistrationExpiryToCar(@RequestParam String maXe) {
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			List<RegistrationExpiryResponse> result = registrationExpiryService.getLstRegistrationExpiryToCar(maXe);
+			ajaxResult.setStatus(true);
+			ajaxResult.setResponseData(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage("Tìm kiếm không thành công!");
+		}
+		return ResponseEntity.ok(ajaxResult);
+	}
 }

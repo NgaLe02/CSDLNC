@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ptit.csdlnc.dao.MaintainenceScheduleDAO;
 import com.ptit.csdlnc.model.MaintainenceSchedule;
 import com.ptit.csdlnc.model.response.MaintainenceScheduleResponse;
+import com.ptit.csdlnc.model.response.RegistrationExpiryResponse;
 
 @Service
 public class MaintainenceScheduleService {
@@ -53,5 +54,10 @@ public class MaintainenceScheduleService {
 
 	public int deleteMaintainenceSchedule(int id) throws Exception {
 		return maintainceScheduleDAO.deleteMaintainenceSchedule(id);
+	}
+
+	public List<MaintainenceScheduleResponse> getLstMaintainenceScheduleToCar(String maXe) throws Exception {
+		List<MaintainenceScheduleResponse> result = maintainceScheduleDAO.getLstMaintainenceScheduleToCar(maXe);
+		return result;
 	}
 }

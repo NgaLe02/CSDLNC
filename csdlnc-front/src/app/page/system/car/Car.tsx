@@ -5,11 +5,18 @@ import { CarModel } from "../../../model/CarModel";
 import { CarService } from "../../../services/CarService";
 import { CarResponseModel } from "../../../model/response/CarResponseModel";
 import CarForm from "./component/CarForm";
+import BaoDuongForm from "./component/BaoDuongForm";
+import DangKiemForm from "./component/DangKiemForm";
 
 export default function Car() {
   const [listData, setListData] = useState<CarResponseModel[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingModel, setEditingModel] = useState<CarModel>(new CarModel());
+  const [showBaoDuongForm, setShowBaoDuongForm] = useState(false);
+  const [baoDuongModel, setBaoDuonModel] = useState<CarModel>(new CarModel());
+
+  const [showDangKiemForm, setShowDangKiemForm] = useState(false);
+  const [dangKiemModel, setDangKiemModel] = useState<CarModel>(new CarModel());
 
   useEffect(() => {
     getLstCar();
@@ -41,14 +48,18 @@ export default function Car() {
   }
 
   function handleEdit(car: CarResponseModel) {
-    // setEditingModel({
-    //   maxe: car.maxe,
-    //   bienSo: car.bienSo,
-    //   tinhTrang: car.tinhTrang,
-    //   maLoaiXe: car.loaiXe?.maLoaiXe
-    // });
     setEditingModel(car);
     setShowForm(true);
+  }
+
+  function handleBaoDuong(car: CarResponseModel) {
+    setBaoDuonModel(car);
+    setShowBaoDuongForm(true);
+  }
+
+  function handleDangKiem(car: CarResponseModel) {
+    setDangKiemModel(car);
+    setShowDangKiemForm(true);
   }
 
   function handleDelete(id: string) {
@@ -77,6 +88,16 @@ export default function Car() {
 
   function closeModal(status: boolean) {
     setShowForm(false);
+    getLstCar();
+  }
+
+  function closeBaoDuongModal(status: boolean) {
+    setShowBaoDuongForm(false);
+    getLstCar();
+  }
+
+  function closeDangKiemModal(status: boolean) {
+    setShowDangKiemForm(false);
     getLstCar();
   }
   return (
@@ -125,6 +146,18 @@ export default function Car() {
                         Sửa
                       </button>
                       <button
+                        className="btn btn-sm btn-warning ms-2"
+                        onClick={() => handleBaoDuong(item)}
+                      >
+                        Bảo dưỡng
+                      </button>
+                      <button
+                        className="btn btn-sm btn-secondary ms-2"
+                        onClick={() => handleDangKiem(item)}
+                      >
+                        Đăng kiểm
+                      </button>
+                      <button
                         className="btn btn-sm btn-danger ms-2"
                         onClick={() => handleDelete(item.maXe!)}
                       >
@@ -165,7 +198,89 @@ export default function Car() {
           </div>
         </div>
       )}
-      {showForm && <div className="modal-backdrop fade show"></div>}
+
+      {showForm && (
+        <div className="modal fade show d-block" tabIndex={-1}>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  {editingModel.maXe ? "Sửa loại xe" : "Thêm loại xe"}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowForm(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <CarForm
+                  model={editingModel}
+                  closeModal={(status: boolean) => {
+                    closeModal(status);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showBaoDuongForm && (
+        <div className="modal fade show d-block" tabIndex={-1}>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  Lịch sử bảo dưỡng xe {baoDuongModel.maXe}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowBaoDuongForm(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <BaoDuongForm
+                  model={baoDuongModel}
+                  closeModal={(status: boolean) => {
+                    closeBaoDuongModal(status);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDangKiemForm && (
+        <div className="modal fade show d-block" tabIndex={-1}>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  Lịch sử đăng kiểm xe {dangKiemModel.maXe}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowDangKiemForm(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <DangKiemForm
+                  model={dangKiemModel}
+                  closeModal={(status: boolean) => {
+                    closeDangKiemModal(status);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {(showForm || showBaoDuongForm || showDangKiemForm) && <div className="modal-backdrop fade show"></div>}
     </>
   );
 }

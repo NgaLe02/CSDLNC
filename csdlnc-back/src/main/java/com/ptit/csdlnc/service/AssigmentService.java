@@ -24,7 +24,7 @@ public class AssigmentService {
 	public int insertAssigment(Assignment model) throws Exception {
 		int result = 0;
 		try {
-			result = assigmentDAO.insertAssigment(model);
+			result = assigmentDAO.insertAssignment(model);
 		} catch (UncategorizedSQLException e) {
 			// lỗi vi phạm trigger, foreign key, check constraint
 			Throwable root = e.getRootCause();
@@ -43,7 +43,7 @@ public class AssigmentService {
 	public int updateAssigment(Assignment model) throws Exception {
 		int result = 0;
 		try {
-			result = assigmentDAO.updateAssigment(model);
+			result = assigmentDAO.updateAssignment(model);
 		} catch (UncategorizedSQLException e) {
 			// lỗi vi phạm trigger, foreign key, check constraint
 			Throwable root = e.getRootCause();
@@ -63,6 +63,6 @@ public class AssigmentService {
 	}
 
 	public int deleteAssigment(String id) throws Exception {
-		return assigmentDAO.deleteAssigment(id);
+		return assigmentDAO.deleteAssignment(id);
 	}
 }
