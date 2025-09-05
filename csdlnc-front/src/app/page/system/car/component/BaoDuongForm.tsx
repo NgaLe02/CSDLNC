@@ -89,36 +89,28 @@ export default function BaoDuongForm(props: any) {
     <div className="col-sm-12 col-xl-12">
       <div className="bg-light rounded h-100 p-4">
         <div className="d-flex align-items-center justify-content-between mb-4">
-          {/* <h6 className="mb-0">Danh sách b</h6>
+          <h6 className="mb-0"></h6>
           <button className="btn btn-sm btn-primary">
-            Thêm xe
-          </button> */}
+            Thêm
+          </button>
         </div>
         <div className="table-responsive">
           <table className="table text-start align-middle table-bordered table-hover mb-0">
             <thead>
               <tr className="text-dark">
-                {/* <th scope="col" style={{ width: "5%" }}></th> */}
                 <th scope="col" style={{ width: "5%" }}>
                   STT
                 </th>
                 <th scope="col">Ngày bảo dưỡng</th>
                 <th scope="col">Chi phí (VNĐ)</th>
-                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
               {listBaoDuong.map((item: MaintainenceScheduleResponse, index: number) => (
                 <tr key={item.maXe}>
-                  {/* <td>
-                    <input className="form-check-input" type="checkbox" />
-                  </td> */}
                   <td>{index + 1}</td>
                   <td>{dayjs(item.ngayBaoDuong).format('DD-MM-YYYY')}</td>
                   <td>{item.chiPhi?.toLocaleString('vi-vn')}</td>
-                  <td>
-
-                  </td>
                 </tr>
               ))}
             </tbody>

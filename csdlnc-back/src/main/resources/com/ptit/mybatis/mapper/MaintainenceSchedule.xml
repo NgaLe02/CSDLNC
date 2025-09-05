@@ -51,6 +51,7 @@
         FROM lichbaoduong lbd
         JOIN Xe x ON lbd.maXe = x.maXe
         where lbd.maXe = #{maXe}
+        order by lbd.ngayBaoDuong desc
     </select>
 	
 </mapper>
