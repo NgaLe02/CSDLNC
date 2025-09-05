@@ -5,10 +5,13 @@ import { CarService } from "../../../../services/CarService";
 import { MaintainenceScheduleService } from "../../../../services/MaintainenceScheduleService";
 import { MaintainenceScheduleResponse } from "../../../../model/response/MaintainenceScheduleResponse";
 import dayjs from "dayjs";
+import { HttpStatusCode } from "axios";
+import { MaintainenceSchedule } from "../../../../model/MaintainenceSchedule";
 
 export default function BaoDuongForm(props: any) {
-  const [model, setModel] = useState<CarModel>(props.model ?? new CarModel());
   const [listBaoDuong, setListbaoDuong] = useState<MaintainenceScheduleResponse[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [newItem, setNewItem] = useState<MaintainenceSchedule>(new MaintainenceSchedule());
 
   useEffect(() => {
     if (props.model.maXe) {
@@ -36,23 +39,57 @@ export default function BaoDuongForm(props: any) {
       });
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setModel((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  function handleDelete(id: number) {
+    MaintainenceScheduleService.getInstance()
+      .deleteMaintainenceSchedule(id)
+      .then((resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          if (resp.data.status) {
+            toast.success(resp.data.message);
+            getLstMaintainenceScheduleToCar();
+          } else {
+            toast.error(resp.data.message);
+          }
+        } else {
+          toast.error(resp.data.message);
+        }
+      })
+      .catch((err) => {
+        if (err.response && err.response.data) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Có lỗi xảy ra");
+        }
+      });
+  }
+
+  // Khi bấm Thêm
+  const handleAdd = () => {
+    setNewItem({
+      maXe: "",
+      ngayBaoDuong: new Date().toISOString(),
+      chiPhi: 0,
+    } as MaintainenceScheduleResponse);
+    setEditingId("new");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (model.maXe) {
-      CarService.getInstance()
-        .updateCar(model)
+  // Khi bấm Sửa
+  const handleEdit = (item: MaintainenceScheduleResponse) => {
+    if (item.maLichBaoDuong) {
+      setEditingId(item.maLichBaoDuong?.toString());
+      setNewItem({ ...item });
+    }
+  };
+
+  // Khi Lưu
+  const handleSave = () => {
+    if (editingId === "new") {
+      MaintainenceScheduleService.getInstance()
+        .saveMaintainenceSchedule(newItem)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
-            props.closeModal(true);
+            getLstMaintainenceScheduleToCar()
           } else {
             toast.error(resp.data.message);
           }
@@ -65,12 +102,12 @@ export default function BaoDuongForm(props: any) {
           }
         });
     } else {
-      CarService.getInstance()
-        .saveCar(model)
+      MaintainenceScheduleService.getInstance()
+        .updateMaintainenceSchedule(newItem)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
-            props.closeModal(true);
+            getLstMaintainenceScheduleToCar()
           } else {
             toast.error(resp.data.message);
           }
@@ -83,6 +120,14 @@ export default function BaoDuongForm(props: any) {
           }
         });
     }
+    setEditingId(null);
+    setNewItem({});
+  };
+
+  // Khi Hủy
+  const handleCancel = () => {
+    setEditingId(null);
+    setNewItem({});
   };
 
   return (
@@ -90,7 +135,7 @@ export default function BaoDuongForm(props: any) {
       <div className="bg-light rounded h-100 p-4">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <h6 className="mb-0"></h6>
-          <button className="btn btn-sm btn-primary">
+          <button className="btn btn-sm btn-primary" onClick={handleAdd}>
             Thêm
           </button>
         </div>
@@ -103,17 +148,101 @@ export default function BaoDuongForm(props: any) {
                 </th>
                 <th scope="col">Ngày bảo dưỡng</th>
                 <th scope="col">Chi phí (VNĐ)</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              {listBaoDuong.map((item: MaintainenceScheduleResponse, index: number) => (
-                <tr key={item.maXe}>
-                  <td>{index + 1}</td>
-                  <td>{dayjs(item.ngayBaoDuong).format('DD-MM-YYYY')}</td>
-                  <td>{item.chiPhi?.toLocaleString('vi-vn')}</td>
-                </tr>
+              {listBaoDuong.map((item, index) => (
+                editingId == item.maLichBaoDuong?.toString() ? (
+                  <tr key={item.maLichBaoDuong}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={dayjs(newItem?.ngayBaoDuong).format("YYYY-MM-DD")}
+                        onChange={(e) =>
+                          setNewItem({ ...newItem!, ngayBaoDuong: e.target.value })
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={newItem?.chiPhi ?? ""}
+                        onChange={(e) =>
+                          setNewItem({ ...newItem!, chiPhi: Number(e.target.value) })
+                        }
+                      />
+                    </td>
+                    <td>
+                      <button className="btn btn-sm btn-success" onClick={handleSave}>
+                        Lưu
+                      </button>
+                      <button className="btn btn-sm btn-secondary ms-2" onClick={handleCancel}>
+                        Hủy
+                      </button>
+                    </td>
+                  </tr>
+                ) : (
+                  <tr key={item.maLichBaoDuong}>
+                    <td>{index + 1}</td>
+                    <td>{dayjs(item.ngayBaoDuong).format("DD-MM-YYYY")}</td>
+                    <td>{item.chiPhi?.toLocaleString("vi-vn")}</td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-info"
+                        onClick={() => handleEdit(item)}
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        className="btn btn-sm btn-danger ms-2"
+                        onClick={() => handleDelete(item.maLichBaoDuong!)}
+                      >
+                        Xóa
+                      </button>
+                    </td>
+                  </tr>
+                )
               ))}
+
+              {editingId === "new" && (
+                <tr>
+                  <td>{listBaoDuong.length + 1}</td>
+                  <td>
+                    <input
+                      type="date"
+                      className="form-control"
+                      value={dayjs(newItem?.ngayBaoDuong).format("YYYY-MM-DD")}
+                      onChange={(e) =>
+                        setNewItem({ ...newItem!, ngayBaoDuong: e.target.value })
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={newItem?.chiPhi ?? ""}
+                      onChange={(e) =>
+                        setNewItem({ ...newItem!, chiPhi: Number(e.target.value) })
+                      }
+                    />
+                  </td>
+                  <td>
+                    <button className="btn btn-sm btn-success" onClick={handleSave}>
+                      Lưu
+                    </button>
+                    <button className="btn btn-sm btn-secondary ms-2" onClick={handleCancel}>
+                      Hủy
+                    </button>
+                  </td>
+                </tr>
+              )}
             </tbody>
+
           </table>
         </div>
       </div>

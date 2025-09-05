@@ -36,7 +36,7 @@
     <update id="updateMaintainenceSchedule" parameterType="com.ptit.csdlnc.model.MaintainenceSchedule">
         UPDATE lichbaoduong
         SET chiPhi = #{chiPhi},
-        	ngayBaoDuong = #{ngayBaoDuon},
+        	ngayBaoDuong = #{ngayBaoDuong},
         	maXe = #{maXe}
         WHERE maLichBaoDuong = #{maLichBaoDuong}
     </update>
@@ -51,7 +51,7 @@
         FROM lichbaoduong lbd
         JOIN Xe x ON lbd.maXe = x.maXe
         where lbd.maXe = #{maXe}
-        order by lbd.ngayBaoDuong desc
+        ORDER BY lbd.ngayBaoDuong desc
     </select>
 	
 </mapper>

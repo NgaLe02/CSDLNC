@@ -43,7 +43,7 @@ export class MaintainenceScheduleService {
     });
   }
 
-  public deleteMaintainenceSchedule(id: string) {
+  public deleteMaintainenceSchedule(id: number) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/maintainenceSchedule/" + id + "/deleteMaintainenceSchedule"
     );

@@ -125,7 +125,6 @@ export default function DangKiemForm(props: any) {
             .add(listBaoDuong[0].hieuLuc ?? 0, "month")
             .format("DD-MM-YYYY")
           : "Chưa có"}</h6>
-
       </div>
     </div>
   );
