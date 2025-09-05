@@ -34,7 +34,7 @@ export default function TicketForm(props: any) {
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
-            const data = response.data.responseData;
+            const data = response.data.responseData.data;
             setListRoute(data);
           } else {
             toast.error(response.data.message);
@@ -54,7 +54,7 @@ export default function TicketForm(props: any) {
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
           if (response.data.status) {
-            const data = response.data.responseData;
+            const data = response.data.responseData.data;
             setListPassenger(data);
           } else {
             toast.error(response.data.message);
@@ -77,7 +77,6 @@ export default function TicketForm(props: any) {
       setModel({ ...model, [name]: value });
     }
   };
-
 
   function check() {
     return true;
@@ -127,7 +126,6 @@ export default function TicketForm(props: any) {
     }
   };
 
-
   function getLstTrip() {
     const tuyenDuong = listRoute.find(
       (item: RouteResponseModel) => item.maTuyen === model.maTuyen
@@ -135,8 +133,8 @@ export default function TicketForm(props: any) {
     const search = {
       diemKhoiHanh: tuyenDuong?.diemKhoiHanh,
       diemDen: tuyenDuong?.diemDen,
-      khoiHanhTuNgay: dayjs(new Date()).format('YYYY-MM-DD')
-    }
+      khoiHanhTuNgay: dayjs(new Date()).format("YYYY-MM-DD"),
+    };
 
     TripService.getInstance()
       .getLstTrip(search)
@@ -165,16 +163,16 @@ export default function TicketForm(props: any) {
           if (response.data.status) {
             const bookedSeat = response.data.responseData.bookedSeat;
             const allSeat = response.data.responseData.allSeat;
-            setBookedSeat(bookedSeat)
-            setListSeat(allSeat)
+            setBookedSeat(bookedSeat);
+            setListSeat(allSeat);
           } else {
-            setBookedSeat([])
-            setListSeat([])
+            setBookedSeat([]);
+            setListSeat([]);
             toast.error(response.data.message);
           }
         } else {
-          setBookedSeat([])
-          setListSeat([])
+          setBookedSeat([]);
+          setListSeat([]);
           toast.error(response.data.message);
         }
       })
@@ -193,7 +191,7 @@ export default function TicketForm(props: any) {
         ...prev,
         maChuyen: "",
         maXe: "",
-        gheNgoi: ""
+        gheNgoi: "",
       }));
       return;
     }
@@ -206,13 +204,12 @@ export default function TicketForm(props: any) {
         ...prev,
         maChuyen: "",
         maXe: "",
-        gheNgoi: ""
+        gheNgoi: "",
       }));
       setListSeat([]);
       setBookedSeat([]);
     }
   }, [model.maTuyen]);
-
 
   useEffect(() => {
     if (model.maChuyen && model.maXe && model.maTuyen) {
@@ -222,29 +219,25 @@ export default function TicketForm(props: any) {
       setModel((prev) => ({
         ...prev,
         maXe: "",
-        gheNgoi: ""
+        gheNgoi: "",
       }));
     }
   }, [model.maChuyen]);
 
-
   useEffect(() => {
-    console.log(model)
+    console.log(model);
     if (model.maTuyen && model.maXe && model.maChuyen) {
-      getSeat(model.maXe, model.maTuyen, model.maChuyen)
+      getSeat(model.maXe, model.maTuyen, model.maChuyen);
+    } else {
+      setListSeat([]);
+      setBookedSeat([]);
     }
-    else {
-      setListSeat([])
-      setBookedSeat([])
-    }
-  }, [model.maTuyen, model.maXe, model.maChuyen])
-
+  }, [model.maTuyen, model.maXe, model.maChuyen]);
 
   return (
     <div className="col-sm-12 col-xl-12">
       <div className="bg-light rounded h-100 p-4">
         <form onSubmit={(e) => e.preventDefault()}>
-
           <div className="mb-3">
             <label htmlFor="maHanhKhach" className="form-label">
               Hành khách
@@ -300,7 +293,8 @@ export default function TicketForm(props: any) {
                 model.maChuyen && model.maXe && model.maTuyen
                   ? `${model.maChuyen}|${model.maXe}|${model.maTuyen}`
                   : ""
-              } onChange={(e: any) => handleChange(e)}
+              }
+              onChange={(e: any) => handleChange(e)}
             >
               <option value="">-- Chọn chuyến xe --</option>
               {listTrip.map((item, index) => (
@@ -308,9 +302,10 @@ export default function TicketForm(props: any) {
                   key={index}
                   value={`${item.maChuyen}|${item.maXe}|${item.maTuyen}`}
                 >
-                  {item.maXe} - {dayjs(item.ngayGioKhoiHanh).format('DD/MM/YYYY HH:mm')} - {item.giaVe?.giaVe?.toLocaleString('vi-vn')} VNĐ
+                  {item.maXe} -{" "}
+                  {dayjs(item.ngayGioKhoiHanh).format("DD/MM/YYYY HH:mm")} -{" "}
+                  {item.giaVe?.giaVe?.toLocaleString("vi-vn")} VNĐ
                 </option>
-
               ))}
             </select>
           </div>
@@ -326,7 +321,13 @@ export default function TicketForm(props: any) {
                   <button
                     key={seat}
                     className={`btn 
-                      ${isSelected ? "btn-success" : isBooked ? "btn-danger" : "btn-outline-primary"}`}
+                      ${
+                        isSelected
+                          ? "btn-success"
+                          : isBooked
+                          ? "btn-danger"
+                          : "btn-outline-primary"
+                      }`}
                     disabled={isBooked}
                     onClick={() => {
                       const oldSeat = model.gheNgoi;
@@ -335,7 +336,9 @@ export default function TicketForm(props: any) {
                       setModel({ ...model, gheNgoi: newSeat });
 
                       if (oldSeat && !listBookedSeat.includes(oldSeat)) {
-                        setBookedSeat((prev) => prev.filter((s) => s != oldSeat));
+                        setBookedSeat((prev) =>
+                          prev.filter((s) => s != oldSeat)
+                        );
                       }
                     }}
                   >
@@ -346,7 +349,6 @@ export default function TicketForm(props: any) {
             </div>
           </div>
 
-
           <button
             type="button"
             className="btn btn-secondary"
@@ -355,7 +357,11 @@ export default function TicketForm(props: any) {
             Huỷ
           </button>
 
-          <button type="submit" className="btn btn-primary ms-2" onClick={handleSubmit}>
+          <button
+            type="submit"
+            className="btn btn-primary ms-2"
+            onClick={handleSubmit}
+          >
             {model.maVe ? "Cập nhật" : "Thêm"}
           </button>
         </form>

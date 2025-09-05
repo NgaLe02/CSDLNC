@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { CarModel } from "../../../../model/CarModel";
-import { CarService } from "../../../../services/CarService";
 import { MaintainenceScheduleService } from "../../../../services/MaintainenceScheduleService";
 import { MaintainenceScheduleResponse } from "../../../../model/response/MaintainenceScheduleResponse";
 import dayjs from "dayjs";
@@ -9,13 +7,19 @@ import { HttpStatusCode } from "axios";
 import { MaintainenceSchedule } from "../../../../model/MaintainenceSchedule";
 
 export default function BaoDuongForm(props: any) {
-  const [listBaoDuong, setListbaoDuong] = useState<MaintainenceScheduleResponse[]>([]);
+  const [listBaoDuong, setListbaoDuong] = useState<
+    MaintainenceScheduleResponse[]
+  >([]);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [newItem, setNewItem] = useState<MaintainenceSchedule>(new MaintainenceSchedule());
+  const [newItem, setNewItem] = useState<MaintainenceSchedule>(
+    new MaintainenceSchedule()
+  );
+  const [nextTimeBaoDuong, setNextTimeBaoDuong] = useState<any>();
 
   useEffect(() => {
     if (props.model.maXe) {
       getLstMaintainenceScheduleToCar();
+      getNextTimeBaoDuongToCar();
     }
   }, [props.model.maXe]);
 
@@ -26,6 +30,26 @@ export default function BaoDuongForm(props: any) {
         if (response.data.status) {
           const data = response.data.responseData;
           setListbaoDuong(data);
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch((err: any) => {
+        if (err.response && err.response.data) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Có lỗi xảy ra");
+        }
+      });
+  }
+
+  function getNextTimeBaoDuongToCar() {
+    MaintainenceScheduleService.getInstance()
+      .getNextTimeBaoDuongToCar({ maXe: props.model.maXe })
+      .then((response) => {
+        if (response.data.status) {
+          const data = response.data.responseData;
+          setNextTimeBaoDuong(data);
         } else {
           toast.error(response.data.message);
         }
@@ -63,17 +87,15 @@ export default function BaoDuongForm(props: any) {
       });
   }
 
-  // Khi bấm Thêm
   const handleAdd = () => {
     setNewItem({
-      maXe: "",
+      maXe: props.model.maXe,
       ngayBaoDuong: new Date().toISOString(),
       chiPhi: 0,
     } as MaintainenceScheduleResponse);
     setEditingId("new");
   };
 
-  // Khi bấm Sửa
   const handleEdit = (item: MaintainenceScheduleResponse) => {
     if (item.maLichBaoDuong) {
       setEditingId(item.maLichBaoDuong?.toString());
@@ -81,7 +103,6 @@ export default function BaoDuongForm(props: any) {
     }
   };
 
-  // Khi Lưu
   const handleSave = () => {
     if (editingId === "new") {
       MaintainenceScheduleService.getInstance()
@@ -89,7 +110,7 @@ export default function BaoDuongForm(props: any) {
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
-            getLstMaintainenceScheduleToCar()
+            getLstMaintainenceScheduleToCar();
           } else {
             toast.error(resp.data.message);
           }
@@ -107,7 +128,7 @@ export default function BaoDuongForm(props: any) {
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
-            getLstMaintainenceScheduleToCar()
+            getLstMaintainenceScheduleToCar();
           } else {
             toast.error(resp.data.message);
           }
@@ -124,7 +145,6 @@ export default function BaoDuongForm(props: any) {
     setNewItem({});
   };
 
-  // Khi Hủy
   const handleCancel = () => {
     setEditingId(null);
     setNewItem({});
@@ -152,7 +172,7 @@ export default function BaoDuongForm(props: any) {
               </tr>
             </thead>
             <tbody>
-              {listBaoDuong.map((item, index) => (
+              {listBaoDuong.map((item, index) =>
                 editingId == item.maLichBaoDuong?.toString() ? (
                   <tr key={item.maLichBaoDuong}>
                     <td>{index + 1}</td>
@@ -160,9 +180,14 @@ export default function BaoDuongForm(props: any) {
                       <input
                         type="date"
                         className="form-control"
-                        value={dayjs(newItem?.ngayBaoDuong).format("YYYY-MM-DD")}
+                        value={dayjs(newItem?.ngayBaoDuong).format(
+                          "YYYY-MM-DD"
+                        )}
                         onChange={(e) =>
-                          setNewItem({ ...newItem!, ngayBaoDuong: e.target.value })
+                          setNewItem({
+                            ...newItem!,
+                            ngayBaoDuong: e.target.value,
+                          })
                         }
                       />
                     </td>
@@ -172,15 +197,24 @@ export default function BaoDuongForm(props: any) {
                         className="form-control"
                         value={newItem?.chiPhi ?? ""}
                         onChange={(e) =>
-                          setNewItem({ ...newItem!, chiPhi: Number(e.target.value) })
+                          setNewItem({
+                            ...newItem!,
+                            chiPhi: Number(e.target.value),
+                          })
                         }
                       />
                     </td>
                     <td>
-                      <button className="btn btn-sm btn-success" onClick={handleSave}>
+                      <button
+                        className="btn btn-sm btn-success"
+                        onClick={handleSave}
+                      >
                         Lưu
                       </button>
-                      <button className="btn btn-sm btn-secondary ms-2" onClick={handleCancel}>
+                      <button
+                        className="btn btn-sm btn-secondary ms-2"
+                        onClick={handleCancel}
+                      >
                         Hủy
                       </button>
                     </td>
@@ -206,7 +240,7 @@ export default function BaoDuongForm(props: any) {
                     </td>
                   </tr>
                 )
-              ))}
+              )}
 
               {editingId === "new" && (
                 <tr>
@@ -217,7 +251,10 @@ export default function BaoDuongForm(props: any) {
                       className="form-control"
                       value={dayjs(newItem?.ngayBaoDuong).format("YYYY-MM-DD")}
                       onChange={(e) =>
-                        setNewItem({ ...newItem!, ngayBaoDuong: e.target.value })
+                        setNewItem({
+                          ...newItem!,
+                          ngayBaoDuong: e.target.value,
+                        })
                       }
                     />
                   </td>
@@ -227,24 +264,40 @@ export default function BaoDuongForm(props: any) {
                       className="form-control"
                       value={newItem?.chiPhi ?? ""}
                       onChange={(e) =>
-                        setNewItem({ ...newItem!, chiPhi: Number(e.target.value) })
+                        setNewItem({
+                          ...newItem!,
+                          chiPhi: Number(e.target.value),
+                        })
                       }
                     />
                   </td>
                   <td>
-                    <button className="btn btn-sm btn-success" onClick={handleSave}>
+                    <button
+                      className="btn btn-sm btn-success"
+                      onClick={handleSave}
+                    >
                       Lưu
                     </button>
-                    <button className="btn btn-sm btn-secondary ms-2" onClick={handleCancel}>
+                    <button
+                      className="btn btn-sm btn-secondary ms-2"
+                      onClick={handleCancel}
+                    >
                       Hủy
                     </button>
                   </td>
                 </tr>
               )}
             </tbody>
-
           </table>
         </div>
+        <h6 className="mt-3">
+          Thời gian bảo dưỡng dự kiến tiếp theo:{" "}
+          {dayjs(nextTimeBaoDuong?.ngayBaoDuongTiepTheo).format("DD-MM-YYYY")}
+        </h6>
+        <h6 className="mt-3">
+          Số km đã chạy kể từ lần bảo dưỡng gần nhất:{" "}
+          {nextTimeBaoDuong?.soKmDaChay?.toLocaleString("vi-vn")} km
+        </h6>
       </div>
     </div>
   );

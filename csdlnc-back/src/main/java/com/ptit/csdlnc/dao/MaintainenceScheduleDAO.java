@@ -20,4 +20,6 @@ public interface MaintainenceScheduleDAO {
 
 	List<MaintainenceScheduleResponse> getLstMaintainenceScheduleToCar(String maXe) throws Exception;
 
+	Map<String, Object> getNextTimeBaoDuongToCar(String maXe) throws Exception;
+
 }

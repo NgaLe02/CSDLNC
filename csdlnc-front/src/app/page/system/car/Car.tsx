@@ -256,7 +256,7 @@ export default function Car() {
       {showDangKiemForm && (
         <div className="modal fade show d-block" tabIndex={-1}>
           <div className="modal-dialog modal-lg">
-            <div className="modal-content">
+            <div className="modal-content" style={{ minWidth: "1000px" }}>
               <div className="modal-header">
                 <h5 className="modal-title">
                   Lịch sử đăng kiểm xe {dangKiemModel.maXe}
@@ -280,7 +280,9 @@ export default function Car() {
         </div>
       )}
 
-      {(showForm || showBaoDuongForm || showDangKiemForm) && <div className="modal-backdrop fade show"></div>}
+      {(showForm || showBaoDuongForm || showDangKiemForm) && (
+        <div className="modal-backdrop fade show"></div>
+      )}
     </>
   );
 }

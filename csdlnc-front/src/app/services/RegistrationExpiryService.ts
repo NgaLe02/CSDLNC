@@ -17,7 +17,8 @@ export class RegistrationExpiryService {
   public getLstRegistrationExpiry(request: any) {
     const params = ParamUtil.toRequestParams(request);
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/registrationExpiry/getLstRegistrationExpiry",
+      process.env.REACT_APP_API_URL +
+        "/registrationExpiry/getLstRegistrationExpiry",
       params
     );
     return axios.get(url, {
@@ -27,7 +28,8 @@ export class RegistrationExpiryService {
 
   public saveRegistrationExpiry(model: RegistrationExpiry) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/registrationExpiry/saveRegistrationExpiry"
+      process.env.REACT_APP_API_URL +
+        "/registrationExpiry/insertRegistrationExpiry"
     );
     return axios.post(url, model, {
       headers: HeadersUtil.getHeaders(),
@@ -36,16 +38,20 @@ export class RegistrationExpiryService {
 
   public updateRegistrationExpiry(model: RegistrationExpiry) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/registrationExpiry/updateRegistrationExpiry"
+      process.env.REACT_APP_API_URL +
+        "/registrationExpiry/updateRegistrationExpiry"
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public deleteRegistrationExpiry(id: string) {
+  public deleteRegistrationExpiry(id: number) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/registrationExpiry/" + id + "/deleteRegistrationExpiry"
+      process.env.REACT_APP_API_URL +
+        "/registrationExpiry/" +
+        id +
+        "/deleteRegistrationExpiry"
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),
@@ -55,7 +61,8 @@ export class RegistrationExpiryService {
   public getLstRegistrationExpiryToCar(request: any) {
     const params = ParamUtil.toRequestParams(request);
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/registrationExpiry/getLstRegistrationExpiryToCar",
+      process.env.REACT_APP_API_URL +
+        "/registrationExpiry/getLstRegistrationExpiryToCar",
       params
     );
     return axios.get(url, {

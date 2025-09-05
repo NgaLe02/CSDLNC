@@ -9,7 +9,8 @@ export class MaintainenceScheduleService {
 
   public static getInstance(): MaintainenceScheduleService {
     if (!MaintainenceScheduleService._maintainenceScheduleService) {
-      MaintainenceScheduleService._maintainenceScheduleService = new MaintainenceScheduleService();
+      MaintainenceScheduleService._maintainenceScheduleService =
+        new MaintainenceScheduleService();
     }
     return MaintainenceScheduleService._maintainenceScheduleService;
   }
@@ -17,7 +18,8 @@ export class MaintainenceScheduleService {
   public getLstMaintainenceSchedule(request: any) {
     const params = ParamUtil.toRequestParams(request);
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/maintainenceSchedule/getLstMaintainenceSchedule",
+      process.env.REACT_APP_API_URL +
+        "/maintainenceSchedule/getLstMaintainenceSchedule",
       params
     );
     return axios.get(url, {
@@ -27,7 +29,8 @@ export class MaintainenceScheduleService {
 
   public saveMaintainenceSchedule(model: MaintainenceSchedule) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/maintainenceSchedule/saveMaintainenceSchedule"
+      process.env.REACT_APP_API_URL +
+        "/maintainenceSchedule/insertMaintainenceSchedule"
     );
     return axios.post(url, model, {
       headers: HeadersUtil.getHeaders(),
@@ -36,7 +39,8 @@ export class MaintainenceScheduleService {
 
   public updateMaintainenceSchedule(model: MaintainenceSchedule) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/maintainenceSchedule/updateMaintainenceSchedule"
+      process.env.REACT_APP_API_URL +
+        "/maintainenceSchedule/updateMaintainenceSchedule"
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
@@ -45,7 +49,10 @@ export class MaintainenceScheduleService {
 
   public deleteMaintainenceSchedule(id: number) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/maintainenceSchedule/" + id + "/deleteMaintainenceSchedule"
+      process.env.REACT_APP_API_URL +
+        "/maintainenceSchedule/" +
+        id +
+        "/deleteMaintainenceSchedule"
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),
@@ -55,7 +62,20 @@ export class MaintainenceScheduleService {
   public getLstMaintainenceScheduleToCar(request: any) {
     const params = ParamUtil.toRequestParams(request);
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/maintainenceSchedule/getLstMaintainenceScheduleToCar",
+      process.env.REACT_APP_API_URL +
+        "/maintainenceSchedule/getLstMaintainenceScheduleToCar",
+      params
+    );
+    return axios.get(url, {
+      headers: HeadersUtil.getHeaders(),
+    });
+  }
+
+  public getNextTimeBaoDuongToCar(request: any) {
+    const params = ParamUtil.toRequestParams(request);
+    const url = ApiUrlUtil.buildQueryString(
+      process.env.REACT_APP_API_URL +
+        "/maintainenceSchedule/getNextTimeBaoDuongToCar",
       params
     );
     return axios.get(url, {

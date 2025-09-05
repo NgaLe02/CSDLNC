@@ -60,4 +60,8 @@ public class MaintainenceScheduleService {
 		List<MaintainenceScheduleResponse> result = maintainceScheduleDAO.getLstMaintainenceScheduleToCar(maXe);
 		return result;
 	}
+
+	public Map<String, Object> getNextTimeBaoDuongToCar(String maXe) throws Exception {
+		return maintainceScheduleDAO.getNextTimeBaoDuongToCar(maXe);
+	}
 }

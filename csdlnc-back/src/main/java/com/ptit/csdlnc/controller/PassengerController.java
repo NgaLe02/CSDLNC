@@ -1,6 +1,5 @@
 package com.ptit.csdlnc.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.csdlnc.model.Passenger;
-import com.ptit.csdlnc.model.TypeCar;
-import com.ptit.csdlnc.model.response.PassengerResponse;
-import com.ptit.csdlnc.model.response.TypeCarResponse;
 import com.ptit.csdlnc.service.PassengerService;
-import com.ptit.csdlnc.service.TypeCarService;
 import com.ptit.csdlnc.util.AjaxResult;
 
 @RestController

@@ -54,4 +54,38 @@
         ORDER BY lbd.ngayBaoDuong desc
     </select>
 	
+	<select id="getNextTimeBaoDuongToCar" parameterType='string' resultType="map">
+		WITH BaoDuongGanNhat AS (
+		    SELECT lb.maXe, MAX(lb.ngayBaoDuong) AS ngayBaoDuongGanNhat
+		    FROM LichBaoDuong lb
+		    GROUP BY lb.maXe
+		),
+		BaoDuong AS (
+		    SELECT x.maXe,
+		           DATE_ADD(
+		               bd.ngayBaoDuongGanNhat,
+		               INTERVAL (360 - FLOOR(SUM(COALESCE(td.khoangCach,0) * td.heSoDuongKho) / 100)) DAY
+		           ) AS ngayBaoDuongTiepTheo,
+		           SUM(COALESCE(td.khoangCach,0) * td.heSoDuongKho) AS soKmDaChay
+		    FROM BaoDuongGanNhat bd
+		    JOIN Xe x ON x.maXe = bd.maXe
+		    LEFT JOIN ChuyenXe cx
+		           ON cx.maXe = x.maXe
+		          AND cx.ngayGioKhoiHanh >= bd.ngayBaoDuongGanNhat
+		          AND cx.tinhTrangChuyen = 'Hoàn thành'
+		    LEFT JOIN TuyenDuong td ON td.maTuyen = cx.maTuyen
+		    GROUP BY x.maXe, bd.ngayBaoDuongGanNhat
+		)
+		SELECT x.maXe,
+		       x.bienSo,
+		       b.ngayBaoDuongTiepTheo,
+		       b.soKmDaChay
+		FROM Xe x
+		LEFT JOIN BaoDuong b ON b.maXe = x.maXe
+		WHERE b.maXe = #{maXe}
+		<if test="keyword != null and keyword != ''">
+		   AND (x.maXe LIKE CONCAT('%', #{keyword}, '%') 
+		        OR x.bienSo LIKE CONCAT('%', #{keyword}, '%'))
+		</if>;
+    </select>
 </mapper>
