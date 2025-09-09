@@ -4,8 +4,6 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,14 +17,14 @@ import lombok.Setter;
 public class MaintainenceSchedule {
 	private Integer maLichBaoDuong;
 
-	@NotNull(message = "Mã xe không được null")
-	@NotBlank(message = "Mã xe không được để trống")
+//	@NotNull(message = "Mã xe không được null")
+//	@NotBlank(message = "Mã xe không được để trống")
 	private String maXe;
 
-	@NotNull(message = "Chi phí không được null")
+//	@NotNull(message = "Chi phí không được null")
 	private Double chiPhi;
 
-	@NotNull(message = "Ngày bảo dưỡng không được null")
+//	@NotNull(message = "Ngày bảo dưỡng không được null")
 	private Date ngayBaoDuong;
 
 }

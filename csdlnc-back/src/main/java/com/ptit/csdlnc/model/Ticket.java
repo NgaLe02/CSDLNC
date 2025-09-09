@@ -4,10 +4,6 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,25 +17,25 @@ import lombok.Setter;
 public class Ticket {
 	private String maVe;
 
-	@NotBlank(message = "Ghế ngồi không được để trống")
-	@Size(max = 10, message = "Ghế ngồi tối đa 10 ký tự")
+//	@NotBlank(message = "Ghế ngồi không được để trống")
+//	@Size(max = 10, message = "Ghế ngồi tối đa 10 ký tự")
 	private String gheNgoi;
 
-	@NotNull(message = "Mã hành khách không được null")
-	@Positive(message = "Mã hành khách phải > 0")
+//	@NotNull(message = "Mã hành khách không được null")
+//	@Positive(message = "Mã hành khách phải > 0")
 	private Integer maHanhKhach;
 
-	@NotBlank(message = "Mã chuyến không được trống")
-	@Size(max = 4, message = "Mã chuyến tối đa 4 ký tự")
+//	@NotBlank(message = "Mã chuyến không được trống")
+//	@Size(max = 4, message = "Mã chuyến tối đa 4 ký tự")
 	private String maChuyen;
 
 	private Date ngayMua;
 
-	@NotNull(message = "Mã xe không được null")
-	@Size(min = 4, max = 4, message = "Mã xe phải có đúng 4 ký tự")
+//	@NotNull(message = "Mã xe không được null")
+//	@Size(min = 4, max = 4, message = "Mã xe phải có đúng 4 ký tự")
 	private String maXe;
 
-	@NotNull(message = "Mã tuyến không được null")
-	@Size(min = 4, max = 4, message = "Mã tuyến phải có đúng 4 ký tự")
+//	@NotNull(message = "Mã tuyến không được null")
+//	@Size(min = 4, max = 4, message = "Mã tuyến phải có đúng 4 ký tự")
 	private String maTuyen;
 }

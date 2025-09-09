@@ -1,15 +1,7 @@
 package com.ptit.csdlnc.model;
 
-import java.sql.Date;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,18 +15,18 @@ import lombok.Setter;
 public class RouteSalary {
 	private Integer maLuongTuyen;
 
-	@NotNull(message = "Độ phức tạp không được null")
-	@Positive(message = "Độ phức tạp phải lớn hơn 0")
-	@Min(value = 1, message = "Độ phức tạp tối thiểu là 1")
-	@Max(value = 3, message = "Độ phức tạp tối đa là 3")
+//	@NotNull(message = "Độ phức tạp không được null")
+//	@Positive(message = "Độ phức tạp phải lớn hơn 0")
+//	@Min(value = 1, message = "Độ phức tạp tối thiểu là 1")
+//	@Max(value = 3, message = "Độ phức tạp tối đa là 3")
 	private Integer doPhucTap;
 
-	@NotNull(message = "Khoảng cách từ không được null")
-	@PositiveOrZero(message = "Khoảng cách từ phải lớn hơn bằng 0")
+//	@NotNull(message = "Khoảng cách từ không được null")
+//	@PositiveOrZero(message = "Khoảng cách từ phải lớn hơn bằng 0")
 	private Double khoangCachTu;
 
-	@NotNull(message = "Khoảng cách đến không được null")
-	@Positive(message = "Khoảng cách đến phải lớn hơn 0")
+//	@NotNull(message = "Khoảng cách đến không được null")
+//	@Positive(message = "Khoảng cách đến phải lớn hơn 0")
 	private Double khoangCachDen;
 
 	private Double luongCoBan;
@@ -44,12 +36,12 @@ public class RouteSalary {
 //	
 //	private Date ngayKetThuc;
 
-	@AssertTrue(message = "Khoảng cách từ phải nhỏ hơn hoặc bằng khoảng cách đến")
-	private boolean isKhoangCachHopLe() {
-		if (khoangCachTu == null || khoangCachDen == null)
-			return true;
-		return khoangCachTu <= khoangCachDen;
-	}
+//	@AssertTrue(message = "Khoảng cách từ phải nhỏ hơn hoặc bằng khoảng cách đến")
+//	private boolean isKhoangCachHopLe() {
+//		if (khoangCachTu == null || khoangCachDen == null)
+//			return true;
+//		return khoangCachTu <= khoangCachDen;
+//	}
 
 //	public boolean isNgayHopLe() {
 //		if (ngayBatDau == null || ngayKetThuc == null) {
