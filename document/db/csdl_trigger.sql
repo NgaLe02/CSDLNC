@@ -833,3 +833,36 @@ BEGIN
 END$$
 
 DELIMITER ;  
+
+-- không được phân công vào 2 chuyến trùng khung giờ
+DELIMITER //
+
+CREATE TRIGGER trg_check_trung_gio
+BEFORE INSERT ON PhanCong
+FOR EACH ROW
+BEGIN
+    DECLARE cnt INT;
+
+    SELECT COUNT(*)
+    INTO cnt
+    FROM PhanCong pc
+    JOIN ChuyenXe cx1 ON pc.maXe = cx1.maXe
+                     AND pc.maTuyen = cx1.maTuyen
+                     AND pc.maChuyen = cx1.maChuyen
+    JOIN ChuyenXe cx2 ON NEW.maXe = cx2.maXe
+                     AND NEW.maTuyen = cx2.maTuyen
+                     AND NEW.maChuyen = cx2.maChuyen
+    WHERE pc.maNhanVien = NEW.maNhanVien
+      AND (
+           (cx1.ngayGioKhoiHanh < cx2.ngayGioDen)
+       AND (cx2.ngayGioKhoiHanh < cx1.ngayGioDen)
+      ); -- điều kiện giao nhau về thời gian
+
+    IF cnt > 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Nhân viên này đã được phân công chuyến khác trùng giờ!';
+    END IF;
+END;
+//
+
+DELIMITER ;

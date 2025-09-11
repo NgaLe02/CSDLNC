@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { HttpStatusCode } from "axios";
 import { EmployeeService } from "../../../../services/EmployeeService";
 import { EmployeeModel } from "../../../../model/EmployeeModel";
-import { LaiXeModel, PhuXeModel } from "../../../../model/AssigmentModel";
+import { AssigmentModel, LaiXeModel, PhuXeModel } from "../../../../model/AssigmentModel";
 import { TripService } from "../../../../services/TripService";
 import { TripModel } from "../../../../model/TripModel";
 import { AssigmentResponseModel } from "../../../../model/response/AssigmentResponseModel";
@@ -77,7 +77,13 @@ export default function AssignTripForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = [laiXe, phuXe];
+    let payload: AssigmentModel[] = []
+    if (laiXe.maNhanVien) {
+      payload.push(laiXe)
+    }
+    if (phuXe.maNhanVien) {
+      payload.push(phuXe)
+    }
     TripService.getInstance()
       .assignEmployeesToTrip(payload)
       .then((resp) => {
