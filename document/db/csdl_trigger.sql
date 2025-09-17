@@ -495,26 +495,6 @@ END $$
 
 DELIMITER ;
 
-
--- Kiểm tra 1 hành khách không mua trùng chuyến
-DELIMITER $$
-
-CREATE TRIGGER trg_check_trungVe
-BEFORE INSERT ON Ve
-FOR EACH ROW
-BEGIN
-    IF EXISTS (
-        SELECT 1 FROM Ve
-        WHERE maHanhKhach = NEW.maHanhKhach
-          AND maChuyen = NEW.maChuyen
-          AND maXe = NEW.maXe
-          AND maTuyen = NEW.maTuyen
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Hành khách này đã có vé cho chuyến xe!';
-    END IF;
-END$$
-
 DELIMITER ;
 
 -- Kiểm tra khi UPDATE (cập nhật lại vé)
@@ -537,19 +517,6 @@ BEGIN
     IF NEW.ngayMua > v_khoiHanh THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Không thể cập nhật vé với ngày mua sau khi xe đã khởi hành!';
-    END IF;
-
-    -- Kiểm tra trùng vé với hành khách khác
-    IF EXISTS (
-        SELECT 1 FROM Ve
-        WHERE maHanhKhach = NEW.maHanhKhach
-          AND maChuyen = NEW.maChuyen
-          AND maXe = NEW.maXe
-          AND maTuyen = NEW.maTuyen
-          AND maVe <> NEW.maVe
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Hành khách này đã có vé cho chuyến xe!';
     END IF;
 END$$
 
@@ -676,7 +643,7 @@ BEGIN
         WHERE T.maTuyen = NEW.maTuyen;
 
         -- Tính tổng km từ lần bảo dưỡng gần nhất
-        SELECT SUM(C.khoangCach * T.heSoDuongKho)
+        SELECT SUM(T.khoangCach * T.heSoDuongKho)
         INTO tongKm
         FROM ChuyenXe C
         JOIN TuyenDuong T ON C.maTuyen = T.maTuyen

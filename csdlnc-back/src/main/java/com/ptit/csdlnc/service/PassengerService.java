@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
 
 import com.ptit.csdlnc.dao.PassengerDAO;
@@ -40,21 +41,17 @@ public class PassengerService {
 		int result = 0;
 		try {
 			result = passengerDAO.insertPassenger(model);
-		} catch (DuplicateKeyException e) {
+		} catch (UncategorizedSQLException e) {
+			// lỗi vi phạm trigger, foreign key, check constraint
 			Throwable root = e.getRootCause();
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
 			if (msg != null) {
-				if (msg.contains("cmnd")) {
-					throw new RuntimeException("CMND đã tồn tại!");
-				} else if (msg.contains("soDienThoai")) {
-					throw new RuntimeException("Số điện thoại đã tồn tại!");
-				} else {
-					throw new RuntimeException("Dữ liệu đã tồn tại!");
-				}
+				throw new RuntimeException(msg);
 			} else {
-				throw new RuntimeException("Dữ liệu đã tồn tại!");
+				throw new RuntimeException("Lỗi dữ liệu không xác định!");
 			}
+
 		}
 		return result;
 	}
@@ -63,21 +60,17 @@ public class PassengerService {
 		int result = 0;
 		try {
 			result = passengerDAO.updatePassenger(model);
-		} catch (DuplicateKeyException e) {
+		} catch (UncategorizedSQLException e) {
+			// lỗi vi phạm trigger, foreign key, check constraint
 			Throwable root = e.getRootCause();
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
 			if (msg != null) {
-				if (msg.contains("cmnd")) {
-					throw new RuntimeException("CMND đã tồn tại!");
-				} else if (msg.contains("soDienThoai")) {
-					throw new RuntimeException("Số điện thoại đã tồn tại!");
-				} else {
-					throw new RuntimeException("Dữ liệu đã tồn tại!");
-				}
+				throw new RuntimeException(msg);
 			} else {
-				throw new RuntimeException("Dữ liệu đã tồn tại!");
+				throw new RuntimeException("Lỗi dữ liệu không xác định!");
 			}
+
 		}
 		return result;
 	}

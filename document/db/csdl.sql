@@ -16,8 +16,9 @@ CREATE TABLE HanhKhach (
 
 CREATE TABLE LoaiXe (
     maLoaiXe INT PRIMARY KEY AUTO_INCREMENT,
-    tenLoaiXe VARCHAR(50) NOT NULL,
-    soGhe INT NOT NULL
+    tenLoaiXe VARCHAR(50) NOT NULL UNIQUE,
+    soGhe INT NOT NULL,
+    CONSTRAINT ck_soGhe CHECK (soGhe > 0)
 );
 
 CREATE TABLE Xe (
@@ -51,8 +52,8 @@ CREATE TABLE HanDangKiem (
     maHanDangKiem INT PRIMARY KEY AUTO_INCREMENT,
     chiPhi DECIMAL(12,2) CHECK (chiPhi >= 0),
     ngayDangKiem DATE NOT NULL,
-    hieuLuc INT NOT NULL, 
-    maXe varCHAR(4),	    
+    hieuLuc INT NOT NULL,
+    maXe varCHAR(4),
 	CONSTRAINT uq_xe_ngay UNIQUE (maXe, ngayDangKiem),
     FOREIGN KEY (maXe) REFERENCES Xe(maXe)
 );
@@ -114,15 +115,15 @@ CREATE TABLE ChuyenXe (
     ngayGioKhoiHanh DATETIME NOT NULL,
     ngayGioDen DATETIME NOT NULL,
     tinhTrangChuyen VARCHAR(50) NOT NULL,
-    chiPhiVanHanh DECIMAL(12,2) NOT NULL CHECK (chiPhiVanHanh > 0),
+    chiPhiVanHanh DECIMAL(12,2) NOT NULL CHECK (chiPhiVanHanh >= 0),
     tiLeThuLao DECIMAL(12,2) NOT NULL CHECK (tiLeThuLao > 1),
     PRIMARY KEY (maXe, maTuyen, maChuyen),
     FOREIGN KEY (maXe) REFERENCES Xe(maXe),
     FOREIGN KEY (maTuyen, maMua, maGiaVe)
 		REFERENCES GiaVe(maTuyen, maMua, maGiaVe),
-    CONSTRAINT chk_tinhtrangchuyen 
+    CONSTRAINT chk_tinhtrangchuyen
         CHECK (tinhTrangChuyen IN ('Chưa khởi hành','Đang chạy','Hoàn thành','Hủy')),
-	CONSTRAINT chk_thoiGian  
+	CONSTRAINT chk_thoiGian
 		CHECK (ngayGioDen > ngayGioKhoiHanh)
 );
 
@@ -133,7 +134,7 @@ CREATE TABLE PhanCong (
     maNhanVien INT,
     vaiTro VARCHAR(255),
     PRIMARY KEY (maChuyen, maTuyen, maXe, maNhanVien),
-    FOREIGN KEY (maXe, maTuyen, maChuyen) 
+    FOREIGN KEY (maXe, maTuyen, maChuyen)
         REFERENCES ChuyenXe(maXe, maTuyen, maChuyen),
     FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien),
     CONSTRAINT chk_vaiTro CHECK (vaiTro IN ('Lái xe', 'Phụ xe')),
@@ -145,14 +146,13 @@ CREATE TABLE Ve (
     maXe VARCHAR(4) NOT NULL,
     maTuyen VARCHAR(4) NOT NULL,
     maChuyen VARCHAR(5) NOT NULL,
-    ngayMua DATE  not null, 
-    gheNgoi VARCHAR(10)  not null,
+    ngayMua DATE  not null,
+    gheNgoi VARCHAR(10) not null,
     maHanhKhach INT  not null,
     PRIMARY KEY (maXe, maTuyen, maChuyen, maVe),
     FOREIGN KEY (maHanhKhach) REFERENCES HanhKhach(maHanhKhach),
     FOREIGN KEY (maXe, maTuyen, maChuyen) REFERENCES ChuyenXe(maXe, maTuyen, maChuyen),
-    CONSTRAINT uq_ve_chuyen_ghe UNIQUE (maXe, maTuyen, maChuyen, gheNgoi),
-    CONSTRAINT uq_hanhkhach_chuyen UNIQUE (maXe, maTuyen, maChuyen, maHanhKhach)
+    CONSTRAINT uq_ve_chuyen_ghe UNIQUE (maXe, maTuyen, maChuyen, gheNgoi)
 );
 
 

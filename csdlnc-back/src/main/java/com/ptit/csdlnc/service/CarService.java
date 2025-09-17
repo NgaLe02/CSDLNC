@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
 
 import com.ptit.csdlnc.dao.CarDAO;
@@ -25,8 +26,17 @@ public class CarService {
 		int result = 0;
 		try {
 			result = carDAO.insertCar(model);
-		} catch (DuplicateKeyException e) {
-			throw new RuntimeException("Biển số đã tồn tại!");
+		} catch (UncategorizedSQLException e) {
+			// lỗi vi phạm trigger, foreign key, check constraint
+			Throwable root = e.getRootCause();
+			String msg = root != null ? root.getMessage() : e.getMessage();
+
+			if (msg != null) {
+				throw new RuntimeException(msg);
+			} else {
+				throw new RuntimeException("Lỗi dữ liệu không xác định!");
+			}
+
 		}
 		return result;
 	}
@@ -35,8 +45,17 @@ public class CarService {
 		int result = 0;
 		try {
 			result = carDAO.updateCar(model);
-		} catch (DuplicateKeyException e) {
-			throw new RuntimeException("Biển số đã tồn tại!");
+		} catch (UncategorizedSQLException e) {
+			// lỗi vi phạm trigger, foreign key, check constraint
+			Throwable root = e.getRootCause();
+			String msg = root != null ? root.getMessage() : e.getMessage();
+
+			if (msg != null) {
+				throw new RuntimeException(msg);
+			} else {
+				throw new RuntimeException("Lỗi dữ liệu không xác định!");
+			}
+
 		}
 		return result;
 	}

@@ -26,9 +26,9 @@ export default function EmployeeForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!check()) {
-      return;
-    }
+    // if (!check()) {
+    //   return;
+    // }
     if (model.maNhanVien) {
       EmployeeService.getInstance()
         .updateEmployee(model)

@@ -60,6 +60,9 @@ public class TypeCarController {
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Lưu thành công");
+		} catch (RuntimeException e) {
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
@@ -84,6 +87,9 @@ public class TypeCarController {
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Cập nhật thành công");
+		} catch (RuntimeException e) {
+			ajaxResult.setStatus(false);
+			ajaxResult.setMessage(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
