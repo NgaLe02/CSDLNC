@@ -18,9 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.ptit.csdlnc.model.Assignment;
 import com.ptit.csdlnc.model.Trip;
+import com.ptit.csdlnc.model.request.AssignmentRequest;
 import com.ptit.csdlnc.model.response.AssigmentResponse;
 import com.ptit.csdlnc.service.TripService;
 import com.ptit.csdlnc.util.AjaxResult;
@@ -114,28 +113,17 @@ public class TripController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@PostMapping("assignEmployeesToTrip")
-	public ResponseEntity<AjaxResult> assignEmployeesToTrip(@Validated @RequestBody Assignment[] lstModel,
-			BindingResult bindingResult) {
+	@PostMapping("/assignEmployeesToTrip")
+	public ResponseEntity<AjaxResult> assignEmployeesToTrip(@RequestBody AssignmentRequest request) {
 		AjaxResult ajaxResult = new AjaxResult();
-
-		if (bindingResult.hasErrors()) {
-			ajaxResult.setStatus(false);
-			ajaxResult.setMessage(bindingResult.getAllErrors().get(0).getDefaultMessage());
-			return ResponseEntity.badRequest().body(ajaxResult);
-		}
 		try {
-			int result = tripService.assignEmployeesToTrip(lstModel);
+			int result = tripService.assignEmployeesToTrip(request);
 			ajaxResult.setStatus(true);
-			ajaxResult.setResponseData(result);
-			ajaxResult.setMessage("Lưu thành công");
-		} catch (RuntimeException e) {
-			ajaxResult.setStatus(false);
-			ajaxResult.setMessage(e.getMessage());
+			ajaxResult.setMessage("Phân công thành công " + result + " nhân viên!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setStatus(false);
-			ajaxResult.setMessage("Lưu thất bại");
+			ajaxResult.setMessage(e.getMessage());
 		}
 		return ResponseEntity.ok(ajaxResult);
 	}

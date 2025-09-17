@@ -124,25 +124,28 @@ export default function Request05() {
                     <td>{index + 1}</td>
                     <td>{item.maXe}</td>
                     <td>{item.bienSo}</td>
-                    {item.ngayBaoDuongTiepTheo}
-                    {(() => {
-                      if (item.ngayBaoDuongTiepTheo) {
-                        const ngayBD = new Date(item.ngayBaoDuongTiepTheo);
-                        const today = new Date();
-                        const diff = Math.floor(
-                          (today.getTime() - ngayBD.getTime()) /
+                    <td>
+                      {item.ngayBaoDuongTiepTheo}
+                      {(() => {
+                        if (item.ngayBaoDuongTiepTheo) {
+                          const ngayBD = new Date(item.ngayBaoDuongTiepTheo);
+                          const today = new Date();
+                          const diff = Math.floor(
+                            (today.getTime() - ngayBD.getTime()) /
                             (1000 * 60 * 60 * 24)
-                        );
-                        if (diff > 0) {
-                          return (
-                            <span style={{ color: "red", marginLeft: "8px" }}>
-                              (Quá hạn {diff} ngày)
-                            </span>
                           );
+                          if (diff > 0) {
+                            return (
+                              <span style={{ color: "red", marginLeft: "8px" }}>
+                                (Quá hạn {diff} ngày)
+                              </span>
+                            );
+                          }
                         }
-                      }
-                      return null;
-                    })()}
+                        return null;
+                      })()}
+                    </td>
+
                     <td>{item.hanDangKiemTiepTheo}</td>
                   </tr>
                 ))}

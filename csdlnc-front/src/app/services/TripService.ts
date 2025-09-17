@@ -53,11 +53,11 @@ export class TripService {
     });
   }
 
-  public assignEmployeesToTrip(payLoad: AssigmentModel[]) {
+  public assignEmployeesToTrip(payload: { addOrUpdate: AssigmentModel[], remove: AssigmentModel[] }) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/trip/assignEmployeesToTrip"
     );
-    return axios.post(url, payLoad, {
+    return axios.post(url, payload, {
       headers: HeadersUtil.getHeaders(),
     });
   }

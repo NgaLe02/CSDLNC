@@ -1,6 +1,7 @@
 package com.ptit.csdlnc.service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.ptit.csdlnc.dao.AssigmentDAO;
 import com.ptit.csdlnc.dao.TripDAO;
 import com.ptit.csdlnc.model.Assignment;
 import com.ptit.csdlnc.model.Trip;
+import com.ptit.csdlnc.model.request.AssignmentRequest;
 import com.ptit.csdlnc.model.response.AssigmentResponse;
 import com.ptit.csdlnc.model.response.TripResponse;
 
@@ -88,25 +90,38 @@ public class TripService {
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public int assignEmployeesToTrip(Assignment[] lstModel) throws Exception {
+	public int assignEmployeesToTrip(AssignmentRequest request) throws Exception {
 		int result = 0;
-		try {
-			if (lstModel.length == 0) {
-				return result;
-			}
-			Map<String, Object> params = new HashMap<>();
-			params.put("maChuyen", lstModel[0].getMaChuyen());
-			params.put("maXe", lstModel[0].getMaXe());
-			params.put("maTuyen", lstModel[0].getMaTuyen());
-			assigmentDAO.deleteAssignmentToTrip(params);
 
-			for (Assignment model : lstModel) {
-				result = assigmentDAO.insertAssignment(model);
+		try {
+			List<Assignment> addOrUpdate = request.getAddOrUpdate();
+			List<Assignment> remove = request.getRemove();
+
+			Assignment first = null;
+			if (addOrUpdate != null && !addOrUpdate.isEmpty()) {
+				first = addOrUpdate.get(0);
+			} else if (remove != null && !remove.isEmpty()) {
+				first = remove.get(0);
 			}
+
+			if (first != null) {
+				Map<String, Object> params = new HashMap<>();
+				params.put("maChuyen", first.getMaChuyen());
+				params.put("maXe", first.getMaXe());
+				params.put("maTuyen", first.getMaTuyen());
+
+				assigmentDAO.deleteAssignmentToTrip(params);
+			}
+
+			if (addOrUpdate != null) {
+				for (Assignment model : addOrUpdate) {
+					result += assigmentDAO.insertAssignment(model);
+				}
+			}
+
 		} catch (DuplicateKeyException e) {
 			throw new RuntimeException("Trùng nhân viên!");
 		} catch (UncategorizedSQLException e) {
-			// lỗi vi phạm trigger, foreign key, check constraint
 			Throwable root = e.getRootCause();
 			String msg = root != null ? root.getMessage() : e.getMessage();
 
@@ -115,7 +130,6 @@ public class TripService {
 			} else {
 				throw new RuntimeException("Lỗi dữ liệu không xác định!");
 			}
-
 		}
 		return result;
 	}

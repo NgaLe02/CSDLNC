@@ -77,13 +77,25 @@ export default function AssignTripForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let payload: AssigmentModel[] = []
+    let payload: { addOrUpdate: AssigmentModel[], remove: AssigmentModel[] } = {
+      addOrUpdate: [],
+      remove: []
+    };
+
     if (laiXe.maNhanVien) {
-      payload.push(laiXe)
+      payload.addOrUpdate.push(laiXe);
+    } else {
+      payload.remove.push(new LaiXeModel(laiXe)); // có key chuyến xe, vai trò, nhưng maNhanVien null
     }
+
     if (phuXe.maNhanVien) {
-      payload.push(phuXe)
+      payload.addOrUpdate.push(phuXe);
+    } else {
+      payload.remove.push(new PhuXeModel(phuXe));
     }
+
+    console.log(payload)
+
     TripService.getInstance()
       .assignEmployeesToTrip(payload)
       .then((resp) => {
