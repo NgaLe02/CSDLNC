@@ -139,7 +139,7 @@
 		BaoDuong AS (
 		    SELECT x.maXe,
 		           DATE_ADD(bd.ngayBaoDuongGanNhat,
-		                    INTERVAL (360 - FLOOR(SUM(COALESCE(td.khoangCach,0) * td.heSoDuongKho) / 100)) DAY
+		                    INTERVAL (360 - FLOOR(COALESCE(SUM(td.khoangCach * td.heSoDuongKho), 0) / 100)) DAY
 		                   ) AS ngayBaoDuongTiepTheo
 		    FROM BaoDuongGanNhat bd
 		    JOIN Xe x ON x.maXe = bd.maXe
@@ -186,7 +186,7 @@
 		    SELECT x.maXe,
 		           DATE_ADD(
 		               bd.ngayBaoDuongGanNhat,
-		               INTERVAL (360 - FLOOR(SUM(COALESCE(td.khoangCach,0) * td.heSoDuongKho) / 100)) DAY
+		               INTERVAL (360 - FLOOR(COALESCE(SUM(td.khoangCach * td.heSoDuongKho), 0) / 100)) DAY
 		           ) AS ngayBaoDuongTiepTheo
 		    FROM BaoDuongGanNhat bd
 		    JOIN Xe x ON x.maXe = bd.maXe
