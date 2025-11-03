@@ -55,9 +55,15 @@ export default function Ticket() {
     setShowForm(true);
   }
 
-  function handleDelete(id: number) {
+  function handleDelete(item: TicketResponseModel) {
+    const payload = {
+      maChuyen: item.maChuyen!,
+      maTuyen: item.maTuyen!,
+      maXe: item.maXe!,
+      maVe: item.maVe!
+    }
     TicketService.getInstance()
-      .deleteTicket(id)
+      .deleteTicket(payload)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
@@ -317,7 +323,7 @@ export default function Ticket() {
                         </button>
                         <button
                           className="btn btn-sm btn-danger ms-2"
-                          onClick={() => handleDelete(item.maVe!)}
+                          onClick={() => handleDelete(item!)}
                         >
                           Xóa
                         </button>

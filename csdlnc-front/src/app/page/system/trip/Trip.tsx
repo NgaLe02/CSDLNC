@@ -63,9 +63,14 @@ export default function Trip() {
     setShowAssignForm(true);
   }
 
-  function handleDelete(id: string) {
+  function handleDelete(item: TripResponseModel) {
+    const payload = {
+      maChuyen: item.maChuyen!,
+      maTuyen: item.maTuyen!,
+      maXe: item.maXe!
+    }
     TripService.getInstance()
-      .deleteTrip(id)
+      .deleteTrip(payload)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
@@ -309,7 +314,7 @@ export default function Trip() {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maChuyen!)}
+                        onClick={() => handleDelete(item!)}
                       >
                         Xóa
                       </button>

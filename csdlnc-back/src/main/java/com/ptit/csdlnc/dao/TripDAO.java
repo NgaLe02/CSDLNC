@@ -17,7 +17,7 @@ public interface TripDAO {
 
 	int updateTrip(Trip model) throws Exception;
 
-	int deleteTrip(String id) throws Exception;
+	int deleteTrip(Map<String, Object> payload) throws Exception;
 
 	int countLstTrip(Map<String, Object> params) throws Exception;
 

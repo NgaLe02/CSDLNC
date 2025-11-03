@@ -97,11 +97,11 @@ public class TripController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@DeleteMapping("{id}/deleteTrip")
-	public ResponseEntity<AjaxResult> deleteTrip(@PathVariable("id") String id) {
+	@DeleteMapping("/deleteTrip")
+	public ResponseEntity<AjaxResult> deleteTrip(@RequestBody Map<String, Object> payload) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			int result = tripService.deleteTrip(id);
+			int result = tripService.deleteTrip(payload);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Xoá thành công");

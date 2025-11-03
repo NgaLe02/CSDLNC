@@ -229,7 +229,7 @@
 	    and maXe = #{maXe}
 	</update>
 	
-	<delete id="deleteTrip" parameterType="string">
+	<delete id="deleteTrip" parameterType="map">
 	    DELETE FROM ChuyenXe
 	    WHERE maChuyen = #{maChuyen}
 	    and maTuyen = #{maTuyen} 

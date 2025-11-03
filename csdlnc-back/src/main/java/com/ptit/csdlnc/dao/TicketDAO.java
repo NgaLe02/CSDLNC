@@ -16,7 +16,7 @@ public interface TicketDAO {
 
 	int updateTicket(Ticket model) throws Exception;
 
-	int deleteTicket(int id) throws Exception;
+	int deleteTicket(Map<String, Object> payload) throws Exception;
 
 	int countLstTicket(Map<String, Object> params);
 

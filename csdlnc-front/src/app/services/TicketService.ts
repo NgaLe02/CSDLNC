@@ -43,15 +43,14 @@ export class TicketService {
     });
   }
 
-  public deleteTicket(id: number) {
+  public deleteTicket(payload: { maChuyen: string, maXe: string, maTuyen: string, maVe: number }) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL +
-      "/ticket/" +
-      id +
-      "/deleteTicket"
+      "/ticket/deleteTicket"
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),
+      data: payload,
     });
   }
 }

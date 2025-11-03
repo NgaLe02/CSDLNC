@@ -1,6 +1,5 @@
 package com.ptit.csdlnc.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.csdlnc.model.Ticket;
-import com.ptit.csdlnc.model.response.TicketResponse;
 import com.ptit.csdlnc.service.TicketService;
 import com.ptit.csdlnc.util.AjaxResult;
 
@@ -96,11 +94,11 @@ public class TicketController {
 		return ResponseEntity.ok(ajaxResult);
 	}
 
-	@DeleteMapping("{id}/deleteTicket")
-	public ResponseEntity<AjaxResult> deleteTicket(@PathVariable("id") int id) {
+	@DeleteMapping("/deleteTicket")
+	public ResponseEntity<AjaxResult> deleteTicket(@RequestBody Map<String, Object> payload) {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
-			int result = ticketService.deleteTicket(id);
+			int result = ticketService.deleteTicket(payload);
 			ajaxResult.setStatus(true);
 			ajaxResult.setResponseData(result);
 			ajaxResult.setMessage("Xoá thành công");

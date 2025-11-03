@@ -85,7 +85,7 @@ public class TicketService {
 		return result;
 	}
 
-	public int deleteTicket(int id) throws Exception {
-		return ticketDAO.deleteTicket(id);
+	public int deleteTicket(Map<String, Object> payload) throws Exception {
+		return ticketDAO.deleteTicket(payload);
 	}
 }

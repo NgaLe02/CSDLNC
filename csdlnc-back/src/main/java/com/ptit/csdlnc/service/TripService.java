@@ -85,8 +85,8 @@ public class TripService {
 		return result;
 	}
 
-	public int deleteTrip(String id) throws Exception {
-		return tripDAO.deleteTrip(id);
+	public int deleteTrip(Map<String, Object> payload) throws Exception {
+		return tripDAO.deleteTrip(payload);
 	}
 
 	@Transactional(rollbackFor = Exception.class)

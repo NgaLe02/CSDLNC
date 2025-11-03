@@ -94,8 +94,6 @@ export default function AssignTripForm(props: any) {
       payload.remove.push(new PhuXeModel(phuXe));
     }
 
-    console.log(payload)
-
     TripService.getInstance()
       .assignEmployeesToTrip(payload)
       .then((resp) => {

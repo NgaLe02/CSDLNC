@@ -44,12 +44,13 @@ export class TripService {
     });
   }
 
-  public deleteTrip(id: string) {
+  public deleteTrip(payload: { maChuyen: string, maXe: string, maTuyen: string }) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/trip/" + id + "/deleteTrip"
+      process.env.REACT_APP_API_URL + "/trip/deleteTrip"
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),
+      data: payload,
     });
   }
 
