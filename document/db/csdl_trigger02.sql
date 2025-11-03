@@ -985,26 +985,29 @@ BEGIN
     END IF;
 END;
 
-create trigger trg_chuyenxe_before_update_chkValidateTimeXe
-    before update
-    on chuyenxe
-    for each row
+CREATE TRIGGER trg_chuyenxe_before_update_chkValidateTimeXe
+BEFORE UPDATE ON ChuyenXe
+FOR EACH ROW
 BEGIN
-    -- Không trùng giờ cho cùng xe
-    IF EXISTS (
-        SELECT 1
-        FROM ChuyenXe
-        WHERE maXe = NEW.maXe
-          AND (
-                (NEW.ngayGioKhoiHanh BETWEEN ngayGioKhoiHanh AND ngayGioDen)
-             OR (NEW.ngayGioDen BETWEEN ngayGioKhoiHanh AND ngayGioDen)
-             OR (ngayGioKhoiHanh BETWEEN NEW.ngayGioKhoiHanh AND NEW.ngayGioDen)
-              )
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Xe này đã có chuyến trong khoảng thời gian trùng lặp';
+    -- Chỉ kiểm tra khi có thay đổi về thời gian
+    IF (NEW.ngayGioKhoiHanh <> OLD.ngayGioKhoiHanh OR NEW.ngayGioDen <> OLD.ngayGioDen) THEN
+        IF EXISTS (
+            SELECT 1
+            FROM ChuyenXe
+            WHERE maXe = NEW.maXe
+              AND NOT (maTuyen = OLD.maTuyen AND maChuyen = OLD.maChuyen)
+              AND (
+                    (NEW.ngayGioKhoiHanh BETWEEN ngayGioKhoiHanh AND ngayGioDen)
+                 OR (NEW.ngayGioDen BETWEEN ngayGioKhoiHanh AND ngayGioDen)
+                 OR (ngayGioKhoiHanh BETWEEN NEW.ngayGioKhoiHanh AND NEW.ngayGioDen)
+                  )
+        ) THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Xe này đã có chuyến trong khoảng thời gian trùng lặp';
+        END IF;
     END IF;
 END;
+
 
 -- 8. Cập nhật tình trạng chuyến theo thời gian
 create trigger trg_chuyenxe_before_insert_tinhTrangChuyen
