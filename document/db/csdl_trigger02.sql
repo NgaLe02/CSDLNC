@@ -683,7 +683,7 @@ END;
 DELIMITER $$
 
 -- 1. Cập nhật tình trạng xe sau khi mỗi chuyến xe hoàn thành
-create trigger trg_chuyenxe_after_update_capNhatTinhTrangXe
+create definer = root@localhost trigger trg_chuyenxe_after_update_capNhatTinhTrangXe
     after update
     on chuyenxe
     for each row
@@ -692,32 +692,48 @@ BEGIN
     DECLARE tongKm DECIMAL(10,2);
     DECLARE ngayConLai INT;
 
-    -- Chỉ xử lý khi chuyến xe được đánh dấu Hoàn thành
+    -- ===== Trường hợp 1: chuyến vừa được hoàn thành =====
     IF NEW.tinhTrangChuyen = 'Hoàn thành' THEN
 
-        -- Tính km làm việc của chuyến này
-        SELECT T.khoangCach * T.heSoDuongKho
-        INTO kmLamViec
-        FROM TuyenDuong T
-        WHERE T.maTuyen = NEW.maTuyen;
-
-        -- Tính tổng km từ lần bảo dưỡng gần nhất
         SELECT SUM(T.khoangCach * T.heSoDuongKho)
         INTO tongKm
         FROM ChuyenXe C
         JOIN TuyenDuong T ON C.maTuyen = T.maTuyen
         WHERE C.maXe = NEW.maXe
           AND C.ngayGioKhoiHanh >= (
-              SELECT MAX(B.ngayBaoDuong)
+              SELECT COALESCE(MAX(B.ngayBaoDuong), '1900-01-01')
               FROM LichBaoDuong B
               WHERE B.maXe = NEW.maXe
           )
           AND C.tinhTrangChuyen = 'Hoàn thành';
 
-        -- Tính số ngày còn lại
         SET ngayConLai = 360 - FLOOR(tongKm / 100);
 
-        -- Cập nhật tình trạng xe
+        IF ngayConLai > 30 THEN
+            UPDATE Xe SET tinhTrang = 'Đang hoạt động' WHERE maXe = NEW.maXe;
+        ELSEIF ngayConLai > 10 THEN
+            UPDATE Xe SET tinhTrang = 'Sắp bảo dưỡng' WHERE maXe = NEW.maXe;
+        ELSE
+            UPDATE Xe SET tinhTrang = 'Quá hạn bảo dưỡng' WHERE maXe = NEW.maXe;
+        END IF;
+
+    -- ===== Trường hợp 2: chuyến bị gỡ khỏi trạng thái Hoàn thành =====
+    ELSEIF OLD.tinhTrangChuyen = 'Hoàn thành' AND NEW.tinhTrangChuyen <> 'Hoàn thành' THEN
+
+        SELECT SUM(T.khoangCach * T.heSoDuongKho)
+        INTO tongKm
+        FROM ChuyenXe C
+        JOIN TuyenDuong T ON C.maTuyen = T.maTuyen
+        WHERE C.maXe = NEW.maXe
+          AND C.ngayGioKhoiHanh >= (
+              SELECT COALESCE(MAX(B.ngayBaoDuong), '1900-01-01')
+              FROM LichBaoDuong B
+              WHERE B.maXe = NEW.maXe
+          )
+          AND C.tinhTrangChuyen = 'Hoàn thành';
+
+        SET ngayConLai = 360 - FLOOR(COALESCE(tongKm, 0) / 100);
+
         IF ngayConLai > 30 THEN
             UPDATE Xe SET tinhTrang = 'Đang hoạt động' WHERE maXe = NEW.maXe;
         ELSEIF ngayConLai > 10 THEN
@@ -727,6 +743,8 @@ BEGIN
         END IF;
     END IF;
 END;
+
+
 
 -- 2,3 Kiểm tra các lỗi như not null, unique, foreign key khi insert, update
 create trigger trg_chuyenxe_before_insert
