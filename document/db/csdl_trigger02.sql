@@ -711,7 +711,7 @@ BEGIN
 
         IF ngayConLai > 30 THEN
             UPDATE Xe SET tinhTrang = 'Đang hoạt động' WHERE maXe = NEW.maXe;
-        ELSEIF ngayConLai > 10 THEN
+        ELSEIF ngayConLai > 0 THEN
             UPDATE Xe SET tinhTrang = 'Sắp bảo dưỡng' WHERE maXe = NEW.maXe;
         ELSE
             UPDATE Xe SET tinhTrang = 'Quá hạn bảo dưỡng' WHERE maXe = NEW.maXe;
@@ -736,7 +736,7 @@ BEGIN
 
         IF ngayConLai > 30 THEN
             UPDATE Xe SET tinhTrang = 'Đang hoạt động' WHERE maXe = NEW.maXe;
-        ELSEIF ngayConLai > 10 THEN
+        ELSEIF ngayConLai > 0 THEN
             UPDATE Xe SET tinhTrang = 'Sắp bảo dưỡng' WHERE maXe = NEW.maXe;
         ELSE
             UPDATE Xe SET tinhTrang = 'Quá hạn bảo dưỡng' WHERE maXe = NEW.maXe;
