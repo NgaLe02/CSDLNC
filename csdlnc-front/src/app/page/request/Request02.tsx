@@ -106,11 +106,10 @@ export default function Request02() {
                     .toISOString()
                     .split("T")[0];
 
-                  handleChangeSearch({
-                    target: { name: "fromDate", value: fromDate },
-                  });
-                  handleChangeSearch({
-                    target: { name: "toDate", value: toDate },
+                  setModelSearch({
+                    ...modelSearch,
+                    fromDate,
+                    toDate,
                   });
                 }}
               />

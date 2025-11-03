@@ -72,10 +72,18 @@ BEGIN
     END IF;
 
     -- ===== UNIQUE Biển số =====
-    IF EXISTS (SELECT 1 FROM Xe WHERE bienSo = NEW.bienSo) THEN
-        SET msg_text = CONCAT('Biển số ', NEW.bienSo, ' đã tồn tại');
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg_text;
+    IF NEW.bienSo <> OLD.bienSo THEN
+        IF EXISTS (
+            SELECT 1
+            FROM Xe
+            WHERE bienSo = NEW.bienSo
+            AND maXe <> OLD.maXe  -- loại trừ bản ghi hiện tại
+        ) THEN
+            SET msg_text = CONCAT('Biển số ', NEW.bienSo, ' đã tồn tại');
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg_text;
+        END IF;
     END IF;
+
 
     -- ===== CHECK Tình trạng =====
     IF NEW.tinhTrang NOT IN (
