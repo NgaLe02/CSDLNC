@@ -1,12 +1,12 @@
 export class NhanVienModel {
-  ma_nv?: string;
-  ho_ten?: string;
-  ngay_sinh?: string; // Date as string
-  gioi_tinh?: "Nam" | "Nữ" | "Khác";
-  chuc_vu?: "NhanVien" | "TruongPhong" | "PhoPhong";
-  bac_luong?: number;
-  luong_co_ban?: number;
-  ma_phong?: string;
+  maNv?: string;
+  hoTen?: string;
+  ngaySinh?: string; // Date as string
+  gioiTinh?: "Nam" | "Nữ" | "Khác";
+  chucVu?: "NhanVien" | "TruongPhong" | "PhoPhong";
+  bacLuong?: number;
+  luongCoBan?: number;
+  maPhong?: string;
 
   constructor(init?: Partial<NhanVienModel>) {
     Object.assign(this, init);

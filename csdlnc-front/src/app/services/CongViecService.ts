@@ -34,18 +34,18 @@ export class CongViecService {
     });
   }
 
-  public updateCongViec(ma_cv: string, model: CongViecModel) {
+  public updateCongViec(maCv: string, model: CongViecModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/congviec/${ma_cv}`,
+      process.env.REACT_APP_API_URL + `/congviec/${maCv}`,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public deleteCongViec(ma_cv: string) {
+  public deleteCongViec(maCv: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/congviec/${ma_cv}`,
+      process.env.REACT_APP_API_URL + `/congviec/${maCv}`,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

@@ -44,9 +44,9 @@ const DuanPage: React.FC = () => {
     setShowForm(true);
   }
 
-  function handleDelete(ma_da: string) {
+  function handleDelete(maDa: string) {
     DuanService.getInstance()
-      .deleteDuan(ma_da)
+      .deleteDuan(maDa)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
@@ -105,20 +105,20 @@ const DuanPage: React.FC = () => {
               </thead>
               <tbody>
                 {listData.map((item: DuanModel, index: number) => (
-                  <tr key={item.ma_da}>
+                  <tr key={item.maDa}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{item.ma_da}</td>
-                    <td>{item.ten_da}</td>
-                    <td>{item.loai_da}</td>
-                    <td>{item.so_nhan_vien_toi_da}</td>
-                    <td>{item.ma_phong_ql}</td>
-                    <td>{item.ma_nv_chu_tri}</td>
-                    <td>{item.ngay_bat_dau}</td>
-                    <td>{item.ngay_ket_thuc_du_kien}</td>
-                    <td>{item.trang_thai}</td>
+                    <td>{item.maDa}</td>
+                    <td>{item.tenDa}</td>
+                    <td>{item.loaiDa}</td>
+                    <td>{item.soNhanVienToiDa}</td>
+                    <td>{item.maPhongQl}</td>
+                    <td>{item.maNvChuTri}</td>
+                    <td>{item.ngayBatDau}</td>
+                    <td>{item.ngayKetThucDuKien}</td>
+                    <td>{item.trangThai}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-info ms-2"
@@ -128,7 +128,7 @@ const DuanPage: React.FC = () => {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.ma_da!)}
+                        onClick={() => handleDelete(item.maDa!)}
                       >
                         Xóa
                       </button>
@@ -147,7 +147,7 @@ const DuanPage: React.FC = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel.ma_da ? "Sửa dự án" : "Thêm dự án"}
+                  {editingModel.maDa ? "Sửa dự án" : "Thêm dự án"}
                 </h5>
                 <button
                   type="button"

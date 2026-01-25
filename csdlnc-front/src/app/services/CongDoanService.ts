@@ -25,9 +25,9 @@ export class CongDoanService {
     });
   }
 
-  public getCongDoanById(ma_cd: string) {
+  public getCongDoanById(maCd: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/congdoan/" + ma_cd,
+      process.env.REACT_APP_API_URL + "/congdoan/" + maCd,
     );
     return axios.get(url, {
       headers: HeadersUtil.getHeaders(),
@@ -43,18 +43,18 @@ export class CongDoanService {
     });
   }
 
-  public updateCongDoan(ma_cd: string, model: CongDoanModel) {
+  public updateCongDoan(maCd: string, model: CongDoanModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/congdoan/" + ma_cd,
+      process.env.REACT_APP_API_URL + "/congdoan/" + maCd,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public deleteCongDoan(ma_cd: string) {
+  public deleteCongDoan(maCd: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/congdoan/" + ma_cd,
+      process.env.REACT_APP_API_URL + "/congdoan/" + maCd,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

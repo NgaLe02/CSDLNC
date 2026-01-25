@@ -25,9 +25,9 @@ export class NhanVienService {
     });
   }
 
-  public getNhanVienById(ma_nv: string) {
+  public getNhanVienById(maNv: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/nhanvien/" + ma_nv,
+      process.env.REACT_APP_API_URL + "/nhanvien/" + maNv,
     );
     return axios.get(url, {
       headers: HeadersUtil.getHeaders(),
@@ -43,18 +43,18 @@ export class NhanVienService {
     });
   }
 
-  public updateNhanVien(ma_nv: string, model: NhanVienModel) {
+  public updateNhanVien(maNv: string, model: NhanVienModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/nhanvien/" + ma_nv,
+      process.env.REACT_APP_API_URL + "/nhanvien/" + maNv,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public deleteNhanVien(ma_nv: string) {
+  public deleteNhanVien(maNv: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/nhanvien/" + ma_nv,
+      process.env.REACT_APP_API_URL + "/nhanvien/" + maNv,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

@@ -37,10 +37,10 @@ const CongDoanPage: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (ma_cd: string) => {
+  const handleDelete = (maCd: string) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       CongDoanService.getInstance()
-        .deleteCongDoan(ma_cd)
+        .deleteCongDoan(maCd)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -100,15 +100,15 @@ const CongDoanPage: React.FC = () => {
                 <tbody>
                   {listData.map((item, index) => (
                     <tr key={index}>
-                      <td>{item.ma_cd}</td>
-                      <td>{item.ten_cong_doan}</td>
-                      <td>{item.thu_tu}</td>
-                      <td>{item.ngay_bat_dau}</td>
-                      <td>{item.so_ngay_hoan_thanh}</td>
-                      <td>{item.ngay_hoan_thanh_thuc_te}</td>
-                      <td>{item.ket_qua}</td>
-                      <td>{item.trang_thai_tien_do}</td>
-                      <td>{item.ma_da}</td>
+                      <td>{item.maCd}</td>
+                      <td>{item.tenCongDoan}</td>
+                      <td>{item.thuTu}</td>
+                      <td>{item.ngayBatDau}</td>
+                      <td>{item.soNgayHoanThanh}</td>
+                      <td>{item.ngayHoanThanhThucTe}</td>
+                      <td>{item.ketQua}</td>
+                      <td>{item.trangThaiTienDo}</td>
+                      <td>{item.maDa}</td>
                       <td>
                         <button
                           type="button"
@@ -120,7 +120,7 @@ const CongDoanPage: React.FC = () => {
                         <button
                           type="button"
                           className="btn btn-sm btn-danger"
-                          onClick={() => handleDelete(item.ma_cd!)}
+                          onClick={() => handleDelete(item.maCd!)}
                         >
                           Xóa
                         </button>

@@ -20,9 +20,9 @@ export default function CongViecForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (model.ma_cv) {
+    if (model.maCv) {
       CongViecService.getInstance()
-        .updateCongViec(model.ma_cv, model)
+        .updateCongViec(model.maCv, model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -64,57 +64,57 @@ export default function CongViecForm(props: any) {
       <div className="bg-light rounded h-100 p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="ma_cv" className="form-label">
+            <label htmlFor="maCv" className="form-label">
               Mã CV
             </label>
             <input
               type="text"
               className="form-control"
-              id="ma_cv"
-              name="ma_cv"
-              value={model.ma_cv ?? ""}
+              id="maCv"
+              name="maCv"
+              value={model.maCv ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="ten_cv" className="form-label">
+            <label htmlFor="tenCv" className="form-label">
               Tên Công Việc
             </label>
             <input
               type="text"
               className="form-control"
-              id="ten_cv"
-              name="ten_cv"
-              value={model.ten_cv ?? ""}
+              id="tenCv"
+              name="tenCv"
+              value={model.tenCv ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="loai_cv" className="form-label">
+            <label htmlFor="loaiCv" className="form-label">
               Loại Công Việc
             </label>
             <input
               type="text"
               className="form-control"
-              id="loai_cv"
-              name="loai_cv"
-              value={model.loai_cv ?? ""}
+              id="loaiCv"
+              name="loaiCv"
+              value={model.loaiCv ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="muc_luong_nang_suat" className="form-label">
+            <label htmlFor="mucLuongNangSuat" className="form-label">
               Mức Lương Năng Suất
             </label>
             <input
               type="number"
               className="form-control"
-              id="muc_luong_nang_suat"
-              name="muc_luong_nang_suat"
-              value={model.muc_luong_nang_suat ?? ""}
+              id="mucLuongNangSuat"
+              name="mucLuongNangSuat"
+              value={model.mucLuongNangSuat ?? ""}
               onChange={handleChange}
               required
             />

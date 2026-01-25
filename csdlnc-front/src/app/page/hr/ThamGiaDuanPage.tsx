@@ -39,10 +39,10 @@ const ThamGiaDuanPage: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (ma_nv: string, ma_da: string) => {
+  const handleDelete = (maNv: string, maDa: string) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       ThamGiaDuanService.getInstance()
-        .deleteThamGiaDuan(ma_nv, ma_da)
+        .deleteThamGiaDuan(maNv, maDa)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -98,9 +98,9 @@ const ThamGiaDuanPage: React.FC = () => {
                 <tbody>
                   {listData.map((item, index) => (
                     <tr key={index}>
-                      <td>{item.ma_nv}</td>
-                      <td>{item.ma_da}</td>
-                      <td>{item.vai_tro}</td>
+                      <td>{item.maNv}</td>
+                      <td>{item.maDa}</td>
+                      <td>{item.vaiTro}</td>
                       <td>{item.thang}</td>
                       <td>{item.nam}</td>
                       <td>
@@ -114,7 +114,7 @@ const ThamGiaDuanPage: React.FC = () => {
                         <button
                           type="button"
                           className="btn btn-sm btn-danger"
-                          onClick={() => handleDelete(item.ma_nv!, item.ma_da!)}
+                          onClick={() => handleDelete(item.maNv!, item.maDa!)}
                         >
                           Xóa
                         </button>

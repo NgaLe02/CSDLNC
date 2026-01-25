@@ -1,10 +1,10 @@
 export class ThucHienCongViecModel {
-  ma_nv?: string;
-  ma_cv?: string;
+  maNv?: string;
+  maCv?: string;
   thang?: number;
   nam?: number;
-  ket_qua?: string;
-  dung_han?: boolean;
+  ketQua?: string;
+  dungHan?: boolean;
 
   constructor(init?: Partial<ThucHienCongViecModel>) {
     Object.assign(this, init);

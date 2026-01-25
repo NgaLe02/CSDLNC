@@ -46,9 +46,9 @@ const PhongBanPage: React.FC = () => {
     setShowForm(true);
   }
 
-  function handleDelete(ma_phong: string) {
+  function handleDelete(maPhong: string) {
     PhongBanService.getInstance()
-      .deletePhongBan(ma_phong)
+      .deletePhongBan(maPhong)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
@@ -102,15 +102,15 @@ const PhongBanPage: React.FC = () => {
               </thead>
               <tbody>
                 {listData.map((item: PhongBanModel, index: number) => (
-                  <tr key={item.ma_phong}>
+                  <tr key={item.maPhong}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{item.ma_phong}</td>
-                    <td>{item.ten_phong}</td>
-                    <td>{item.mo_ta}</td>
-                    <td>{item.ngay_thanh_lap}</td>
+                    <td>{item.maPhong}</td>
+                    <td>{item.tenPhong}</td>
+                    <td>{item.moTa}</td>
+                    <td>{item.ngayThanhLap}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-info ms-2"
@@ -120,7 +120,7 @@ const PhongBanPage: React.FC = () => {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.ma_phong!)}
+                        onClick={() => handleDelete(item.maPhong!)}
                       >
                         Xóa
                       </button>
@@ -139,7 +139,7 @@ const PhongBanPage: React.FC = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel.ma_phong ? "Sửa phòng ban" : "Thêm phòng ban"}
+                  {editingModel.maPhong ? "Sửa phòng ban" : "Thêm phòng ban"}
                 </h5>
                 <button
                   type="button"

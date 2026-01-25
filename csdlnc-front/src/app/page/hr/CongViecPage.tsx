@@ -37,10 +37,10 @@ const CongViecPage: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (ma_cv: string) => {
+  const handleDelete = (maCv: string) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       CongViecService.getInstance()
-        .deleteCongViec(ma_cv)
+        .deleteCongViec(maCv)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -95,10 +95,10 @@ const CongViecPage: React.FC = () => {
                 <tbody>
                   {listData.map((item, index) => (
                     <tr key={index}>
-                      <td>{item.ma_cv}</td>
-                      <td>{item.ten_cv}</td>
-                      <td>{item.loai_cv}</td>
-                      <td>{item.muc_luong_nang_suat}</td>
+                      <td>{item.maCv}</td>
+                      <td>{item.tenCv}</td>
+                      <td>{item.loaiCv}</td>
+                      <td>{item.mucLuongNangSuat}</td>
                       <td>
                         <button
                           type="button"
@@ -110,7 +110,7 @@ const CongViecPage: React.FC = () => {
                         <button
                           type="button"
                           className="btn btn-sm btn-danger"
-                          onClick={() => handleDelete(item.ma_cv!)}
+                          onClick={() => handleDelete(item.maCv!)}
                         >
                           Xóa
                         </button>

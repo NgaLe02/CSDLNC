@@ -46,9 +46,9 @@ const NhanVienPage: React.FC = () => {
     setShowForm(true);
   }
 
-  function handleDelete(ma_nv: string) {
+  function handleDelete(maNv: string) {
     NhanVienService.getInstance()
-      .deleteNhanVien(ma_nv)
+      .deleteNhanVien(maNv)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           if (resp.data.status) {
@@ -106,19 +106,19 @@ const NhanVienPage: React.FC = () => {
               </thead>
               <tbody>
                 {listData.map((item: NhanVienModel, index: number) => (
-                  <tr key={item.ma_nv}>
+                  <tr key={item.maNv}>
                     <td>
                       <input className="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{item.ma_nv}</td>
-                    <td>{item.ho_ten}</td>
-                    <td>{item.ngay_sinh}</td>
-                    <td>{item.gioi_tinh}</td>
-                    <td>{item.chuc_vu}</td>
-                    <td>{item.bac_luong}</td>
-                    <td>{item.luong_co_ban}</td>
-                    <td>{item.ma_phong}</td>
+                    <td>{item.maNv}</td>
+                    <td>{item.hoTen}</td>
+                    <td>{item.ngaySinh}</td>
+                    <td>{item.gioiTinh}</td>
+                    <td>{item.chucVu}</td>
+                    <td>{item.bacLuong}</td>
+                    <td>{item.luongCoBan}</td>
+                    <td>{item.maPhong}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-info ms-2"
@@ -128,7 +128,7 @@ const NhanVienPage: React.FC = () => {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.ma_nv!)}
+                        onClick={() => handleDelete(item.maNv!)}
                       >
                         Xóa
                       </button>
@@ -147,7 +147,7 @@ const NhanVienPage: React.FC = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel.ma_nv ? "Sửa nhân viên" : "Thêm nhân viên"}
+                  {editingModel.maNv ? "Sửa nhân viên" : "Thêm nhân viên"}
                 </h5>
                 <button
                   type="button"

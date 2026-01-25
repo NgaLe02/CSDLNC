@@ -20,9 +20,9 @@ export default function PhongBanForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (model.ma_phong) {
+    if (model.maPhong) {
       PhongBanService.getInstance()
-        .updatePhongBan(model.ma_phong, model)
+        .updatePhongBan(model.maPhong, model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -64,55 +64,55 @@ export default function PhongBanForm(props: any) {
       <div className="bg-light rounded h-100 p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="ma_phong" className="form-label">
+            <label htmlFor="maPhong" className="form-label">
               Mã Phòng
             </label>
             <input
               type="text"
               className="form-control"
-              id="ma_phong"
-              name="ma_phong"
-              value={model.ma_phong ?? ""}
+              id="maPhong"
+              name="maPhong"
+              value={model.maPhong ?? ""}
               onChange={handleChange}
               //   required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="ten_phong" className="form-label">
+            <label htmlFor="tenPhong" className="form-label">
               Tên Phòng
             </label>
             <input
               type="text"
               className="form-control"
-              id="ten_phong"
-              name="ten_phong"
-              value={model.ten_phong ?? ""}
+              id="tenPhong"
+              name="tenPhong"
+              value={model.tenPhong ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="mo_ta" className="form-label">
+            <label htmlFor="moTa" className="form-label">
               Mô tả
             </label>
             <textarea
               className="form-control"
-              id="mo_ta"
-              name="mo_ta"
-              value={model.mo_ta ?? ""}
+              id="moTa"
+              name="moTa"
+              value={model.moTa ?? ""}
               onChange={handleChange}
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="ngay_thanh_lap" className="form-label">
+            <label htmlFor="ngayThanhLap" className="form-label">
               Ngày Thành Lập
             </label>
             <input
               type="date"
               className="form-control"
-              id="ngay_thanh_lap"
-              name="ngay_thanh_lap"
-              value={model.ngay_thanh_lap ?? ""}
+              id="ngayThanhLap"
+              name="ngayThanhLap"
+              value={model.ngayThanhLap ?? ""}
               onChange={handleChange}
             />
           </div>

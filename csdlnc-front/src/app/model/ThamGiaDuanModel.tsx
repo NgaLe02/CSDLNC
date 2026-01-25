@@ -1,7 +1,7 @@
 export class ThamGiaDuanModel {
-  ma_nv?: string;
-  ma_da?: string;
-  vai_tro?: "ThanhVien" | "ChuTri";
+  maNv?: string;
+  maDa?: string;
+  vaiTro?: "ThanhVien" | "ChuTri";
   thang?: number;
   nam?: number;
 

@@ -34,18 +34,22 @@ export class ThamGiaDuanService {
     });
   }
 
-  public updateThamGiaDuan(ma_nv: string, ma_da: string, model: ThamGiaDuanModel) {
+  public updateThamGiaDuan(
+    maNv: string,
+    maDa: string,
+    model: ThamGiaDuanModel,
+  ) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thamgiaduan/${ma_nv}/${ma_da}`,
+      process.env.REACT_APP_API_URL + `/thamgiaduan/${maNv}/${maDa}`,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public deleteThamGiaDuan(ma_nv: string, ma_da: string) {
+  public deleteThamGiaDuan(maNv: string, maDa: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thamgiaduan/${ma_nv}/${ma_da}`,
+      process.env.REACT_APP_API_URL + `/thamgiaduan/${maNv}/${maDa}`,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

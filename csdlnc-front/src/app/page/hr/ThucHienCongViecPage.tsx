@@ -38,10 +38,10 @@ const ThucHienCongViecPage: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (ma_nv: string, ma_cv: string) => {
+  const handleDelete = (maNv: string, maCv: string) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       ThucHienCongViecService.getInstance()
-        .deleteThucHienCongViec(ma_nv, ma_cv)
+        .deleteThucHienCongViec(maNv, maCv)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -98,12 +98,12 @@ const ThucHienCongViecPage: React.FC = () => {
                 <tbody>
                   {listData.map((item, index) => (
                     <tr key={index}>
-                      <td>{item.ma_nv}</td>
-                      <td>{item.ma_cv}</td>
+                      <td>{item.maNv}</td>
+                      <td>{item.maCv}</td>
                       <td>{item.thang}</td>
                       <td>{item.nam}</td>
-                      <td>{item.ket_qua}</td>
-                      <td>{item.dung_han ? "Có" : "Không"}</td>
+                      <td>{item.ketQua}</td>
+                      <td>{item.dungHan ? "Có" : "Không"}</td>
                       <td>
                         <button
                           type="button"
@@ -115,7 +115,7 @@ const ThucHienCongViecPage: React.FC = () => {
                         <button
                           type="button"
                           className="btn btn-sm btn-danger"
-                          onClick={() => handleDelete(item.ma_nv!, item.ma_cv!)}
+                          onClick={() => handleDelete(item.maNv!, item.maCv!)}
                         >
                           Xóa
                         </button>

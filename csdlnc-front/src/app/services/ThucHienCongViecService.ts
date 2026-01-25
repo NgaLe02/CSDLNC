@@ -36,21 +36,21 @@ export class ThucHienCongViecService {
   }
 
   public updateThucHienCongViec(
-    ma_nv: string,
-    ma_cv: string,
+    maNv: string,
+    maCv: string,
     model: ThucHienCongViecModel,
   ) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thuchiencongviec/${ma_nv}/${ma_cv}`,
+      process.env.REACT_APP_API_URL + `/thuchiencongviec/${maNv}/${maCv}`,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public deleteThucHienCongViec(ma_nv: string, ma_cv: string) {
+  public deleteThucHienCongViec(maNv: string, maCv: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thuchiencongviec/${ma_nv}/${ma_cv}`,
+      process.env.REACT_APP_API_URL + `/thuchiencongviec/${maNv}/${maCv}`,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

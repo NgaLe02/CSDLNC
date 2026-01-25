@@ -25,9 +25,9 @@ export class DuanService {
     });
   }
 
-  public getDuanById(ma_da: string) {
+  public getDuanById(maDa: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/duan/" + ma_da,
+      process.env.REACT_APP_API_URL + "/duan/" + maDa,
     );
     return axios.get(url, {
       headers: HeadersUtil.getHeaders(),
@@ -43,18 +43,18 @@ export class DuanService {
     });
   }
 
-  public updateDuan(ma_da: string, model: DuanModel) {
+  public updateDuan(maDa: string, model: DuanModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/duan/" + ma_da,
+      process.env.REACT_APP_API_URL + "/duan/" + maDa,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public deleteDuan(ma_da: string) {
+  public deleteDuan(maDa: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/duan/" + ma_da,
+      process.env.REACT_APP_API_URL + "/duan/" + maDa,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

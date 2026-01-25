@@ -36,21 +36,21 @@ export class ThucHienCongDoanService {
   }
 
   public updateThucHienCongDoan(
-    ma_nv: string,
-    ma_cd: string,
+    maNv: string,
+    maCd: string,
     model: ThucHienCongDoanModel,
   ) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thuchiencongdoan/${ma_nv}/${ma_cd}`,
+      process.env.REACT_APP_API_URL + `/thuchiencongdoan/${maNv}/${maCd}`,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public deleteThucHienCongDoan(ma_nv: string, ma_cd: string) {
+  public deleteThucHienCongDoan(maNv: string, maCd: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thuchiencongdoan/${ma_nv}/${ma_cd}`,
+      process.env.REACT_APP_API_URL + `/thuchiencongdoan/${maNv}/${maCd}`,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

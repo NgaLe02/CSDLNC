@@ -25,9 +25,9 @@ export class PhongBanService {
     });
   }
 
-  public getPhongBanById(ma_phong: string) {
+  public getPhongBanById(maPhong: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/phongban/" + ma_phong,
+      process.env.REACT_APP_API_URL + "/phongban/" + maPhong,
     );
     return axios.get(url, {
       headers: HeadersUtil.getHeaders(),
@@ -43,18 +43,18 @@ export class PhongBanService {
     });
   }
 
-  public updatePhongBan(ma_phong: string, model: PhongBanModel) {
+  public updatePhongBan(maPhong: string, model: PhongBanModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/phongban/" + ma_phong,
+      process.env.REACT_APP_API_URL + "/phongban/" + maPhong,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public deletePhongBan(ma_phong: string) {
+  public deletePhongBan(maPhong: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/phongban/" + ma_phong,
+      process.env.REACT_APP_API_URL + "/phongban/" + maPhong,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

@@ -26,9 +26,9 @@ export default function NhanVienForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (model.ma_nv) {
+    if (model.maNv) {
       NhanVienService.getInstance()
-        .updateNhanVien(model.ma_nv, model)
+        .updateNhanVien(model.maNv, model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -70,55 +70,55 @@ export default function NhanVienForm(props: any) {
       <div className="bg-light rounded h-100 p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="ma_nv" className="form-label">
+            <label htmlFor="maNv" className="form-label">
               Mã NV
             </label>
             <input
               type="text"
               className="form-control"
-              id="ma_nv"
-              name="ma_nv"
-              value={model.ma_nv ?? ""}
+              id="maNv"
+              name="maNv"
+              value={model.maNv ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="ho_ten" className="form-label">
+            <label htmlFor="hoTen" className="form-label">
               Họ Tên
             </label>
             <input
               type="text"
               className="form-control"
-              id="ho_ten"
-              name="ho_ten"
-              value={model.ho_ten ?? ""}
+              id="hoTen"
+              name="hoTen"
+              value={model.hoTen ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="ngay_sinh" className="form-label">
+            <label htmlFor="ngaySinh" className="form-label">
               Ngày Sinh
             </label>
             <input
               type="date"
               className="form-control"
-              id="ngay_sinh"
-              name="ngay_sinh"
-              value={model.ngay_sinh ?? ""}
+              id="ngaySinh"
+              name="ngaySinh"
+              value={model.ngaySinh ?? ""}
               onChange={handleChange}
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="gioi_tinh" className="form-label">
+            <label htmlFor="gioiTinh" className="form-label">
               Giới Tính
             </label>
             <select
               className="form-control"
-              id="gioi_tinh"
-              name="gioi_tinh"
-              value={model.gioi_tinh ?? ""}
+              id="gioiTinh"
+              name="gioiTinh"
+              value={model.gioiTinh ?? ""}
               onChange={handleSelectChange}
             >
               <option value="">Chọn giới tính</option>
@@ -128,14 +128,14 @@ export default function NhanVienForm(props: any) {
             </select>
           </div>
           <div className="mb-3">
-            <label htmlFor="chuc_vu" className="form-label">
+            <label htmlFor="chucVu" className="form-label">
               Chức Vụ
             </label>
             <select
               className="form-control"
-              id="chuc_vu"
-              name="chuc_vu"
-              value={model.chuc_vu ?? ""}
+              id="chucVu"
+              name="chucVu"
+              value={model.chucVu ?? ""}
               onChange={handleSelectChange}
               required
             >
@@ -146,44 +146,44 @@ export default function NhanVienForm(props: any) {
             </select>
           </div>
           <div className="mb-3">
-            <label htmlFor="bac_luong" className="form-label">
+            <label htmlFor="bacLuong" className="form-label">
               Bậc Lương
             </label>
             <input
               type="number"
               className="form-control"
-              id="bac_luong"
-              name="bac_luong"
-              value={model.bac_luong ?? ""}
+              id="bacLuong"
+              name="bacLuong"
+              value={model.bacLuong ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="luong_co_ban" className="form-label">
+            <label htmlFor="luongCoBan" className="form-label">
               Lương Cơ Bản
             </label>
             <input
               type="number"
               step="0.01"
               className="form-control"
-              id="luong_co_ban"
-              name="luong_co_ban"
-              value={model.luong_co_ban ?? ""}
+              id="luongCoBan"
+              name="luongCoBan"
+              value={model.luongCoBan ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="ma_phong" className="form-label">
+            <label htmlFor="maPhong" className="form-label">
               Mã Phòng
             </label>
             <input
               type="text"
               className="form-control"
-              id="ma_phong"
-              name="ma_phong"
-              value={model.ma_phong ?? ""}
+              id="maPhong"
+              name="maPhong"
+              value={model.maPhong ?? ""}
               onChange={handleChange}
               required
             />

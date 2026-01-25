@@ -28,9 +28,9 @@ export default function ThamGiaDuanForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (model.ma_nv && model.ma_da) {
+    if (model.maNv && model.maDa) {
       ThamGiaDuanService.getInstance()
-        .updateThamGiaDuan(model.ma_nv, model.ma_da, model)
+        .updateThamGiaDuan(model.maNv, model.maDa, model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -72,42 +72,42 @@ export default function ThamGiaDuanForm(props: any) {
       <div className="bg-light rounded h-100 p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="ma_nv" className="form-label">
+            <label htmlFor="maNv" className="form-label">
               Mã NV
             </label>
             <input
               type="text"
               className="form-control"
-              id="ma_nv"
-              name="ma_nv"
-              value={model.ma_nv ?? ""}
+              id="maNv"
+              name="maNv"
+              value={model.maNv ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="ma_da" className="form-label">
+            <label htmlFor="maDa" className="form-label">
               Mã DA
             </label>
             <input
               type="text"
               className="form-control"
-              id="ma_da"
-              name="ma_da"
-              value={model.ma_da ?? ""}
+              id="maDa"
+              name="maDa"
+              value={model.maDa ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="vai_tro" className="form-label">
+            <label htmlFor="vaiTro" className="form-label">
               Vai Trò
             </label>
             <select
               className="form-control"
-              id="vai_tro"
-              name="vai_tro"
-              value={model.vai_tro ?? ""}
+              id="vaiTro"
+              name="vaiTro"
+              value={model.vaiTro ?? ""}
               onChange={handleSelectChange}
               required
             >
