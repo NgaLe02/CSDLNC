@@ -43,9 +43,9 @@ export class NhanVienService {
     });
   }
 
-  public updateNhanVien(maNv: string, model: NhanVienModel) {
+  public updateNhanVien(model: NhanVienModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/nhanvien/" + maNv,
+      process.env.REACT_APP_API_URL + "/nhanvien",
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),

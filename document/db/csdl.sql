@@ -17,7 +17,7 @@ CREATE TABLE nhanvien (
     ngay_sinh DATE,
     gioi_tinh ENUM('Nam', 'Nữ', 'Khác'),
     chuc_vu ENUM('NhanVien', 'TruongPhong', 'PhoPhong') NOT NULL,
-    bac_luong INT NOT NULL,
+    bac_luong DECIMAL(12,2) NOT NULL,
     luong_co_ban DECIMAL(12,2) NOT NULL,
     ma_phong VARCHAR(10) NOT NULL,
 

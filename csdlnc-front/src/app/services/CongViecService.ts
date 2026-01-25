@@ -34,9 +34,9 @@ export class CongViecService {
     });
   }
 
-  public updateCongViec(maCv: string, model: CongViecModel) {
+  public updateCongViec(model: CongViecModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/congviec/${maCv}`,
+      process.env.REACT_APP_API_URL + `/congviec`,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),

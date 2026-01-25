@@ -43,9 +43,9 @@ export class DuanService {
     });
   }
 
-  public updateDuan(maDa: string, model: DuanModel) {
+  public updateDuan(model: DuanModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/duan/" + maDa,
+      process.env.REACT_APP_API_URL + "/duan",
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),

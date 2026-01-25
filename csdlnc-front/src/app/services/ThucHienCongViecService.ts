@@ -35,13 +35,9 @@ export class ThucHienCongViecService {
     });
   }
 
-  public updateThucHienCongViec(
-    maNv: string,
-    maCv: string,
-    model: ThucHienCongViecModel,
-  ) {
+  public updateThucHienCongViec(model: ThucHienCongViecModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thuchiencongviec/${maNv}/${maCv}`,
+      process.env.REACT_APP_API_URL + `/thuchiencongviec`,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),

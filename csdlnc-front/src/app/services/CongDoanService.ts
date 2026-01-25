@@ -43,9 +43,9 @@ export class CongDoanService {
     });
   }
 
-  public updateCongDoan(maCd: string, model: CongDoanModel) {
+  public updateCongDoan(model: CongDoanModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/congdoan/" + maCd,
+      process.env.REACT_APP_API_URL + "/congdoan",
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),

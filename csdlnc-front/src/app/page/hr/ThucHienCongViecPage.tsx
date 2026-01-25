@@ -43,16 +43,16 @@ const ThucHienCongViecPage: React.FC = () => {
       ThucHienCongViecService.getInstance()
         .deleteThucHienCongViec(maNv, maCv)
         .then((resp) => {
-          if (resp.data.status) {
-            toast.success(resp.data.message);
+          if (resp.status === 204) {
+            toast.success("Xóa thực hiện công việc thành công");
             getLstThucHienCongViec();
           } else {
-            toast.error(resp.data.message);
+            toast.error("Có lỗi xảy ra khi xóa");
           }
         })
         .catch((err) => {
           if (err.response && err.response.data) {
-            toast.error(err.response.data.message);
+            toast.error(err.response.data.message || "Có lỗi xảy ra");
           } else {
             toast.error("Có lỗi xảy ra");
           }
@@ -61,7 +61,7 @@ const ThucHienCongViecPage: React.FC = () => {
   };
 
   const closeModal = (refresh: boolean) => {
-    setShowForm(refresh);
+    setShowForm(false);
     if (refresh) {
       getLstThucHienCongViec();
     }

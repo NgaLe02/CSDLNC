@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { HttpStatusCode } from "axios";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import { CongDoanModel } from "../../model/CongDoanModel";
 import { CongDoanService } from "../../services/CongDoanService";
 import CongDoanForm from "./component/CongDoanForm";
@@ -33,7 +34,17 @@ const CongDoanPage: React.FC = () => {
   };
 
   const handleEdit = (model: CongDoanModel) => {
-    setEditingModel(model);
+    // Format dates to YYYY-MM-DD for date inputs
+    const formattedModel = {
+      ...model,
+      ngayBatDau: model.ngayBatDau
+        ? dayjs(model.ngayBatDau, "DD-MM-YYYY").format("YYYY-MM-DD")
+        : model.ngayBatDau,
+      ngayHoanThanhThucTe: model.ngayHoanThanhThucTe
+        ? dayjs(model.ngayHoanThanhThucTe, "DD-MM-YYYY").format("YYYY-MM-DD")
+        : model.ngayHoanThanhThucTe,
+    };
+    setEditingModel(formattedModel);
     setShowForm(true);
   };
 
@@ -42,16 +53,16 @@ const CongDoanPage: React.FC = () => {
       CongDoanService.getInstance()
         .deleteCongDoan(maCd)
         .then((resp) => {
-          if (resp.data.status) {
-            toast.success(resp.data.message);
+          if (resp.status === 204) {
+            toast.success("Xóa công đoạn thành công");
             getLstCongDoan();
           } else {
-            toast.error(resp.data.message);
+            toast.error("Có lỗi xảy ra khi xóa");
           }
         })
         .catch((err) => {
           if (err.response && err.response.data) {
-            toast.error(err.response.data.message);
+            toast.error(err.response.data.message || "Có lỗi xảy ra");
           } else {
             toast.error("Có lỗi xảy ra");
           }
@@ -60,7 +71,7 @@ const CongDoanPage: React.FC = () => {
   };
 
   const closeModal = (refresh: boolean) => {
-    setShowForm(refresh);
+    setShowForm(false);
     if (refresh) {
       getLstCongDoan();
     }
@@ -103,9 +114,17 @@ const CongDoanPage: React.FC = () => {
                       <td>{item.maCd}</td>
                       <td>{item.tenCongDoan}</td>
                       <td>{item.thuTu}</td>
-                      <td>{item.ngayBatDau}</td>
+                      <td>
+                        {item.ngayBatDau
+                          ? dayjs(item.ngayBatDau).format("DD-MM-YYYY")
+                          : ""}
+                      </td>
                       <td>{item.soNgayHoanThanh}</td>
-                      <td>{item.ngayHoanThanhThucTe}</td>
+                      <td>
+                        {item.ngayHoanThanhThucTe
+                          ? dayjs(item.ngayHoanThanhThucTe).format("DD-MM-YYYY")
+                          : ""}
+                      </td>
                       <td>{item.ketQua}</td>
                       <td>{item.trangThaiTienDo}</td>
                       <td>{item.maDa}</td>

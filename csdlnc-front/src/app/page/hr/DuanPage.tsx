@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { HttpStatusCode } from "axios";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import { DuanModel } from "../../model/DuanModel";
 import { DuanService } from "../../services/DuanService";
 import DuanForm from "./component/DuanForm";
@@ -19,12 +20,8 @@ const DuanPage: React.FC = () => {
       .getLstDuan({})
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
-          if (response.data.status) {
-            const data = response.data.responseData;
-            setListData(data);
-          } else {
-            toast.error(response.data.message);
-          }
+          const data = response.data;
+          setListData(data);
         } else {
           toast.error(response.data.message);
         }
@@ -40,36 +37,44 @@ const DuanPage: React.FC = () => {
   }
 
   function handleEdit(duan: DuanModel) {
-    setEditingModel(duan);
+    // Format dates to YYYY-MM-DD for date inputs
+    const formattedModel = {
+      ...duan,
+      ngayBatDau: duan.ngayBatDau
+        ? dayjs(duan.ngayBatDau, "DD-MM-YYYY").format("YYYY-MM-DD")
+        : duan.ngayBatDau,
+      ngayKetThucDuKien: duan.ngayKetThucDuKien
+        ? dayjs(duan.ngayKetThucDuKien, "DD-MM-YYYY").format("YYYY-MM-DD")
+        : duan.ngayKetThucDuKien,
+    };
+    setEditingModel(formattedModel);
     setShowForm(true);
   }
 
   function handleDelete(maDa: string) {
-    DuanService.getInstance()
-      .deleteDuan(maDa)
-      .then((resp) => {
-        if (resp.status === HttpStatusCode.Ok) {
-          if (resp.data.status) {
-            toast.success(resp.data.message);
+    if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
+      DuanService.getInstance()
+        .deleteDuan(maDa)
+        .then((resp) => {
+          if (resp.status === 204) {
+            toast.success("Xóa dự án thành công");
             getLstDuan();
           } else {
-            toast.error(resp.data.message);
+            toast.error("Có lỗi xảy ra khi xóa");
           }
-        } else {
-          toast.error(resp.data.message);
-        }
-      })
-      .catch((err) => {
-        if (err.response && err.response.data) {
-          toast.error(err.response.data.message);
-        } else {
-          toast.error("Có lỗi xảy ra");
-        }
-      });
+        })
+        .catch((err) => {
+          if (err.response && err.response.data) {
+            toast.error(err.response.data.message || "Có lỗi xảy ra");
+          } else {
+            toast.error("Có lỗi xảy ra");
+          }
+        });
+    }
   }
 
   function closeModal(status: boolean) {
-    setShowForm(status);
+    setShowForm(false);
     getLstDuan();
   }
 
@@ -116,8 +121,16 @@ const DuanPage: React.FC = () => {
                     <td>{item.soNhanVienToiDa}</td>
                     <td>{item.maPhongQl}</td>
                     <td>{item.maNvChuTri}</td>
-                    <td>{item.ngayBatDau}</td>
-                    <td>{item.ngayKetThucDuKien}</td>
+                    <td>
+                      {item.ngayBatDau
+                        ? dayjs(item.ngayBatDau).format("DD-MM-YYYY")
+                        : ""}
+                    </td>
+                    <td>
+                      {item.ngayKetThucDuKien
+                        ? dayjs(item.ngayKetThucDuKien).format("DD-MM-YYYY")
+                        : ""}
+                    </td>
                     <td>{item.trangThai}</td>
                     <td>
                       <button

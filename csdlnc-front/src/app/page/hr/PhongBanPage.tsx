@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { HttpStatusCode } from "axios";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import { PhongBanModel } from "../../model/PhongBanModel";
 import { PhongBanService } from "../../services/PhongBanService";
 import PhongBanForm from "./component/PhongBanForm";
@@ -38,7 +39,14 @@ const PhongBanPage: React.FC = () => {
   }
 
   function handleEdit(phongBan: PhongBanModel) {
-    setEditingModel(phongBan);
+    // Format ngayThanhLap to YYYY-MM-DD for date input
+    const formattedModel = {
+      ...phongBan,
+      ngayThanhLap: phongBan.ngayThanhLap
+        ? dayjs(phongBan.ngayThanhLap, "DD-MM-YYYY").format("YYYY-MM-DD")
+        : phongBan.ngayThanhLap,
+    };
+    setEditingModel(formattedModel);
     setShowForm(true);
   }
 
@@ -46,20 +54,16 @@ const PhongBanPage: React.FC = () => {
     PhongBanService.getInstance()
       .deletePhongBan(maPhong)
       .then((resp) => {
-        if (resp.status === HttpStatusCode.Ok) {
-          if (resp.data.status) {
-            toast.success(resp.data.message);
-            getLstPhongBan();
-          } else {
-            toast.error(resp.data.message);
-          }
+        if (resp.status === 204) {
+          toast.success("Xóa phòng ban thành công");
+          getLstPhongBan();
         } else {
-          toast.error(resp.data.message);
+          toast.error("Có lỗi xảy ra khi xóa");
         }
       })
       .catch((err) => {
         if (err.response && err.response.data) {
-          toast.error(err.response.data.message);
+          toast.error(err.response.data.message || "Có lỗi xảy ra");
         } else {
           toast.error("Có lỗi xảy ra");
         }
@@ -67,7 +71,7 @@ const PhongBanPage: React.FC = () => {
   }
 
   function closeModal(status: boolean) {
-    setShowForm(status);
+    setShowForm(false);
     getLstPhongBan();
   }
 
@@ -85,7 +89,6 @@ const PhongBanPage: React.FC = () => {
             <table className="table text-start align-middle table-bordered table-hover mb-0">
               <thead>
                 <tr className="text-dark">
-                  <th scope="col" style={{ width: "5%" }}></th>
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
@@ -99,14 +102,15 @@ const PhongBanPage: React.FC = () => {
               <tbody>
                 {listData.map((item: PhongBanModel, index: number) => (
                   <tr key={item.maPhong}>
-                    <td>
-                      <input className="form-check-input" type="checkbox" />
-                    </td>
                     <td>{index + 1}</td>
                     <td>{item.maPhong}</td>
                     <td>{item.tenPhong}</td>
                     <td>{item.moTa}</td>
-                    <td>{item.ngayThanhLap}</td>
+                    <td>
+                      {item.ngayThanhLap
+                        ? dayjs(item.ngayThanhLap).format("DD-MM-YYYY")
+                        : ""}
+                    </td>
                     <td>
                       <button
                         className="btn btn-sm btn-info ms-2"

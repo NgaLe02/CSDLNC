@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { HttpStatusCode } from "axios";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import { NhanVienModel } from "../../model/NhanVienModel";
 import { NhanVienService } from "../../services/NhanVienService";
 import NhanVienForm from "./component/NhanVienForm";
@@ -21,12 +22,8 @@ const NhanVienPage: React.FC = () => {
       .getLstNhanVien({})
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
-          if (response.data.status) {
-            const data = response.data.responseData;
-            setListData(data);
-          } else {
-            toast.error(response.data.message);
-          }
+          const data = response.data;
+          setListData(data);
         } else {
           toast.error(response.data.message);
         }
@@ -42,36 +39,41 @@ const NhanVienPage: React.FC = () => {
   }
 
   function handleEdit(nhanVien: NhanVienModel) {
-    setEditingModel(nhanVien);
+    // Format ngaySinh to YYYY-MM-DD for date input
+    const formattedModel = {
+      ...nhanVien,
+      ngaySinh: nhanVien.ngaySinh
+        ? dayjs(nhanVien.ngaySinh, "DD-MM-YYYY").format("YYYY-MM-DD")
+        : nhanVien.ngaySinh,
+    };
+    setEditingModel(formattedModel);
     setShowForm(true);
   }
 
   function handleDelete(maNv: string) {
-    NhanVienService.getInstance()
-      .deleteNhanVien(maNv)
-      .then((resp) => {
-        if (resp.status === HttpStatusCode.Ok) {
-          if (resp.data.status) {
-            toast.success(resp.data.message);
+    if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
+      NhanVienService.getInstance()
+        .deleteNhanVien(maNv)
+        .then((resp) => {
+          if (resp.status === 204) {
+            toast.success("Xóa nhân viên thành công");
             getLstNhanVien();
           } else {
-            toast.error(resp.data.message);
+            toast.error("Có lỗi xảy ra khi xóa");
           }
-        } else {
-          toast.error(resp.data.message);
-        }
-      })
-      .catch((err) => {
-        if (err.response && err.response.data) {
-          toast.error(err.response.data.message);
-        } else {
-          toast.error("Có lỗi xảy ra");
-        }
-      });
+        })
+        .catch((err) => {
+          if (err.response && err.response.data) {
+            toast.error(err.response.data.message || "Có lỗi xảy ra");
+          } else {
+            toast.error("Có lỗi xảy ra");
+          }
+        });
+    }
   }
 
   function closeModal(status: boolean) {
-    setShowForm(status);
+    setShowForm(false);
     getLstNhanVien();
   }
 
@@ -89,7 +91,6 @@ const NhanVienPage: React.FC = () => {
             <table className="table text-start align-middle table-bordered table-hover mb-0">
               <thead>
                 <tr className="text-dark">
-                  <th scope="col" style={{ width: "5%" }}></th>
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
@@ -107,13 +108,14 @@ const NhanVienPage: React.FC = () => {
               <tbody>
                 {listData.map((item: NhanVienModel, index: number) => (
                   <tr key={item.maNv}>
-                    <td>
-                      <input className="form-check-input" type="checkbox" />
-                    </td>
                     <td>{index + 1}</td>
                     <td>{item.maNv}</td>
                     <td>{item.hoTen}</td>
-                    <td>{item.ngaySinh}</td>
+                    <td>
+                      {item.ngaySinh
+                        ? dayjs(item.ngaySinh).format("DD-MM-YYYY")
+                        : ""}
+                    </td>
                     <td>{item.gioiTinh}</td>
                     <td>{item.chucVu}</td>
                     <td>{item.bacLuong}</td>

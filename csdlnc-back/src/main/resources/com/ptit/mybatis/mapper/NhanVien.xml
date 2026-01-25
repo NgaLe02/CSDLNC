@@ -5,7 +5,7 @@
     <resultMap id="NhanVienResultMap" type="com.ptit.csdlnc.model.NhanVien">
         <id column="ma_nv" property="maNv"/>
         <result column="ho_ten" property="hoTen"/>
-        <result column="ngay_sinh" property="ngaySinh"/>
+        <result column="ngay_sinh" property="ngaySinh"  jdbcType="DATE"/>
         <result column="gioi_tinh" property="gioiTinh"/>
         <result column="chuc_vu" property="chucVu"/>
         <result column="bac_luong" property="bacLuong"/>
@@ -22,8 +22,8 @@
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.NhanVien">
-        INSERT INTO nhanvien (ma_nv, ho_ten, ngay_sinh, gioi_tinh, chuc_vu, bac_luong, luong_co_ban, ma_phong)
-        VALUES (#{maNv}, #{hoTen}, #{ngaySinh}, #{gioiTinh}, #{chucVu}, #{bacLuong}, #{luongCoBan}, #{maPhong})
+        INSERT INTO nhanvien (ho_ten, ngay_sinh, gioi_tinh, chuc_vu, bac_luong, luong_co_ban, ma_phong)
+        VALUES (#{hoTen}, #{ngaySinh}, #{gioiTinh}, #{chucVu}, #{bacLuong}, #{luongCoBan}, #{maPhong})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.NhanVien">

@@ -30,18 +30,18 @@ export default function ThucHienCongViecForm(props: any) {
     e.preventDefault();
     if (model.maNv && model.maCv) {
       ThucHienCongViecService.getInstance()
-        .updateThucHienCongViec(model.maNv, model.maCv, model)
+        .updateThucHienCongViec(model)
         .then((resp) => {
-          if (resp.data.status) {
-            toast.success(resp.data.message);
+          if (resp.status === 200) {
+            toast.success("Cập nhật thực hiện công việc thành công");
             props.closeModal(true);
           } else {
-            toast.error(resp.data.message);
+            toast.error("Có lỗi xảy ra khi cập nhật");
           }
         })
         .catch((err) => {
           if (err.response && err.response.data) {
-            toast.error(err.response.data.message);
+            toast.error(err.response.data.message || "Có lỗi xảy ra");
           } else {
             toast.error("Có lỗi xảy ra");
           }
@@ -50,16 +50,16 @@ export default function ThucHienCongViecForm(props: any) {
       ThucHienCongViecService.getInstance()
         .insertThucHienCongViec(model)
         .then((resp) => {
-          if (resp.data.status) {
-            toast.success(resp.data.message);
+          if (resp.status === 201) {
+            toast.success("Thêm thực hiện công việc thành công");
             props.closeModal(true);
           } else {
-            toast.error(resp.data.message);
+            toast.error("Có lỗi xảy ra khi thêm");
           }
         })
         .catch((err) => {
           if (err.response && err.response.data) {
-            toast.error(err.response.data.message);
+            toast.error(err.response.data.message || "Có lỗi xảy ra");
           } else {
             toast.error("Có lỗi xảy ra");
           }

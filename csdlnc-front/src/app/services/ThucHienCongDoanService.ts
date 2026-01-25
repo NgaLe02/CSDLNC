@@ -35,13 +35,9 @@ export class ThucHienCongDoanService {
     });
   }
 
-  public updateThucHienCongDoan(
-    maNv: string,
-    maCd: string,
-    model: ThucHienCongDoanModel,
-  ) {
+  public updateThucHienCongDoan(model: ThucHienCongDoanModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thuchiencongdoan/${maNv}/${maCd}`,
+      process.env.REACT_APP_API_URL + `/thuchiencongdoan`,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),

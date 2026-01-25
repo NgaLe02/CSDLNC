@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import { DuanModel } from "../../../model/DuanModel";
 import { DuanService } from "../../../services/DuanService";
 
@@ -26,38 +27,48 @@ export default function DuanForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Format dates to DD-MM-YYYY before sending
+    const formattedModel = {
+      ...model,
+      ngayBatDau: model.ngayBatDau
+        ? dayjs(model.ngayBatDau).format("DD-MM-YYYY")
+        : model.ngayBatDau,
+      ngayKetThucDuKien: model.ngayKetThucDuKien
+        ? dayjs(model.ngayKetThucDuKien).format("DD-MM-YYYY")
+        : model.ngayKetThucDuKien,
+    };
     if (model.maDa) {
       DuanService.getInstance()
-        .updateDuan(model.maDa, model)
+        .updateDuan(formattedModel)
         .then((resp) => {
-          if (resp.data.status) {
-            toast.success(resp.data.message);
+          if (resp.status === 200) {
+            toast.success("Cập nhật dự án thành công");
             props.closeModal(true);
           } else {
-            toast.error(resp.data.message);
+            toast.error("Có lỗi xảy ra khi cập nhật");
           }
         })
         .catch((err) => {
           if (err.response && err.response.data) {
-            toast.error(err.response.data.message);
+            toast.error(err.response.data.message || "Có lỗi xảy ra");
           } else {
             toast.error("Có lỗi xảy ra");
           }
         });
     } else {
       DuanService.getInstance()
-        .insertDuan(model)
+        .insertDuan(formattedModel)
         .then((resp) => {
-          if (resp.data.status) {
-            toast.success(resp.data.message);
+          if (resp.status === 201) {
+            toast.success("Thêm dự án thành công");
             props.closeModal(true);
           } else {
-            toast.error(resp.data.message);
+            toast.error("Có lỗi xảy ra khi thêm");
           }
         })
         .catch((err) => {
           if (err.response && err.response.data) {
-            toast.error(err.response.data.message);
+            toast.error(err.response.data.message || "Có lỗi xảy ra");
           } else {
             toast.error("Có lỗi xảy ra");
           }

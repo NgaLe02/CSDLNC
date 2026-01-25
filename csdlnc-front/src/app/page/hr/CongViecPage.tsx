@@ -42,16 +42,16 @@ const CongViecPage: React.FC = () => {
       CongViecService.getInstance()
         .deleteCongViec(maCv)
         .then((resp) => {
-          if (resp.data.status) {
-            toast.success(resp.data.message);
+          if (resp.status === 204) {
+            toast.success("Xóa công việc thành công");
             getLstCongViec();
           } else {
-            toast.error(resp.data.message);
+            toast.error("Có lỗi xảy ra khi xóa");
           }
         })
         .catch((err) => {
           if (err.response && err.response.data) {
-            toast.error(err.response.data.message);
+            toast.error(err.response.data.message || "Có lỗi xảy ra");
           } else {
             toast.error("Có lỗi xảy ra");
           }
@@ -60,7 +60,7 @@ const CongViecPage: React.FC = () => {
   };
 
   const closeModal = (refresh: boolean) => {
-    setShowForm(refresh);
+    setShowForm(false);
     if (refresh) {
       getLstCongViec();
     }

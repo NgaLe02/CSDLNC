@@ -34,13 +34,9 @@ export class ThamGiaDuanService {
     });
   }
 
-  public updateThamGiaDuan(
-    maNv: string,
-    maDa: string,
-    model: ThamGiaDuanModel,
-  ) {
+  public updateThamGiaDuan(model: ThamGiaDuanModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thamgiaduan/${maNv}/${maDa}`,
+      process.env.REACT_APP_API_URL + `/thamgiaduan`,
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),
