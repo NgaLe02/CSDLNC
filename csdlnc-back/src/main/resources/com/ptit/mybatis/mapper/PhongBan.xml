@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.PhongBanDAO">
+
+    <resultMap id="PhongBanResultMap" type="com.ptit.csdlnc.model.PhongBan">
+        <id column="ma_phong" property="maPhong"/>
+        <result column="ten_phong" property="tenPhong"/>
+        <result column="mo_ta" property="moTa"/>
+        <result column="ngay_thanh_lap" property="ngayThanhLap"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="PhongBanResultMap">
+        SELECT * FROM phongban
+    </select>
+
+    <select id="getById" parameterType="string" resultMap="PhongBanResultMap">
+        SELECT * FROM phongban WHERE ma_phong = #{maPhong}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.PhongBan">
+        INSERT INTO phongban (ma_phong, ten_phong, mo_ta, ngay_thanh_lap)
+        VALUES (#{maPhong}, #{tenPhong}, #{moTa}, #{ngayThanhLap})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.PhongBan">
+        UPDATE phongban SET
+        ten_phong = #{tenPhong},
+        mo_ta = #{moTa},
+        ngay_thanh_lap = #{ngayThanhLap}
+        WHERE ma_phong = #{maPhong}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM phongban WHERE ma_phong = #{maPhong}
+    </delete>
+
+</mapper>

@@ -1,158 +1,154 @@
-use csdlnc;
+CREATE DATABASE quan_ly_nhan_su_du_an
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE NhanVien (
-    maNhanVien INT PRIMARY KEY AUTO_INCREMENT,
-    hoTen VARCHAR(100) NOT NULL,
-    cmnd VARCHAR(20) UNIQUE,
-    soDienThoai VARCHAR(20) UNIQUE
-);
+USE quan_ly_nhan_su_du_an;
 
-CREATE TABLE HanhKhach (
-    maHanhKhach INT PRIMARY KEY AUTO_INCREMENT,
-    hoTen VARCHAR(100) NOT NULL,
-    cmnd VARCHAR(12) UNIQUE,
-    soDienThoai VARCHAR(20) UNIQUE
-);
+CREATE TABLE phongban (
+    ma_phong VARCHAR(10) PRIMARY KEY,
+    ten_phong VARCHAR(100) NOT NULL,
+    mo_ta TEXT,
+    ngay_thanh_lap DATE
+) ENGINE=InnoDB;
 
-CREATE TABLE LoaiXe (
-    maLoaiXe INT PRIMARY KEY AUTO_INCREMENT,
-    tenLoaiXe VARCHAR(50) NOT NULL UNIQUE,
-    soGhe INT NOT NULL,
-    CONSTRAINT ck_soGhe CHECK (soGhe > 0)
-);
+CREATE TABLE nhanvien (
+    ma_nv VARCHAR(15) PRIMARY KEY,
+    ho_ten VARCHAR(100) NOT NULL,
+    ngay_sinh DATE,
+    gioi_tinh ENUM('Nam', 'Nữ', 'Khác'),
+    chuc_vu ENUM('NhanVien', 'TruongPhong', 'PhoPhong') NOT NULL,
+    bac_luong INT NOT NULL,
+    luong_co_ban DECIMAL(12,2) NOT NULL,
+    ma_phong VARCHAR(10) NOT NULL,
 
-CREATE TABLE Xe (
-	maXe VARCHAR(4) PRIMARY KEY,
-    bienSo VARCHAR(20) NOT NULL UNIQUE,
-    tinhTrang VARCHAR(50) NOT NULL CHECK (tinhTrang IN (
-        'Đang hoạt động',
-        'Sắp bảo dưỡng',
-        'Đang bảo dưỡng',
-        'Quá hạn bảo dưỡng',
-        'Ngừng hoạt động'
-    )),
-    maLoaiXe INT NOT NULL,
-    FOREIGN KEY (maLoaiXe) REFERENCES LoaiXe(maLoaiXe)
-);
+    CONSTRAINT fk_nv_phongban
+        FOREIGN KEY (ma_phong)
+        REFERENCES phongban(ma_phong)
+) ENGINE=InnoDB;
 
--- Đang hoạt động
--- Xe đang chạy bình thường, chưa tới kỳ bảo dưỡng/đăng kiểm.
--- Sắp bảo dưỡng
--- Khi số ngày còn lại trong chu kỳ bảo dưỡng < X ngày (ví dụ 30 ngày) hoặc số km tính toán gần chạm ngưỡng → cảnh báo để chủ xe chuẩn bị.
--- Đang bảo dưỡng
--- Xe được đưa đi bảo dưỡng, tạm thời không hoạt động.
--- Quá hạn bảo dưỡng
--- Khi số ngày/khoảng cách vượt quá chu kỳ (360 ngày hoặc km tính toán vượt ngưỡng). Xe không nên hoạt động nếu quá hạn.
--- Hết hạn đăng kiểm
--- Nếu ngày đăng kiểm < ngày hiện tại → xe phải ngừng hoạt động cho đến khi đăng kiểm lại.
--- (Tuỳ chọn thêm) Ngừng hoạt động / Thanh lý
--- Khi xe bị loại bỏ khỏi hệ thống.
+CREATE TABLE duan (
+    ma_da VARCHAR(10) PRIMARY KEY,
+    ten_da VARCHAR(150) NOT NULL,
+    loai_da VARCHAR(50),
+    so_nhan_vien_toi_da INT NOT NULL,
+    ma_phong_ql VARCHAR(10) NOT NULL,
+    ma_nv_chu_tri VARCHAR(15) NOT NULL,
+    ngay_bat_dau DATE,
+    ngay_ket_thuc_du_kien DATE,
+    trang_thai VARCHAR(50),
 
-CREATE TABLE HanDangKiem (
-    maHanDangKiem INT PRIMARY KEY AUTO_INCREMENT,
-    chiPhi DECIMAL(12,2) CHECK (chiPhi >= 0),
-    ngayDangKiem DATE NOT NULL,
-    hieuLuc INT NOT NULL,
-    maXe varCHAR(4),
-	CONSTRAINT uq_xe_ngay UNIQUE (maXe, ngayDangKiem),
-    FOREIGN KEY (maXe) REFERENCES Xe(maXe)
-);
+    CONSTRAINT fk_da_phongban
+        FOREIGN KEY (ma_phong_ql)
+        REFERENCES phongban(ma_phong),
 
-CREATE TABLE LichBaoDuong (
-    maLichBaoDuong INT PRIMARY KEY AUTO_INCREMENT,
-    ngayBaoDuong DATE not null,
-    chiPhi DECIMAL(12,2) CHECK (chiPhi >= 0),
-    maXe varCHAR(4),
-    FOREIGN KEY (maXe) REFERENCES Xe(maXe)
-);
+    CONSTRAINT fk_da_chutri
+        FOREIGN KEY (ma_nv_chu_tri)
+        REFERENCES nhanvien(ma_nv)
+) ENGINE=InnoDB;
 
+CREATE TABLE congdoan (
+    ma_cd VARCHAR(10) PRIMARY KEY,
+    ten_cong_doan VARCHAR(150) NOT NULL,
+    thu_tu INT NOT NULL,
+    ngay_bat_dau DATE,
+    so_ngay_hoan_thanh INT NOT NULL,
+    ngay_hoan_thanh_thuc_te DATE,
+    ket_qua TEXT,
+    trang_thai_tien_do ENUM('DungHan', 'TreHan'),
+    ma_da VARCHAR(10) NOT NULL,
 
-CREATE TABLE LuongTuyenDuong (
-    maLuongTuyen INT PRIMARY KEY AUTO_INCREMENT,
-    doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),
-    khoangCachTu DECIMAL(10,2) not null,
-    khoangCachDen DECIMAL(10,2) not null,
-    luongCoBan DECIMAL(10,2) not null,
-    CONSTRAINT ck_khoangCach CHECK (khoangCachTu < khoangCachDen)
-);
+    CONSTRAINT fk_cd_duan
+        FOREIGN KEY (ma_da)
+        REFERENCES duan(ma_da)
+) ENGINE=InnoDB;
 
-CREATE TABLE TuyenDuong (
-    maTuyen VARCHAR(4) PRIMARY KEY,
-    diemKhoiHanh VARCHAR(100) not null,
-    doPhucTap int not null CHECK (doPhucTap IN (1,2,3)),
-    diemDen VARCHAR(100) not null,
-    khoangCach DECIMAL(10,2) not null,
-    thoiGianUocTinh INT,
-    maLuongTuyen INT not null,
-    heSoDuongKho DECIMAL(10,2) not null DEFAULT 1.0,
-    FOREIGN KEY (maLuongTuyen) REFERENCES LuongTuyenDuong(maLuongTuyen)
-);
+CREATE TABLE thamgia_duan (
+    ma_nv VARCHAR(15),
+    ma_da VARCHAR(10),
+    vai_tro ENUM('ThanhVien', 'ChuTri'),
+    thang INT CHECK (thang BETWEEN 1 AND 12),
+    nam INT,
 
-CREATE TABLE Mua (
-    maMua varchar(3) PRIMARY KEY,
-    tenMua VARCHAR(50) not null unique
-);
+    PRIMARY KEY (ma_nv, ma_da, thang, nam),
 
-CREATE TABLE GiaVe (
-    maGiaVe varchar(3) ,
-    giaVe DECIMAL(12,2) not null,
-    ngayBatDau DATE not null,
-    ngayKetThuc DATE,
-    maTuyen VARCHAR(4) not null,
-    maMua varchar(3) not null,
-    PRIMARY KEY (maTuyen, maMua, maGiaVe),
-    FOREIGN KEY (maTuyen) REFERENCES TuyenDuong(maTuyen),
-    FOREIGN KEY (maMua) REFERENCES Mua(maMua),
-    CONSTRAINT chk_ngay_giave CHECK (ngayKetThuc IS NULL OR ngayKetThuc > ngayBatDau)
-);
+    CONSTRAINT fk_tg_nv
+        FOREIGN KEY (ma_nv)
+        REFERENCES nhanvien(ma_nv),
 
-CREATE TABLE ChuyenXe (
-    maXe VARCHAR(4) NOT NULL,
-    maTuyen VARCHAR(4) NOT NULL,
-    maChuyen VARCHAR(5) NOT NULL,
-    maMua varchar(3) NOT NULL,
-    maGiaVe VARCHAR(3) NOT NULL,
-    ngayGioKhoiHanh DATETIME NOT NULL,
-    ngayGioDen DATETIME NOT NULL,
-    tinhTrangChuyen VARCHAR(50) NOT NULL,
-    chiPhiVanHanh DECIMAL(12,2) NOT NULL CHECK (chiPhiVanHanh >= 0),
-    tiLeThuLao DECIMAL(12,2) NOT NULL CHECK (tiLeThuLao > 1),
-    PRIMARY KEY (maXe, maTuyen, maChuyen),
-    FOREIGN KEY (maXe) REFERENCES Xe(maXe),
-    FOREIGN KEY (maTuyen, maMua, maGiaVe)
-		REFERENCES GiaVe(maTuyen, maMua, maGiaVe),
-    CONSTRAINT chk_tinhtrangchuyen
-        CHECK (tinhTrangChuyen IN ('Chưa khởi hành','Đang chạy','Hoàn thành','Hủy')),
-	CONSTRAINT chk_thoiGian
-		CHECK (ngayGioDen > ngayGioKhoiHanh)
-);
+    CONSTRAINT fk_tg_da
+        FOREIGN KEY (ma_da)
+        REFERENCES duan(ma_da)
+) ENGINE=InnoDB;
 
-CREATE TABLE PhanCong (
-    maChuyen VARCHAR(5),
-    maTuyen  VARCHAR(4),
-    maXe     VARCHAR(4),
-    maNhanVien INT,
-    vaiTro VARCHAR(255),
-    PRIMARY KEY (maChuyen, maTuyen, maXe, maNhanVien),
-    FOREIGN KEY (maXe, maTuyen, maChuyen)
-        REFERENCES ChuyenXe(maXe, maTuyen, maChuyen),
-    FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien),
-    CONSTRAINT chk_vaiTro CHECK (vaiTro IN ('Lái xe', 'Phụ xe')),
-	UNIQUE (maXe, maTuyen, maChuyen, vaiTro)
-);
+CREATE TABLE thuchien_congdoan (
+    ma_nv VARCHAR(15),
+    ma_cd VARCHAR(10),
+    vai_tro ENUM('ThucHien', 'ChuTri'),
+    ket_qua TEXT,
+    dung_han BOOLEAN,
 
-CREATE TABLE Ve (
-    maVe INT ,
-    maXe VARCHAR(4) NOT NULL,
-    maTuyen VARCHAR(4) NOT NULL,
-    maChuyen VARCHAR(5) NOT NULL,
-    ngayMua DATE  not null,
-    gheNgoi VARCHAR(10) not null,
-    maHanhKhach INT  not null,
-    PRIMARY KEY (maXe, maTuyen, maChuyen, maVe),
-    FOREIGN KEY (maHanhKhach) REFERENCES HanhKhach(maHanhKhach),
-    FOREIGN KEY (maXe, maTuyen, maChuyen) REFERENCES ChuyenXe(maXe, maTuyen, maChuyen),
-    CONSTRAINT uq_ve_chuyen_ghe UNIQUE (maXe, maTuyen, maChuyen, gheNgoi)
-);
+    PRIMARY KEY (ma_nv, ma_cd),
 
+    CONSTRAINT fk_thcd_nv
+        FOREIGN KEY (ma_nv)
+        REFERENCES nhanvien(ma_nv),
+
+    CONSTRAINT fk_thcd_cd
+        FOREIGN KEY (ma_cd)
+        REFERENCES congdoan(ma_cd)
+) ENGINE=InnoDB;
+
+CREATE TABLE congviec (
+    ma_cv VARCHAR(10) PRIMARY KEY,
+    ten_cv VARCHAR(150) NOT NULL,
+    loai_cv VARCHAR(50),
+    muc_luong_nang_suat DECIMAL(12,2)
+) ENGINE=InnoDB;
+
+CREATE TABLE thuchien_congviec (
+    ma_nv VARCHAR(15),
+    ma_cv VARCHAR(10),
+    thang INT CHECK (thang BETWEEN 1 AND 12),
+    nam INT,
+    ket_qua TEXT,
+    dung_han BOOLEAN,
+
+    PRIMARY KEY (ma_nv, ma_cv, thang, nam),
+
+    CONSTRAINT fk_thcv_nv
+        FOREIGN KEY (ma_nv)
+        REFERENCES nhanvien(ma_nv),
+
+    CONSTRAINT fk_thcv_cv
+        FOREIGN KEY (ma_cv)
+        REFERENCES congviec(ma_cv)
+) ENGINE=InnoDB;
+
+CREATE TABLE bangluong (
+    ma_bang_luong INT AUTO_INCREMENT PRIMARY KEY,
+    ma_nv VARCHAR(15) NOT NULL,
+    thang INT CHECK (thang BETWEEN 1 AND 12),
+    nam INT,
+    luong_cung DECIMAL(12,2),
+    luong_trach_nhiem DECIMAL(12,2),
+    luong_nang_suat DECIMAL(12,2),
+    tong_tien_phat DECIMAL(12,2),
+    tong_luong DECIMAL(12,2),
+
+    CONSTRAINT fk_bl_nv
+        FOREIGN KEY (ma_nv)
+        REFERENCES nhanvien(ma_nv)
+) ENGINE=InnoDB;
+
+CREATE TABLE chitiet_phat (
+    ma_phat INT AUTO_INCREMENT PRIMARY KEY,
+    ma_bang_luong INT NOT NULL,
+    ly_do VARCHAR(255),
+    ty_le_phat DECIMAL(5,2),
+    so_tien_phat DECIMAL(12,2),
+
+    CONSTRAINT fk_phat_bangluong
+        FOREIGN KEY (ma_bang_luong)
+        REFERENCES bangluong(ma_bang_luong)
+) ENGINE=InnoDB;
 
