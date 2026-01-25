@@ -1,42 +1,56 @@
 package com.ptit.csdlnc.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ptit.csdlnc.model.ThucHienCongDoan;
 import com.ptit.csdlnc.service.ThucHienCongDoanService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/thuchiencongdoan")
-@CrossOrigin(origins = "*")
 public class ThucHienCongDoanController {
 
     @Autowired
     private ThucHienCongDoanService thucHienCongDoanService;
 
     @GetMapping
-    public List<ThucHienCongDoan> getAll() {
-        return thucHienCongDoanService.getAll();
+    public ResponseEntity<List<ThucHienCongDoan>> getAll() {
+        List<ThucHienCongDoan> list = thucHienCongDoanService.getAll();
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/get")
-    public ThucHienCongDoan getById(@RequestParam String maNv, @RequestParam String maCd) {
-        return thucHienCongDoanService.getById(maNv, maCd);
+    public ResponseEntity<ThucHienCongDoan> getById(@RequestParam String maNv, @RequestParam String maCd) {
+        ThucHienCongDoan thucHienCongDoan = thucHienCongDoanService.getById(maNv, maCd);
+        return ResponseEntity.ok(thucHienCongDoan);
     }
 
     @PostMapping
-    public void insert(@RequestBody ThucHienCongDoan thucHienCongDoan) {
+    public ResponseEntity<Void> insert(@RequestBody ThucHienCongDoan thucHienCongDoan) {
         thucHienCongDoanService.insert(thucHienCongDoan);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping
-    public void update(@RequestBody ThucHienCongDoan thucHienCongDoan) {
+    public ResponseEntity<Void> update(@RequestBody ThucHienCongDoan thucHienCongDoan) {
         thucHienCongDoanService.update(thucHienCongDoan);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete")
-    public void delete(@RequestParam String maNv, @RequestParam String maCd) {
+    public ResponseEntity<Void> delete(@RequestParam String maNv, @RequestParam String maCd) {
         thucHienCongDoanService.delete(maNv, maCd);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,42 +1,56 @@
 package com.ptit.csdlnc.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ptit.csdlnc.model.CongDoan;
 import com.ptit.csdlnc.service.CongDoanService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/congdoan")
-@CrossOrigin(origins = "*")
 public class CongDoanController {
 
     @Autowired
     private CongDoanService congDoanService;
 
     @GetMapping
-    public List<CongDoan> getAll() {
-        return congDoanService.getAll();
+    public ResponseEntity<List<CongDoan>> getAll() {
+        List<CongDoan> list = congDoanService.getAll();
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{maCd}")
-    public CongDoan getById(@PathVariable String maCd) {
-        return congDoanService.getById(maCd);
+    public ResponseEntity<CongDoan> getById(@PathVariable String maCd) {
+        CongDoan congDoan = congDoanService.getById(maCd);
+        return ResponseEntity.ok(congDoan);
     }
 
     @PostMapping
-    public void insert(@RequestBody CongDoan congDoan) {
+    public ResponseEntity<Void> insert(@RequestBody CongDoan congDoan) {
         congDoanService.insert(congDoan);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping
-    public void update(@RequestBody CongDoan congDoan) {
+    public ResponseEntity<Void> update(@RequestBody CongDoan congDoan) {
         congDoanService.update(congDoan);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{maCd}")
-    public void delete(@PathVariable String maCd) {
+    public ResponseEntity<Void> delete(@PathVariable String maCd) {
         congDoanService.delete(maCd);
+        return ResponseEntity.noContent().build();
     }
 }

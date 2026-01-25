@@ -62,7 +62,7 @@ const ThamGiaDuanPage: React.FC = () => {
   };
 
   const closeModal = (refresh: boolean) => {
-    setShowForm(false);
+    setShowForm(refresh);
     if (refresh) {
       getLstThamGiaDuan();
     }

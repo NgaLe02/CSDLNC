@@ -71,7 +71,7 @@ const NhanVienPage: React.FC = () => {
   }
 
   function closeModal(status: boolean) {
-    setShowForm(false);
+    setShowForm(status);
     getLstNhanVien();
   }
 

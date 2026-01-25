@@ -21,12 +21,8 @@ const PhongBanPage: React.FC = () => {
       .getLstPhongBan({})
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
-          if (response.data.status) {
-            const data = response.data.responseData;
-            setListData(data);
-          } else {
-            toast.error(response.data.message);
-          }
+          const data = response.data;
+          setListData(data);
         } else {
           toast.error(response.data.message);
         }
@@ -71,7 +67,7 @@ const PhongBanPage: React.FC = () => {
   }
 
   function closeModal(status: boolean) {
-    setShowForm(false);
+    setShowForm(status);
     getLstPhongBan();
   }
 

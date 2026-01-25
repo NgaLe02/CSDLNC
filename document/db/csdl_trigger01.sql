@@ -4,13 +4,13 @@ CREATE TRIGGER trg_phongban_before_insert
 BEFORE INSERT ON phongban
 FOR EACH ROW
 BEGIN
-    DECLARE next_id INT;
+    DECLARE next_num INT;
 
-    -- Lấy id kế tiếp
-    SELECT IFNULL(MAX(ma_phong), 0) + 1 INTO next_id FROM phongban;
+    SELECT IFNULL(MAX(CAST(SUBSTRING(ma_phong, 3) AS UNSIGNED)), 0) + 1
+    INTO next_num
+    FROM phongban;
 
-    -- Sinh mã PB + 2 chữ số
-    SET NEW.ma_phong = CONCAT('PB', LPAD(next_id, 2, '0'));
+    SET NEW.ma_phong = CONCAT('PB', LPAD(next_num, 2, '0'));
 END$$
 
 DELIMITER ;

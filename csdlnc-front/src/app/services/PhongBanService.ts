@@ -43,9 +43,9 @@ export class PhongBanService {
     });
   }
 
-  public updatePhongBan(maPhong: string, model: PhongBanModel) {
+  public updatePhongBan(model: PhongBanModel) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/phongban/" + maPhong,
+      process.env.REACT_APP_API_URL + "/phongban",
     );
     return axios.put(url, model, {
       headers: HeadersUtil.getHeaders(),

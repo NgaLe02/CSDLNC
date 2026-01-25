@@ -69,7 +69,7 @@ const DuanPage: React.FC = () => {
   }
 
   function closeModal(status: boolean) {
-    setShowForm(false);
+    setShowForm(status);
     getLstDuan();
   }
 

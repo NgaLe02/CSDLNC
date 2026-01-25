@@ -22,7 +22,7 @@ export default function PhongBanForm(props: any) {
     e.preventDefault();
     if (model.maPhong) {
       PhongBanService.getInstance()
-        .updatePhongBan(model.maPhong, model)
+        .updatePhongBan(model)
         .then((resp) => {
           if (resp.data.status) {
             toast.success(resp.data.message);
@@ -74,7 +74,7 @@ export default function PhongBanForm(props: any) {
               name="maPhong"
               value={model.maPhong ?? ""}
               onChange={handleChange}
-              //   required
+              readOnly
             />
           </div>
           <div className="mb-3">
