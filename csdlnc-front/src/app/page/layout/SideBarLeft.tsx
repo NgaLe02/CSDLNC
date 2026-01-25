@@ -61,10 +61,10 @@ function SideBarLeft() {
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/system/hanh-khach");
+                    navigate("/system/phong-ban");
                   }}
                 >
-                  Hành khách
+                  Phòng ban
                 </a>
                 <a
                   href="#"
@@ -81,20 +81,20 @@ function SideBarLeft() {
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/system/loai-xe");
+                    navigate("/system/du-an");
                   }}
                 >
-                  Loại xe
+                  Dự án
                 </a>
                 <a
                   href="#"
                   className="dropdown-item "
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/system/xe");
+                    navigate("/system/cong-doan");
                   }}
                 >
-                  Xe
+                  Công đoạn
                 </a>
 
                 <a
@@ -102,60 +102,60 @@ function SideBarLeft() {
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/system/mua");
+                    navigate("/system/tham-gia-du-an");
                   }}
                 >
-                  Mùa
+                  Tham gia dự án
                 </a>
                 <a
                   href="#"
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/system/luong-tuyen-duong");
+                    navigate("/system/thuc-hien-cong-doan");
                   }}
                 >
-                  Lương tuyến đường
+                  Thực hiện công đoạn
                 </a>
                 <a
                   href="#"
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/system/tuyen-duong");
+                    navigate("/system/cong-viec");
                   }}
                 >
-                  Tuyến đường
+                  Công việc
                 </a>
                 <a
                   href="#"
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/system/gia-ve");
+                    navigate("/system/thuc-hien-cong-viec");
                   }}
                 >
-                  Giá vé
+                  Thực hiện công việc
                 </a>
                 <a
                   href="#"
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/system/chuyen-xe");
+                    navigate("/system/bang-luong");
                   }}
                 >
-                  Chuyến xe
+                  Bảng lương
                 </a>
                 <a
                   href="#"
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/system/ve");
+                    navigate("/system/chi-tiet-phat");
                   }}
                 >
-                  Vé
+                  Chi tiết phạt
                 </a>
               </div>
             </div>

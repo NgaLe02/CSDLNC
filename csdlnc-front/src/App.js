@@ -1,17 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import SideBarLeft from "./app/page/layout/SideBarLeft";
-import Car from "./app/page/system/car/Car";
-import TypeCar from "./app/page/system/typeCar/TypeCar";
+import PhongBanPage from "./app/page/hr/PhongBanPage";
+import NhanVienPage from "./app/page/hr/NhanVienPage";
+import DuanPage from "./app/page/hr/DuanPage";
+import CongDoanPage from "./app/page/hr/CongDoanPage";
+import ThamGiaDuanPage from "./app/page/hr/ThamGiaDuanPage";
+import ThucHienCongDoanPage from "./app/page/hr/ThucHienCongDoanPage";
+import ThucHienCongViecPage from "./app/page/hr/ThucHienCongViecPage";
+import CongViecPage from "./app/page/hr/CongViecPage";
 import { ToastContainer } from "react-toastify";
-import Passenger from "./app/page/system/passenger/Passenger";
-import Employee from "./app/page/system/employee/Employee";
-import Season from "./app/page/system/season/Season";
-import RouteSalary from "./app/page/system/routhSalary/RouteSalary";
-import RouteSystem from "./app/page/system/routes/RouteSystem";
-import TicketPrice from "./app/page/system/ticketPrice/TicketPrice";
-import Trip from "./app/page/system/trip/Trip";
-import Ticket from "./app/page/system/ticket/Ticket";
 import Request01 from "./app/page/request/Request01";
 import Request02 from "./app/page/request/Request02";
 import Request03 from "./app/page/request/Request03";
@@ -33,16 +31,20 @@ function App() {
           <div className="container-fluid pt-4 px-4">
             <Routes>
               <Route path="/system">
-                <Route path="xe" element={<Car />} />
-                <Route path="loai-xe" element={<TypeCar />} />
-                <Route path="hanh-khach" element={<Passenger />} />
-                <Route path="nhan-vien" element={<Employee />} />
-                <Route path="mua" element={<Season />} />
-                <Route path="luong-tuyen-duong" element={<RouteSalary />} />
-                <Route path="tuyen-duong" element={<RouteSystem />} />
-                <Route path="gia-ve" element={<TicketPrice />} />
-                <Route path="chuyen-xe" element={<Trip />} />
-                <Route path="ve" element={<Ticket />} />
+                <Route path="phong-ban" element={<PhongBanPage />} />
+                <Route path="nhan-vien" element={<NhanVienPage />} />
+                <Route path="du-an" element={<DuanPage />} />
+                <Route path="cong-doan" element={<CongDoanPage />} />
+                <Route path="tham-gia-du-an" element={<ThamGiaDuanPage />} />
+                <Route
+                  path="thuc-hien-cong-doan"
+                  element={<ThucHienCongDoanPage />}
+                />
+                <Route
+                  path="thuc-hien-cong-viec"
+                  element={<ThucHienCongViecPage />}
+                />
+                <Route path="cong-viec" element={<CongViecPage />} />
               </Route>
 
               <Route path="/request">
@@ -69,7 +71,7 @@ function App() {
           pauseOnHover
         />
       </div>
-    </Router >
+    </Router>
   );
 }
 
