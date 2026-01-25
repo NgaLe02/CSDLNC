@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.ThamGiaDuAnDAO">
+
+    <resultMap id="ThamGiaDuAnResultMap" type="com.ptit.csdlnc.model.ThamGiaDuAn">
+        <id column="ma_nv" property="maNv"/>
+        <id column="ma_da" property="maDa"/>
+        <id column="thang" property="thang"/>
+        <id column="nam" property="nam"/>
+        <result column="so_gio_lam_viec" property="soGioLamViec"/>
+        <result column="ghi_chu" property="ghiChu"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="ThamGiaDuAnResultMap">
+        SELECT * FROM thamgiaduan
+    </select>
+
+    <select id="getById" parameterType="map" resultMap="ThamGiaDuAnResultMap">
+        SELECT * FROM thamgiaduan WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.ThamGiaDuAn">
+        INSERT INTO thamgiaduan (ma_nv, ma_da, thang, nam, so_gio_lam_viec, ghi_chu)
+        VALUES (#{maNv}, #{maDa}, #{thang}, #{nam}, #{soGioLamViec}, #{ghiChu})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.ThamGiaDuAn">
+        UPDATE thamgiaduan SET
+        so_gio_lam_viec = #{soGioLamViec},
+        ghi_chu = #{ghiChu}
+        WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
+    </update>
+
+    <delete id="delete" parameterType="map">
+        DELETE FROM thamgiaduan WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
+    </delete>
+
+</mapper>

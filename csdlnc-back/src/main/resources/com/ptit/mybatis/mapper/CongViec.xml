@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.CongViecDAO">
+
+    <resultMap id="CongViecResultMap" type="com.ptit.csdlnc.model.CongViec">
+        <id column="ma_cong_viec" property="maCongViec"/>
+        <result column="ten_cong_viec" property="tenCongViec"/>
+        <result column="mo_ta" property="moTa"/>
+        <result column="ma_cong_doan" property="maCongDoan"/>
+        <result column="trang_thai" property="trangThai"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="CongViecResultMap">
+        SELECT * FROM congviec
+    </select>
+
+    <select id="getById" parameterType="string" resultMap="CongViecResultMap">
+        SELECT * FROM congviec WHERE ma_cong_viec = #{maCongViec}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.CongViec">
+        INSERT INTO congviec (ma_cong_viec, ten_cong_viec, mo_ta, ma_cong_doan, trang_thai)
+        VALUES (#{maCongViec}, #{tenCongViec}, #{moTa}, #{maCongDoan}, #{trangThai})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.CongViec">
+        UPDATE congviec SET
+        ten_cong_viec = #{tenCongViec},
+        mo_ta = #{moTa},
+        ma_cong_doan = #{maCongDoan},
+        trang_thai = #{trangThai}
+        WHERE ma_cong_viec = #{maCongViec}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM congviec WHERE ma_cong_viec = #{maCongViec}
+    </delete>
+
+</mapper>

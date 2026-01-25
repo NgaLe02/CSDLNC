@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.CongDoanDAO">
+
+    <resultMap id="CongDoanResultMap" type="com.ptit.csdlnc.model.CongDoan">
+        <id column="ma_cong_doan" property="maCongDoan"/>
+        <result column="ten_cong_doan" property="tenCongDoan"/>
+        <result column="mo_ta" property="moTa"/>
+        <result column="ngay_bat_dau" property="ngayBatDau"/>
+        <result column="ngay_ket_thuc_du_kien" property="ngayKetThucDuKien"/>
+        <result column="ma_da" property="maDa"/>
+        <result column="trang_thai" property="trangThai"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="CongDoanResultMap">
+        SELECT * FROM congdoan
+    </select>
+
+    <select id="getById" parameterType="string" resultMap="CongDoanResultMap">
+        SELECT * FROM congdoan WHERE ma_cong_doan = #{maCongDoan}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.CongDoan">
+        INSERT INTO congdoan (ma_cong_doan, ten_cong_doan, mo_ta, ngay_bat_dau, ngay_ket_thuc_du_kien, ma_da, trang_thai)
+        VALUES (#{maCongDoan}, #{tenCongDoan}, #{moTa}, #{ngayBatDau}, #{ngayKetThucDuKien}, #{maDa}, #{trangThai})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.CongDoan">
+        UPDATE congdoan SET
+        ten_cong_doan = #{tenCongDoan},
+        mo_ta = #{moTa},
+        ngay_bat_dau = #{ngayBatDau},
+        ngay_ket_thuc_du_kien = #{ngayKetThucDuKien},
+        ma_da = #{maDa},
+        trang_thai = #{trangThai}
+        WHERE ma_cong_doan = #{maCongDoan}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM congdoan WHERE ma_cong_doan = #{maCongDoan}
+    </delete>
+
+</mapper>

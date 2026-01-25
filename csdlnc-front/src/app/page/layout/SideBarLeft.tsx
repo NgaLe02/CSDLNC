@@ -50,12 +50,12 @@ function SideBarLeft() {
             <div className="nav-item dropdown">
               <a
                 href="#"
-                className="nav-link dropdown-toggle "
+                className="nav-link dropdown-toggle show"
                 data-bs-toggle="dropdown"
               >
                 <i className="fa fa-laptop me-2"></i>Hệ thống
               </a>
-              <div className="dropdown-menu bg-transparent border-0">
+              <div className="dropdown-menu bg-transparent border-0 show">
                 <a
                   href="#"
                   className="dropdown-item"
@@ -163,12 +163,12 @@ function SideBarLeft() {
             <div className="nav-item dropdown">
               <a
                 href="#"
-                className="nav-link dropdown-toggle active"
+                className="nav-link dropdown-toggle active show"
                 data-bs-toggle="dropdown"
               >
                 <i className="far fa-file-alt me-2"></i>Các yêu cầu
               </a>
-              <div className="dropdown-menu bg-transparent border-0">
+              <div className="dropdown-menu bg-transparent border-0 show">
                 <a
                   href="#"
                   className="dropdown-item"

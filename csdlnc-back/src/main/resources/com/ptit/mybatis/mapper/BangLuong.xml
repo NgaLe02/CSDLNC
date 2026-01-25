@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.BangLuongDAO">
+
+    <resultMap id="BangLuongResultMap" type="com.ptit.csdlnc.model.BangLuong">
+        <id column="id" property="id"/>
+        <result column="ma_nv" property="maNv"/>
+        <result column="thang" property="thang"/>
+        <result column="nam" property="nam"/>
+        <result column="luong_co_ban" property="luongCoBan"/>
+        <result column="phu_cap" property="phuCap"/>
+        <result column="khoan_tru" property="khoanTru"/>
+        <result column="tong_luong" property="tongLuong"/>
+        <result column="ghi_chu" property="ghiChu"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="BangLuongResultMap">
+        SELECT * FROM bangluong
+    </select>
+
+    <select id="getById" parameterType="int" resultMap="BangLuongResultMap">
+        SELECT * FROM bangluong WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.BangLuong" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bangluong (ma_nv, thang, nam, luong_co_ban, phu_cap, khoan_tru, tong_luong, ghi_chu)
+        VALUES (#{maNv}, #{thang}, #{nam}, #{luongCoBan}, #{phuCap}, #{khoanTru}, #{tongLuong}, #{ghiChu})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.BangLuong">
+        UPDATE bangluong SET
+        ma_nv = #{maNv},
+        thang = #{thang},
+        nam = #{nam},
+        luong_co_ban = #{luongCoBan},
+        phu_cap = #{phuCap},
+        khoan_tru = #{khoanTru},
+        tong_luong = #{tongLuong},
+        ghi_chu = #{ghiChu}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM bangluong WHERE id = #{id}
+    </delete>
+
+</mapper>

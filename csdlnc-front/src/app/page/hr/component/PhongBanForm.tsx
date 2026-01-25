@@ -74,7 +74,7 @@ export default function PhongBanForm(props: any) {
               name="ma_phong"
               value={model.ma_phong ?? ""}
               onChange={handleChange}
-              required
+              //   required
             />
           </div>
           <div className="mb-3">

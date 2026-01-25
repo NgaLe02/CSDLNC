@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.NhanVienDAO">
+
+    <resultMap id="NhanVienResultMap" type="com.ptit.csdlnc.model.NhanVien">
+        <id column="ma_nv" property="maNv"/>
+        <result column="ho_ten" property="hoTen"/>
+        <result column="ngay_sinh" property="ngaySinh"/>
+        <result column="gioi_tinh" property="gioiTinh"/>
+        <result column="chuc_vu" property="chucVu"/>
+        <result column="bac_luong" property="bacLuong"/>
+        <result column="luong_co_ban" property="luongCoBan"/>
+        <result column="ma_phong" property="maPhong"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="NhanVienResultMap">
+        SELECT * FROM nhanvien
+    </select>
+
+    <select id="getById" parameterType="string" resultMap="NhanVienResultMap">
+        SELECT * FROM nhanvien WHERE ma_nv = #{maNv}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.NhanVien">
+        INSERT INTO nhanvien (ma_nv, ho_ten, ngay_sinh, gioi_tinh, chuc_vu, bac_luong, luong_co_ban, ma_phong)
+        VALUES (#{maNv}, #{hoTen}, #{ngaySinh}, #{gioiTinh}, #{chucVu}, #{bacLuong}, #{luongCoBan}, #{maPhong})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.NhanVien">
+        UPDATE nhanvien SET
+        ho_ten = #{hoTen},
+        ngay_sinh = #{ngaySinh},
+        gioi_tinh = #{gioiTinh},
+        chuc_vu = #{chucVu},
+        bac_luong = #{bacLuong},
+        luong_co_ban = #{luongCoBan},
+        ma_phong = #{maPhong}
+        WHERE ma_nv = #{maNv}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM nhanvien WHERE ma_nv = #{maNv}
+    </delete>
+
+</mapper>

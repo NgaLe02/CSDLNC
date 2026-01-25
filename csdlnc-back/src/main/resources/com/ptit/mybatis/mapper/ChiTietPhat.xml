@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.ChiTietPhatDAO">
+
+    <resultMap id="ChiTietPhatResultMap" type="com.ptit.csdlnc.model.ChiTietPhat">
+        <id column="id" property="id"/>
+        <result column="id_bang_luong" property="idBangLuong"/>
+        <result column="ly_do" property="lyDo"/>
+        <result column="so_tien" property="soTien"/>
+        <result column="ghi_chu" property="ghiChu"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="ChiTietPhatResultMap">
+        SELECT * FROM chitietphat
+    </select>
+
+    <select id="getById" parameterType="int" resultMap="ChiTietPhatResultMap">
+        SELECT * FROM chitietphat WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.ChiTietPhat" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO chitietphat (id_bang_luong, ly_do, so_tien, ghi_chu)
+        VALUES (#{idBangLuong}, #{lyDo}, #{soTien}, #{ghiChu})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.ChiTietPhat">
+        UPDATE chitietphat SET
+        id_bang_luong = #{idBangLuong},
+        ly_do = #{lyDo},
+        so_tien = #{soTien},
+        ghi_chu = #{ghiChu}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM chitietphat WHERE id = #{id}
+    </delete>
+
+</mapper>

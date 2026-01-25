@@ -18,8 +18,8 @@
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.PhongBan">
-        INSERT INTO phongban (ma_phong, ten_phong, mo_ta, ngay_thanh_lap)
-        VALUES (#{maPhong}, #{tenPhong}, #{moTa}, #{ngayThanhLap})
+        INSERT INTO phongban (ten_phong, mo_ta, ngay_thanh_lap)
+        VALUES (#{tenPhong}, #{moTa}, #{ngayThanhLap})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.PhongBan">

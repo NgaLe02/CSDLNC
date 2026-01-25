@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.DuAnDAO">
+
+    <resultMap id="DuAnResultMap" type="com.ptit.csdlnc.model.DuAn">
+        <id column="ma_da" property="maDa"/>
+        <result column="ten_da" property="tenDa"/>
+        <result column="loai_da" property="loaiDa"/>
+        <result column="so_nhan_vien_toi_da" property="soNhanVienToiDa"/>
+        <result column="ma_phong_ql" property="maPhongQl"/>
+        <result column="ma_nv_chu_tri" property="maNvChuTri"/>
+        <result column="ngay_bat_dau" property="ngayBatDau"/>
+        <result column="ngay_ket_thuc_du_kien" property="ngayKetThucDuKien"/>
+        <result column="trang_thai" property="trangThai"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="DuAnResultMap">
+        SELECT * FROM duan
+    </select>
+
+    <select id="getById" parameterType="string" resultMap="DuAnResultMap">
+        SELECT * FROM duan WHERE ma_da = #{maDa}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.DuAn">
+        INSERT INTO duan (ma_da, ten_da, loai_da, so_nhan_vien_toi_da, ma_phong_ql, ma_nv_chu_tri, ngay_bat_dau, ngay_ket_thuc_du_kien, trang_thai)
+        VALUES (#{maDa}, #{tenDa}, #{loaiDa}, #{soNhanVienToiDa}, #{maPhongQl}, #{maNvChuTri}, #{ngayBatDau}, #{ngayKetThucDuKien}, #{trangThai})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.DuAn">
+        UPDATE duan SET
+        ten_da = #{tenDa},
+        loai_da = #{loaiDa},
+        so_nhan_vien_toi_da = #{soNhanVienToiDa},
+        ma_phong_ql = #{maPhongQl},
+        ma_nv_chu_tri = #{maNvChuTri},
+        ngay_bat_dau = #{ngayBatDau},
+        ngay_ket_thuc_du_kien = #{ngayKetThucDuKien},
+        trang_thai = #{trangThai}
+        WHERE ma_da = #{maDa}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM duan WHERE ma_da = #{maDa}
+    </delete>
+
+</mapper>
