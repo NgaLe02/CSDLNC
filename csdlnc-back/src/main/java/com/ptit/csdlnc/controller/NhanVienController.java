@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.csdlnc.model.NhanVien;
@@ -34,6 +35,12 @@ public class NhanVienController {
     public ResponseEntity<NhanVien> getById(@PathVariable String maNv) {
         NhanVien nhanVien = nhanVienService.getById(maNv);
         return ResponseEntity.ok(nhanVien);
+    }
+
+    @GetMapping("/by-phong")
+    public ResponseEntity<List<NhanVien>> getByMaPhong(@RequestParam String maPhong) {
+        List<NhanVien> list = nhanVienService.getByMaPhong(maPhong);
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping

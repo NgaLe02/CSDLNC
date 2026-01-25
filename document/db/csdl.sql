@@ -26,16 +26,29 @@ CREATE TABLE nhanvien (
         REFERENCES phongban(ma_phong)
 ) ENGINE=InnoDB;
 
+CREATE TABLE loai_du_an (
+    ma_loai_du_an int auto_increment PRIMARY KEY ,
+    ten_loai_du_an VARCHAR(100) NOT NULL,
+    so_nv_toi_da INT NOT NULL,
+    mo_ta TEXT
+) ENGINE=InnoDB;
+
 CREATE TABLE duan (
-    ma_da VARCHAR(10) PRIMARY KEY,
+    ma_da int auto_increment PRIMARY KEY,
     ten_da VARCHAR(150) NOT NULL,
-    loai_da VARCHAR(50),
+    loai_da int NOT NULL,
     so_nhan_vien_toi_da INT NOT NULL,
     ma_phong_ql VARCHAR(10) NOT NULL,
     ma_nv_chu_tri VARCHAR(15) NOT NULL,
     ngay_bat_dau DATE,
     ngay_ket_thuc_du_kien DATE,
-    trang_thai VARCHAR(50),
+    ngay_ket_thuc_thuc_te DATE,
+    ket_qua_thuc_hien text,
+    trang_thai ENUM('ChuaThucHien', 'DangThucHien', 'DungHan', 'QuaHan'),
+
+    CONSTRAINT fk_da_loai
+        FOREIGN KEY (loai_da)
+        REFERENCES loai_du_an(ma_loai_du_an),
 
     CONSTRAINT fk_da_phongban
         FOREIGN KEY (ma_phong_ql)
@@ -55,7 +68,7 @@ CREATE TABLE congdoan (
     ngay_hoan_thanh_thuc_te DATE,
     ket_qua TEXT,
     trang_thai_tien_do ENUM('DungHan', 'TreHan'),
-    ma_da VARCHAR(10) NOT NULL,
+    ma_da int NOT NULL,
 
     CONSTRAINT fk_cd_duan
         FOREIGN KEY (ma_da)
@@ -64,7 +77,7 @@ CREATE TABLE congdoan (
 
 CREATE TABLE thamgia_duan (
     ma_nv VARCHAR(15),
-    ma_da VARCHAR(10),
+    ma_da int,
     vai_tro ENUM('ThanhVien', 'ChuTri'),
     thang INT CHECK (thang BETWEEN 1 AND 12),
     nam INT,

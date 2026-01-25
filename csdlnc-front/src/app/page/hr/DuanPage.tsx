@@ -4,15 +4,19 @@ import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import { DuanModel } from "../../model/DuanModel";
 import { DuanService } from "../../services/DuanService";
+import { LoaiDuAnModel } from "../../model/LoaiDuAnModel";
+import { LoaiDuAnService } from "../../services/LoaiDuAnService";
 import DuanForm from "./component/DuanForm";
 
 const DuanPage: React.FC = () => {
   const [listData, setListData] = useState<DuanModel[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingModel, setEditingModel] = useState<DuanModel>(new DuanModel());
+  const [listLoaiDuAn, setListLoaiDuAn] = useState<LoaiDuAnModel[]>([]);
 
   useEffect(() => {
     getLstDuan();
+    getLstLoaiDuAn();
   }, []);
 
   function getLstDuan() {
@@ -31,6 +35,19 @@ const DuanPage: React.FC = () => {
       });
   }
 
+  function getLstLoaiDuAn() {
+    LoaiDuAnService.getInstance()
+      .getLstLoaiDuAn({})
+      .then((resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          setListLoaiDuAn(resp.data);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
   function handleAdd() {
     setEditingModel(new DuanModel());
     setShowForm(true);
@@ -41,11 +58,14 @@ const DuanPage: React.FC = () => {
     const formattedModel = {
       ...duan,
       ngayBatDau: duan.ngayBatDau
-        ? dayjs(duan.ngayBatDau, "DD-MM-YYYY").format("YYYY-MM-DD")
+        ? dayjs(duan.ngayBatDau).format("YYYY-MM-DD")
         : duan.ngayBatDau,
       ngayKetThucDuKien: duan.ngayKetThucDuKien
-        ? dayjs(duan.ngayKetThucDuKien, "DD-MM-YYYY").format("YYYY-MM-DD")
+        ? dayjs(duan.ngayKetThucDuKien).format("YYYY-MM-DD")
         : duan.ngayKetThucDuKien,
+      ngayKetThucThucTe: duan.ngayKetThucThucTe
+        ? dayjs(duan.ngayKetThucThucTe).format("YYYY-MM-DD")
+        : duan.ngayKetThucThucTe,
     };
     setEditingModel(formattedModel);
     setShowForm(true);
@@ -92,7 +112,6 @@ const DuanPage: React.FC = () => {
             <table className="table text-start align-middle table-bordered table-hover mb-0">
               <thead>
                 <tr className="text-dark">
-                  <th scope="col" style={{ width: "5%" }}></th>
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
@@ -104,6 +123,8 @@ const DuanPage: React.FC = () => {
                   <th scope="col">Mã NV Chủ Trì</th>
                   <th scope="col">Ngày Bắt Đầu</th>
                   <th scope="col">Ngày Kết Thúc Dự Kiến</th>
+                  <th scope="col">Ngày Kết Thúc Thực Tế</th>
+                  <th scope="col">Kết Quả Thực Hiện</th>
                   <th scope="col">Trạng Thái</th>
                   <th scope="col"></th>
                 </tr>
@@ -111,26 +132,24 @@ const DuanPage: React.FC = () => {
               <tbody>
                 {listData.map((item: DuanModel, index: number) => (
                   <tr key={item.maDa}>
-                    <td>
-                      <input className="form-check-input" type="checkbox" />
-                    </td>
                     <td>{index + 1}</td>
                     <td>{item.maDa}</td>
                     <td>{item.tenDa}</td>
-                    <td>{item.loaiDa}</td>
-                    <td>{item.soNhanVienToiDa}</td>
+                    <td>
+                      {listLoaiDuAn.find((l) => l.maLoaiDuAn === item.loaiDa)
+                        ?.tenLoaiDuAn || item.loaiDa}
+                    </td>
+                    <td>{item?.loaiDuAn?.soNvToiDa}</td>
                     <td>{item.maPhongQl}</td>
                     <td>{item.maNvChuTri}</td>
+                    <td>{item.ngayBatDau ? item.ngayBatDau : ""}</td>
                     <td>
-                      {item.ngayBatDau
-                        ? dayjs(item.ngayBatDau).format("DD-MM-YYYY")
-                        : ""}
+                      {item.ngayKetThucDuKien ? item.ngayKetThucDuKien : ""}
                     </td>
                     <td>
-                      {item.ngayKetThucDuKien
-                        ? dayjs(item.ngayKetThucDuKien).format("DD-MM-YYYY")
-                        : ""}
+                      {item.ngayKetThucThucTe ? item.ngayKetThucThucTe : ""}
                     </td>
+                    <td>{item.ketQuaThucHien}</td>
                     <td>{item.trangThai}</td>
                     <td>
                       <button

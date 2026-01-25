@@ -11,6 +11,8 @@
         <result column="ma_nv_chu_tri" property="maNvChuTri"/>
         <result column="ngay_bat_dau" property="ngayBatDau"/>
         <result column="ngay_ket_thuc_du_kien" property="ngayKetThucDuKien"/>
+        <result column="ngay_ket_thuc_thuc_te" property="ngayKetThucThucTe"/>
+        <result column="ket_qua_thuc_hien" property="ketQuaThucHien"/>
         <result column="trang_thai" property="trangThai"/>
     </resultMap>
 
@@ -23,19 +25,20 @@
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.DuAn">
-        INSERT INTO duan (ma_da, ten_da, loai_da, so_nhan_vien_toi_da, ma_phong_ql, ma_nv_chu_tri, ngay_bat_dau, ngay_ket_thuc_du_kien, trang_thai)
-        VALUES (#{maDa}, #{tenDa}, #{loaiDa}, #{soNhanVienToiDa}, #{maPhongQl}, #{maNvChuTri}, #{ngayBatDau}, #{ngayKetThucDuKien}, #{trangThai})
+        INSERT INTO duan (ten_da, loai_da, ma_phong_ql, ma_nv_chu_tri, ngay_bat_dau, ngay_ket_thuc_du_kien, ngay_ket_thuc_thuc_te, ket_qua_thuc_hien, trang_thai)
+        VALUES (#{tenDa}, #{loaiDa}, #{maPhongQl}, #{maNvChuTri}, #{ngayBatDau}, #{ngayKetThucDuKien}, #{ngayKetThucThucTe}, #{ketQuaThucHien}, #{trangThai})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.DuAn">
         UPDATE duan SET
         ten_da = #{tenDa},
         loai_da = #{loaiDa},
-        so_nhan_vien_toi_da = #{soNhanVienToiDa},
         ma_phong_ql = #{maPhongQl},
         ma_nv_chu_tri = #{maNvChuTri},
         ngay_bat_dau = #{ngayBatDau},
         ngay_ket_thuc_du_kien = #{ngayKetThucDuKien},
+        ngay_ket_thuc_thuc_te = #{ngayKetThucThucTe},
+        ket_qua_thuc_hien = #{ketQuaThucHien},
         trang_thai = #{trangThai}
         WHERE ma_da = #{maDa}
     </update>

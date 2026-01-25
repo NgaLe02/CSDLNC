@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.LoaiDuAnDAO">
+
+    <resultMap id="LoaiDuAnResultMap" type="com.ptit.csdlnc.model.LoaiDuAn">
+        <id column="ma_loai_du_an" property="maLoaiDuAn"/>
+        <result column="ten_loai_du_an" property="tenLoaiDuAn"/>
+        <result column="so_nv_toi_da" property="soNvToiDa"/>
+        <result column="mo_ta" property="moTa"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="LoaiDuAnResultMap">
+        SELECT * FROM loai_du_an
+    </select>
+
+    <select id="getById" parameterType="string" resultMap="LoaiDuAnResultMap">
+        SELECT * FROM loai_du_an WHERE ma_loai_du_an = #{maLoaiDuAn}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.LoaiDuAn">
+        INSERT INTO loai_du_an (ma_loai_du_an, ten_loai_du_an, so_nv_toi_da, mo_ta)
+        VALUES (#{maLoaiDuAn}, #{tenLoaiDuAn}, #{soNvToiDa}, #{moTa})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.LoaiDuAn">
+        UPDATE loai_du_an SET
+        ten_loai_du_an = #{tenLoaiDuAn},
+        so_nv_toi_da = #{soNvToiDa},
+        mo_ta = #{moTa}
+        WHERE ma_loai_du_an = #{maLoaiDuAn}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM loai_du_an WHERE ma_loai_du_an = #{maLoaiDuAn}
+    </delete>
+
+</mapper>

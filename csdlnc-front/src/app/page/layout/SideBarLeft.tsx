@@ -81,6 +81,16 @@ function SideBarLeft() {
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
+                    navigate("/system/loai-du-an");
+                  }}
+                >
+                  Loại dự án
+                </a>
+                <a
+                  href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
                     navigate("/system/du-an");
                   }}
                 >

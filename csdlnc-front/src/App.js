@@ -16,6 +16,7 @@ import Request03 from "./app/page/request/Request03";
 import Request04 from "./app/page/request/Request04";
 import Request05 from "./app/page/request/Request05";
 import Request06 from "./app/page/request/Request06";
+import LoaiDuAnPage from "./app/page/hr/LoaiDuAnPage";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 <Route path="phong-ban" element={<PhongBanPage />} />
                 <Route path="nhan-vien" element={<NhanVienPage />} />
                 <Route path="du-an" element={<DuanPage />} />
+                <Route path="loai-du-an" element={<LoaiDuAnPage />} />
                 <Route path="cong-doan" element={<CongDoanPage />} />
                 <Route path="tham-gia-du-an" element={<ThamGiaDuanPage />} />
                 <Route

@@ -1,11 +1,12 @@
 package com.ptit.csdlnc.service;
 
-import com.ptit.csdlnc.dao.NhanVienDAO;
-import com.ptit.csdlnc.model.NhanVien;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.ptit.csdlnc.dao.NhanVienDAO;
+import com.ptit.csdlnc.model.NhanVien;
 
 @Service
 public class NhanVienService {
@@ -19,6 +20,10 @@ public class NhanVienService {
 
     public NhanVien getById(String maNv) {
         return nhanVienDAO.getById(maNv);
+    }
+
+    public List<NhanVien> getByMaPhong(String maPhong) {
+        return nhanVienDAO.getByMaPhong(maPhong);
     }
 
     public void insert(NhanVien nhanVien) {

@@ -21,6 +21,10 @@
         SELECT * FROM nhanvien WHERE ma_nv = #{maNv}
     </select>
 
+    <select id="getByMaPhong" parameterType="string" resultMap="NhanVienResultMap">
+        SELECT * FROM nhanvien WHERE ma_phong = #{maPhong}
+    </select>
+
     <insert id="insert" parameterType="com.ptit.csdlnc.model.NhanVien">
         INSERT INTO nhanvien (ho_ten, ngay_sinh, gioi_tinh, chuc_vu, bac_luong, luong_co_ban, ma_phong)
         VALUES (#{hoTen}, #{ngaySinh}, #{gioiTinh}, #{chucVu}, #{bacLuong}, #{luongCoBan}, #{maPhong})

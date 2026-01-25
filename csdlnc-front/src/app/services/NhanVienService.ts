@@ -60,4 +60,15 @@ export class NhanVienService {
       headers: HeadersUtil.getHeaders(),
     });
   }
+
+  public getLstNhanVienByPhong(maPhong: string) {
+    const params = ParamUtil.toRequestParams({ maPhong });
+    const url = ApiUrlUtil.buildQueryString(
+      process.env.REACT_APP_API_URL + "/nhanvien/by-phong",
+      params,
+    );
+    return axios.get(url, {
+      headers: HeadersUtil.getHeaders(),
+    });
+  }
 }
