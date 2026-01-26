@@ -1,8 +1,10 @@
 package com.ptit.csdlnc.dao;
 
-import com.ptit.csdlnc.model.ThamGiaDuAn;
-import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.ptit.csdlnc.model.ThamGiaDuAn;
 
 @Mapper
 public interface ThamGiaDuAnDAO {

@@ -1,17 +1,24 @@
 package com.ptit.csdlnc.service;
 
-import com.ptit.csdlnc.dao.DuAnDAO;
-import com.ptit.csdlnc.model.DuAn;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.ptit.csdlnc.dao.DuAnDAO;
+import com.ptit.csdlnc.dao.ThamGiaDuAnDAO;
+import com.ptit.csdlnc.model.DuAn;
 
 @Service
 public class DuAnService {
 
     @Autowired
     private DuAnDAO duAnDAO;
+
+     @Autowired
+    private ThamGiaDuAnDAO thamGiaDuAnDAO;
+
 
     public List<DuAn> getAll() {
         return duAnDAO.getAll();
@@ -25,6 +32,7 @@ public class DuAnService {
         duAnDAO.insert(duAn);
     }
 
+    @Transactional
     public void update(DuAn duAn) {
         duAnDAO.update(duAn);
     }

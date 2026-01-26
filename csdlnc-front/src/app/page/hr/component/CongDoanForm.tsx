@@ -80,22 +80,28 @@ export default function CongDoanForm(props: any) {
 
   return (
     <div className="col-sm-12 col-xl-12">
-      <div className="bg-light rounded h-100 p-4">
+      <div
+        className="bg-light rounded p-4"
+        style={{ maxHeight: "70vh", overflowY: "auto" }}
+      >
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="maCd" className="form-label">
-              Mã CD
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="maCd"
-              name="maCd"
-              value={model.maCd ?? ""}
-              onChange={handleChange}
-              required
-            />
+          <div className="row mb-3">
+            <div className="col-md-12">
+              <label htmlFor="maCd" className="form-label">
+                Mã CD
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="maCd"
+                name="maCd"
+                value={model.maCd ?? ""}
+                onChange={handleChange}
+                readOnly
+              />
+            </div>
           </div>
+
           <div className="mb-3">
             <label htmlFor="tenCongDoan" className="form-label">
               Tên Công Đoạn
@@ -110,60 +116,69 @@ export default function CongDoanForm(props: any) {
               required
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="thuTu" className="form-label">
-              Thứ Tự
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              id="thuTu"
-              name="thuTu"
-              value={model.thuTu ?? ""}
-              onChange={handleChange}
-              required
-            />
+          <div className="row mb-3">
+            <div className="col-6">
+              <label htmlFor="thuTu" className="form-label">
+                Thứ Tự
+              </label>
+              <input
+                type="number"
+                className="form-control"
+                id="thuTu"
+                name="thuTu"
+                value={model.thuTu ?? ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="col-6">
+              <label htmlFor="trangThaiTienDo" className="form-label">
+                Trạng Thái Tiến Độ
+              </label>
+              <select
+                className="form-control"
+                id="trangThaiTienDo"
+                name="trangThaiTienDo"
+                value={model.trangThaiTienDo ?? ""}
+                onChange={handleSelectChange}
+              >
+                <option value="">Chọn trạng thái</option>
+                <option value="DungHan">DungHan</option>
+                <option value="TreHan">TreHan</option>
+              </select>
+            </div>
           </div>
-          <div className="mb-3">
-            <label htmlFor="ngayBatDau" className="form-label">
-              Ngày Bắt Đầu
-            </label>
-            <input
-              type="date"
-              className="form-control"
-              id="ngayBatDau"
-              name="ngayBatDau"
-              value={model.ngayBatDau ?? ""}
-              onChange={handleChange}
-            />
+
+          <div className="row mb-3">
+            <div className="col-6">
+              <label htmlFor="ngayBatDau" className="form-label">
+                Ngày Bắt Đầu
+              </label>
+              <input
+                type="date"
+                className="form-control"
+                id="ngayBatDau"
+                name="ngayBatDau"
+                value={model.ngayBatDau ?? ""}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-6">
+              <label htmlFor="soNgayHoanThanh" className="form-label">
+                Số Ngày Hoàn Thành
+              </label>
+              <input
+                type="number"
+                className="form-control"
+                id="soNgayHoanThanh"
+                name="soNgayHoanThanh"
+                value={model.soNgayHoanThanh ?? ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
-          <div className="mb-3">
-            <label htmlFor="soNgayHoanThanh" className="form-label">
-              Số Ngày Hoàn Thành
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              id="soNgayHoanThanh"
-              name="soNgayHoanThanh"
-              value={model.soNgayHoanThanh ?? ""}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="ngayHoanThanhThucTe" className="form-label">
-              Ngày Hoàn Thành Thực Tế
-            </label>
-            <input
-              type="date"
-              className="form-control"
-              id="ngayHoanThanhThucTe"
-              name="ngayHoanThanhThucTe"
-              value={model.ngayHoanThanhThucTe ?? ""}
-              onChange={handleChange}
-            />
-          </div>
+
           <div className="mb-3">
             <label htmlFor="ketQua" className="form-label">
               Kết Quả
@@ -176,22 +191,7 @@ export default function CongDoanForm(props: any) {
               onChange={handleChange}
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="trangThaiTienDo" className="form-label">
-              Trạng Thái Tiến Độ
-            </label>
-            <select
-              className="form-control"
-              id="trangThaiTienDo"
-              name="trangThaiTienDo"
-              value={model.trangThaiTienDo ?? ""}
-              onChange={handleSelectChange}
-            >
-              <option value="">Chọn trạng thái</option>
-              <option value="DungHan">DungHan</option>
-              <option value="TreHan">TreHan</option>
-            </select>
-          </div>
+
           <div className="mb-3">
             <label htmlFor="maDa" className="form-label">
               Mã DA

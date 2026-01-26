@@ -10,12 +10,37 @@ import { NhanVienService } from "../../../services/NhanVienService";
 import { HttpStatusCode } from "axios";
 import { PhongBanModel } from "../../../model/PhongBanModel";
 import { NhanVienModel } from "../../../model/NhanVienModel";
+import { ThamGiaDuanModel } from "../../../model/ThamGiaDuanModel";
+import { ThamGiaDuanService } from "../../../services/ThamGiaDuanService";
 
 export default function DuanForm(props: any) {
-  const [model, setModel] = useState<DuanModel>(props.model ?? new DuanModel());
+  // Convert dates from DD-MM-YYYY to YYYY-MM-DD for input type='date'
+  const convertModelDates = (model: DuanModel) => {
+    return {
+      ...model,
+      ngayBatDau: model.ngayBatDau
+        ? dayjs(model.ngayBatDau, "DD-MM-YYYY").format("YYYY-MM-DD")
+        : model.ngayBatDau,
+      ngayKetThucDuKien: model.ngayKetThucDuKien
+        ? dayjs(model.ngayKetThucDuKien, "DD-MM-YYYY").format("YYYY-MM-DD")
+        : model.ngayKetThucDuKien,
+      ngayKetThucThucTe: model.ngayKetThucThucTe
+        ? dayjs(model.ngayKetThucThucTe, "DD-MM-YYYY").format("YYYY-MM-DD")
+        : model.ngayKetThucThucTe,
+    };
+  };
+
+  const [model, setModel] = useState<DuanModel>(
+    props.model ? convertModelDates(props.model) : new DuanModel(),
+  );
   const [listLoaiDuAn, setListLoaiDuAn] = useState<LoaiDuAnModel[]>([]);
   const [phongBanList, setPhongBanList] = useState<PhongBanModel[]>([]);
   const [nhanVienList, setNhanVienList] = useState<NhanVienModel[]>([]);
+  const [thamGiaList, setThamGiaList] = useState<ThamGiaDuanModel[]>([]);
+  const [soNvToiDa, setSoNvToiDa] = useState<number>(0);
+
+  // Computed value for maNvChuTri from thamGiaList
+  const maNvChuTri = thamGiaList.find((tg) => tg.vaiTro === "ChuTri")?.maNv;
 
   useEffect(() => {
     getLstLoaiDuAn();
@@ -29,6 +54,21 @@ export default function DuanForm(props: any) {
       setNhanVienList([]);
     }
   }, [model.maPhongQl]);
+
+  useEffect(() => {
+    if (model.loaiDa) {
+      const selectedLoai = listLoaiDuAn.find(
+        (loai) => loai.maLoaiDuAn === model.loaiDa,
+      );
+      setSoNvToiDa(selectedLoai?.soNvToiDa || 0);
+    }
+  }, [model.loaiDa, listLoaiDuAn]);
+
+  useEffect(() => {
+    if (model.thamGiaLst && model.thamGiaLst.length > 0) {
+      setThamGiaList(model.thamGiaLst);
+    }
+  }, [model.thamGiaLst]);
 
   function getLstNhanVienByPhong(maPhong: string) {
     NhanVienService.getInstance()
@@ -95,6 +135,15 @@ export default function DuanForm(props: any) {
       [name]: value,
     }));
 
+    if (name === "loaiDa") {
+      const selectedLoai = listLoaiDuAn.find(
+        (loai) => loai.maLoaiDuAn === value,
+      );
+      setSoNvToiDa(selectedLoai?.soNvToiDa || 0);
+      // Reset thamGiaList khi đổi loại dự án
+      setThamGiaList([]);
+    }
+
     if (name === "maPhongQl") {
       // Load nhân viên của phòng này
       if (value) {
@@ -103,11 +152,8 @@ export default function DuanForm(props: any) {
           .then((response) => {
             if (response.status === HttpStatusCode.Ok) {
               setNhanVienList(response.data);
-              // Reset maNvChuTri khi đổi phòng
-              setModel((prev) => ({
-                ...prev,
-                maNvChuTri: "",
-              }));
+              // Reset thamGiaList khi đổi phòng
+              setThamGiaList([]);
             } else {
               toast.error(response.data.message);
             }
@@ -117,33 +163,72 @@ export default function DuanForm(props: any) {
           });
       } else {
         setNhanVienList([]);
-        setModel((prev) => ({
-          ...prev,
-          maNvChuTri: "",
-        }));
+        setThamGiaList([]);
       }
+    }
+
+    if (name === "maNvChuTri") {
+      // Thêm trưởng dự án vào danh sách tham gia với vai trò ChuTri
+      setThamGiaList((prev) => {
+        // Remove existing ChuTri if any
+        const filtered = prev.filter((tg) => tg.vaiTro !== "ChuTri");
+        // Add new ChuTri
+        const newChuTri = new ThamGiaDuanModel({
+          maNv: value,
+          vaiTro: "ChuTri",
+        });
+        return [...filtered, newChuTri];
+      });
+    }
+  };
+
+  const handleThamGiaChange = (maNv: string, checked: boolean) => {
+    if (checked) {
+      if (thamGiaList.length >= soNvToiDa - 1) {
+        toast.warning(
+          `Tối đa chỉ được chọn ${soNvToiDa - 1} nhân viên tham gia`,
+        );
+        return;
+      }
+      if (
+        thamGiaList.some((tg) => tg.maNv === maNv && tg.vaiTro === "ChuTri")
+      ) {
+        toast.warning("Trưởng dự án không thể tham gia với vai trò thành viên");
+        return;
+      }
+      const newThamGia = new ThamGiaDuanModel({
+        maNv: maNv,
+        vaiTro: "ThanhVien",
+      });
+      setThamGiaList((prev) => [...prev, newThamGia]);
+    } else {
+      setThamGiaList((prev) => prev.filter((tg) => tg.maNv !== maNv));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log(thamGiaList);
     e.preventDefault();
     // Format dates to DD-MM-YYYY before sending
     const formattedModel = {
       ...model,
-      ngayBatDau: model.ngayBatDau
-        ? dayjs(model.ngayBatDau).format("DD-MM-YYYY")
-        : model.ngayBatDau,
-      ngayKetThucDuKien: model.ngayKetThucDuKien
-        ? dayjs(model.ngayKetThucDuKien).format("DD-MM-YYYY")
-        : model.ngayKetThucDuKien,
-      ngayKetThucThucTe: model.ngayKetThucThucTe
-        ? dayjs(model.ngayKetThucThucTe).format("DD-MM-YYYY")
-        : model.ngayKetThucThucTe,
+      thamGiaLst: thamGiaList,
+      //   ngayBatDau: model.ngayBatDau
+      //     ? dayjs(model.ngayBatDau).format("DD-MM-YYYY")
+      //     : model.ngayBatDau,
+      //   ngayKetThucDuKien: model.ngayKetThucDuKien
+      //     ? dayjs(model.ngayKetThucDuKien).format("DD-MM-YYYY")
+      //     : model.ngayKetThucDuKien,
+      //   ngayKetThucThucTe: model.ngayKetThucThucTe
+      //     ? dayjs(model.ngayKetThucThucTe).format("DD-MM-YYYY")
+      //     : model.ngayKetThucThucTe,
     };
+    console.log(formattedModel);
+
     if (model.maDa) {
       DuanService.getInstance()
         .updateDuan(formattedModel)
-        .then((resp) => {
+        .then(async (resp) => {
           if (resp.status === 200) {
             toast.success("Cập nhật dự án thành công");
             props.closeModal(true);
@@ -161,8 +246,9 @@ export default function DuanForm(props: any) {
     } else {
       DuanService.getInstance()
         .insertDuan(formattedModel)
-        .then((resp) => {
+        .then(async (resp) => {
           if (resp.status === 201) {
+            const maDa = resp.data.maDa; // Assume response has maDa
             toast.success("Thêm dự án thành công");
             props.closeModal(true);
           } else {
@@ -181,7 +267,10 @@ export default function DuanForm(props: any) {
 
   return (
     <div className="col-sm-12 col-xl-12">
-      <div className="bg-light rounded h-100 p-4">
+      <div
+        className="bg-light rounded p-4"
+        style={{ maxHeight: "70vh", overflowY: "auto" }}
+      >
         <form onSubmit={handleSubmit}>
           <div className="row mb-3">
             <div className="col-md-6">
@@ -256,26 +345,70 @@ export default function DuanForm(props: any) {
                 ))}
               </select>
             </div>
+
             <div className="col-md-6">
-              <label htmlFor="maNvChuTri" className="form-label">
-                Nhân viên chủ trì
+              <label htmlFor="trangThai" className="form-label">
+                Trạng Thái
               </label>
               <select
                 className="form-control"
-                name="maNvChuTri"
-                value={model.maNvChuTri ?? ""}
+                id="trangThai"
+                name="trangThai"
+                value={model.trangThai ?? ""}
                 onChange={handleSelectChange}
-                required
               >
-                <option value="">Chọn nhân viên</option>
-                {nhanVienList.map((pb) => (
-                  <option key={pb.maNv} value={pb.maNv}>
-                    {pb.hoTen}
-                  </option>
-                ))}
+                <option value="">Chọn trạng thái</option>
+                <option value="ChuaThucHien">Chưa thực hiện</option>
+                <option value="DangThucHien">Đang thực hiện</option>
+                <option value="DungHan">Đúng hạn</option>
+                <option value="QuaHan">Quá hạn</option>
               </select>
             </div>
           </div>
+          {soNvToiDa > 1 && (
+            <div className="row mb-3">
+              <div className="col-md-12">
+                <label className="form-label">
+                  Nhân Viên Tham Gia (Tối đa {soNvToiDa - 1} người)
+                </label>
+                <div
+                  className="border p-3"
+                  style={{ maxHeight: "200px", overflowY: "auto" }}
+                >
+                  {nhanVienList
+                    .filter((nv) => nv.maNv !== maNvChuTri)
+                    .map((nv) => (
+                      <div key={nv.maNv} className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id={`thamgia-${nv.maNv}`}
+                          checked={thamGiaList.some(
+                            (tg) => tg.maNv === nv.maNv,
+                          )}
+                          onChange={(e) =>
+                            handleThamGiaChange(nv.maNv!, e.target.checked)
+                          }
+                          disabled={
+                            thamGiaList.length >= soNvToiDa - 1 &&
+                            !thamGiaList.some((tg) => tg.maNv === nv.maNv)
+                          }
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`thamgia-${nv.maNv}`}
+                        >
+                          {nv.hoTen}
+                        </label>
+                      </div>
+                    ))}
+                </div>
+                <small className="text-muted">
+                  Đã chọn: {thamGiaList.length} / {soNvToiDa - 1}
+                </small>
+              </div>
+            </div>
+          )}
           <div className="row mb-3">
             <div className="col-md-6">
               <label htmlFor="ngayBatDau" className="form-label">
@@ -317,27 +450,6 @@ export default function DuanForm(props: any) {
               onChange={handleChange}
               rows={3}
             />
-          </div>
-
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label htmlFor="trangThai" className="form-label">
-                Trạng Thái
-              </label>
-              <select
-                className="form-control"
-                id="trangThai"
-                name="trangThai"
-                value={model.trangThai ?? ""}
-                onChange={handleSelectChange}
-              >
-                <option value="">Chọn trạng thái</option>
-                <option value="ChuaThucHien">Chưa thực hiện</option>
-                <option value="DangThucHien">Đang thực hiện</option>
-                <option value="DungHan">Đúng hạn</option>
-                <option value="QuaHan">Quá hạn</option>
-              </select>
-            </div>
           </div>
 
           <button type="submit" className="btn btn-primary">

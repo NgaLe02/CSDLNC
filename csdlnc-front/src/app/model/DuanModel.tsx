@@ -1,11 +1,12 @@
 import { LoaiDuAnModel } from "./LoaiDuAnModel";
+import { NhanVienModel } from "./NhanVienModel";
+import { ThamGiaDuanModel } from "./ThamGiaDuanModel";
 
 export class DuanModel {
   maDa?: string;
   tenDa?: string;
   loaiDa?: string;
   maPhongQl?: string;
-  maNvChuTri?: string;
   ngayBatDau?: string;
   ngayKetThucDuKien?: string;
   ngayKetThucThucTe?: string;
@@ -13,6 +14,8 @@ export class DuanModel {
   trangThai?: "ChuaThucHien" | "DangThucHien" | "DungHan" | "QuaHan";
   loaiDuAn?: LoaiDuAnModel;
 
+  dsNvThamGia?: NhanVienModel[];
+  thamGiaLst?: ThamGiaDuanModel[];
   constructor(init?: Partial<DuanModel>) {
     Object.assign(this, init);
   }

@@ -34,7 +34,6 @@
         ten_da = #{tenDa},
         loai_da = #{loaiDa},
         ma_phong_ql = #{maPhongQl},
-        ma_nv_chu_tri = #{maNvChuTri},
         ngay_bat_dau = #{ngayBatDau},
         ngay_ket_thuc_du_kien = #{ngayKetThucDuKien},
         ngay_ket_thuc_thuc_te = #{ngayKetThucThucTe},

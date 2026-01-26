@@ -107,9 +107,10 @@ const PhongBanPage: React.FC = () => {
                     <td>{item.tenPhong}</td>
                     <td>{item.moTa}</td>
                     <td>
-                      {item.ngayThanhLap
+                      {/* {item.ngayThanhLap
                         ? dayjs(item.ngayThanhLap).format("DD-MM-YYYY")
-                        : ""}
+                        : ""} */}
+                      {item.ngayThanhLap}
                     </td>
                     <td>
                       <button

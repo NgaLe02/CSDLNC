@@ -112,9 +112,10 @@ const NhanVienPage: React.FC = () => {
                     <td>{item.maNv}</td>
                     <td>{item.hoTen}</td>
                     <td>
-                      {item.ngaySinh
+                      {/* {item.ngaySinh
                         ? dayjs(item.ngaySinh).format("DD-MM-YYYY")
-                        : ""}
+                        : ""} */}
+                      {item.ngaySinh}
                     </td>
                     <td>{item.gioiTinh}</td>
                     <td>{item.chucVu}</td>

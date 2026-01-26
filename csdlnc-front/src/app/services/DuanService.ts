@@ -44,6 +44,7 @@ export class DuanService {
   }
 
   public updateDuan(model: DuanModel) {
+    console.log(model);
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/duan",
     );

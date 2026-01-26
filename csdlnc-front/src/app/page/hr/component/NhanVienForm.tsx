@@ -99,7 +99,10 @@ export default function NhanVienForm(props: any) {
 
   return (
     <div className="col-sm-12 col-xl-12">
-      <div className="bg-light rounded h-100 p-4">
+      <div
+        className="bg-light rounded p-4"
+        style={{ maxHeight: "70vh", overflowY: "auto" }}
+      >
         <form onSubmit={handleSubmit}>
           <div className="row mb-3">
             <div className="col-md-6">

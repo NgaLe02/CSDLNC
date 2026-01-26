@@ -7,32 +7,30 @@
         <id column="ma_da" property="maDa"/>
         <id column="thang" property="thang"/>
         <id column="nam" property="nam"/>
-        <result column="so_gio_lam_viec" property="soGioLamViec"/>
-        <result column="ghi_chu" property="ghiChu"/>
+        <result column="vai_tro" property="vaiTro"/>
     </resultMap>
 
     <select id="getAll" resultMap="ThamGiaDuAnResultMap">
-        SELECT * FROM thamgiaduan
+        SELECT * FROM thamgia_duan
     </select>
 
     <select id="getById" parameterType="map" resultMap="ThamGiaDuAnResultMap">
-        SELECT * FROM thamgiaduan WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
+        SELECT * FROM thamgia_duan WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.ThamGiaDuAn">
-        INSERT INTO thamgiaduan (ma_nv, ma_da, thang, nam, so_gio_lam_viec, ghi_chu)
-        VALUES (#{maNv}, #{maDa}, #{thang}, #{nam}, #{soGioLamViec}, #{ghiChu})
+        INSERT INTO thamgia_duan (ma_nv, ma_da, thang, nam, vai_tro)
+        VALUES (#{maNv}, #{maDa}, #{thang}, #{nam}, #{vaiTro})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.ThamGiaDuAn">
-        UPDATE thamgiaduan SET
-        so_gio_lam_viec = #{soGioLamViec},
-        ghi_chu = #{ghiChu}
+        UPDATE thamgia_duan SET
+        vai_tro = #{vaiTro}
         WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
     </update>
 
     <delete id="delete" parameterType="map">
-        DELETE FROM thamgiaduan WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
+        DELETE FROM thamgia_duan WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
     </delete>
 
 </mapper>

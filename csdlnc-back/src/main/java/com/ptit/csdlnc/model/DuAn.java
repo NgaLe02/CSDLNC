@@ -1,6 +1,8 @@
 package com.ptit.csdlnc.model;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -18,13 +20,14 @@ public class DuAn {
     private String loaiDa;
     private Integer soNhanVienToiDa;
     private String maPhongQl;
-    private String maNvChuTri;
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate ngayBatDau;
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate ngayKetThucDuKien;
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate ngayKetThucThucTe;
-    private String ketQuaThucHien;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date ngayKetThucThucTe;
+    private LocalDate ketQuaThucHien;
     private String trangThai;
+
+    private List<ThamGiaDuAn> thamGiaLst; 
 }
