@@ -46,4 +46,22 @@
         DELETE FROM duan WHERE ma_da = #{maDa}
     </delete>
 
+    <resultMap id="NhanVienResultMap" type="com.ptit.csdlnc.model.NhanVien">
+        <id column="ma_nv" property="maNv"/>
+        <result column="ho_ten" property="hoTen"/>
+        <result column="ngay_sinh" property="ngaySinh" jdbcType="DATE"/>
+        <result column="gioi_tinh" property="gioiTinh"/>
+        <result column="chuc_vu" property="chucVu"/>
+        <result column="bac_luong" property="bacLuong"/>
+        <result column="luong_co_ban" property="luongCoBan"/>
+        <result column="ma_phong" property="maPhong"/>
+    </resultMap>
+
+    <select id="getAssignedEmployees" parameterType="string" resultMap="NhanVienResultMap">
+        SELECT DISTINCT nv.*
+        FROM nhanvien nv
+        INNER JOIN thamgia_duan thc ON nv.ma_nv = thc.ma_nv
+        WHERE thc.ma_da = #{maDa} and thc.thang = #{thang} and thc.nam=#{nam}
+    </select>
+
 </mapper>

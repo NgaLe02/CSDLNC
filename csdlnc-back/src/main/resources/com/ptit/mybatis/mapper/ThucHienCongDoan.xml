@@ -8,27 +8,27 @@
     </resultMap>
 
     <select id="getAll" resultMap="ThucHienCongDoanResultMap">
-        SELECT * FROM thuchiencongdoan
+        SELECT * FROM thuchien_congdoan
     </select>
 
     <select id="getById" parameterType="map" resultMap="ThucHienCongDoanResultMap">
-        SELECT * FROM thuchiencongdoan WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
+        SELECT * FROM thuchien_congdoan WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.ThucHienCongDoan">
-        INSERT INTO thuchiencongdoan (ma_nv, ma_cong_doan)
+        INSERT INTO thuchien_congdoan (ma_nv, ma_cong_doan)
         VALUES (#{maNv}, #{maCd})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.ThucHienCongDoan">
-        UPDATE thuchiencongdoan SET
+        UPDATE thuchien_congdoan SET
         ma_nv = #{maNv},
         ma_cong_doan = #{maCd}
         WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
     </update>
 
     <delete id="delete" parameterType="map">
-        DELETE FROM thuchiencongdoan WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
+        DELETE FROM thuchien_congdoan WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
     </delete>
 
 </mapper>

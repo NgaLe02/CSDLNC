@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ptit.csdlnc.dao.DuAnDAO;
 import com.ptit.csdlnc.dao.ThamGiaDuAnDAO;
 import com.ptit.csdlnc.model.DuAn;
+import com.ptit.csdlnc.model.NhanVien;
 
 @Service
 public class DuAnService {
@@ -26,6 +27,10 @@ public class DuAnService {
 
     public DuAn getById(String maDa) {
         return duAnDAO.getById(maDa);
+    }
+
+    public List<NhanVien> getAssignedEmployees(String maDa, String thang, String nam) {
+        return duAnDAO.getAssignedEmployees(maDa, thang, nam);
     }
 
     public void insert(DuAn duAn) {

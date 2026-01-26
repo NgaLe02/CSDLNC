@@ -1,31 +1,84 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import { ThucHienCongDoanModel } from "../../../model/ThucHienCongDoanModel";
 import { ThucHienCongDoanService } from "../../../services/ThucHienCongDoanService";
 import { HttpStatusCode } from "axios";
 import { NhanVienService } from "../../../services/NhanVienService";
 import { NhanVienModel } from "../../../model/NhanVienModel";
+import { CongDoanService } from "../../../services/CongDoanService";
+import { DuanService } from "../../../services/DuanService";
+import { CongDoanModel } from "../../../model/CongDoanModel";
 
 export default function ThucHienCongDoanForm(props: any) {
   const [model, setModel] = useState<ThucHienCongDoanModel>(
     props.thucHienCongDoan ?? new ThucHienCongDoanModel(),
   );
+  const [congDoan, setCongDoan] = useState<CongDoanModel>(
+    props.congDoan ?? new CongDoanModel(),
+  );
+  const [maDa, setMaDa] = useState<string>(props.maDa ?? "");
   const [nhanVienList, setNhanVienList] = useState<NhanVienModel[]>([]);
+  const [selectedThang, setSelectedThang] = useState<number>(1);
+  const [selectedNam, setSelectedNam] = useState<number>(new Date().getFullYear());
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i);
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+  const loadCongDoan = useCallback(async () => {
+    if (model.maCd) {
+      try {
+        const congDoanResp = await CongDoanService.getInstance().getCongDoanById(model.maCd);
+        if (congDoanResp.status === HttpStatusCode.Ok) {
+          setCongDoan(congDoanResp.data);
+          setMaDa(congDoanResp.data.maDa);
+          
+          // Parse ngayBatDau để set tháng/năm mặc định
+          if (congDoanResp.data.ngayBatDau) {
+            const ngayBatDau = new Date(congDoanResp.data.ngayBatDau);
+            setSelectedThang(ngayBatDau.getMonth() + 1);
+            setSelectedNam(ngayBatDau.getFullYear());
+          }
+        }
+      } catch (error) {
+        console.error("Lỗi khi tải công đoạn:", error);
+      }
+    }
+  }, [model.maCd]);
 
   useEffect(() => {
-    getLstNhanVien();
-  }, []);
+    loadCongDoan();
+  }, [loadCongDoan]);
 
-  const getLstNhanVien = async () => {
-    try {
-      const resp = await NhanVienService.getInstance().getLstNhanVien({});
-      if (resp.status === HttpStatusCode.Ok) {
-        setNhanVienList(resp.data);
+  const getLstNhanVien = useCallback(async () => {
+    if (maDa) {
+      try {
+        // Lấy danh sách nhân viên tham gia dự án trong tháng/năm được chọn
+        const thamGiaResp =
+          await DuanService.getInstance().getLstNhanVienThamGiaDuan({
+            maDa: maDa,
+            thang: selectedThang.toString(),
+            nam: selectedNam.toString(),
+          });
+        if (thamGiaResp.status === HttpStatusCode.Ok) {
+          setNhanVienList(thamGiaResp.data);
+        }
+      } catch (error) {
+        console.error("Lỗi khi tải danh sách nhân viên:", error);
       }
-    } catch (error) {
-      console.error("Lỗi khi tải danh sách nhân viên:", error);
     }
-  };
+  }, [maDa, selectedThang, selectedNam]);
+
+  useEffect(() => {
+    if (model.maCd) {
+      getLstNhanVien();
+    }
+  }, [model.maCd, getLstNhanVien]);
+
+  useEffect(() => {
+    if (maDa) {
+      getLstNhanVien();
+    }
+  }, [selectedThang, selectedNam, getLstNhanVien]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -47,9 +100,16 @@ export default function ThucHienCongDoanForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Cập nhật thang và nam vào model
+    const updatedModel = {
+      ...model,
+      thang: selectedThang,
+      nam: selectedNam,
+    };
+    
     if (props.type === "U") {
       ThucHienCongDoanService.getInstance()
-        .updateThucHienCongDoan(model)
+        .updateThucHienCongDoan(updatedModel)
         .then((resp) => {
           if (resp.status === 200) {
             toast.success("Cập nhật thành công");
@@ -67,7 +127,7 @@ export default function ThucHienCongDoanForm(props: any) {
         });
     } else {
       ThucHienCongDoanService.getInstance()
-        .insertThucHienCongDoan(model)
+        .insertThucHienCongDoan(updatedModel)
         .then((resp) => {
           if (resp.status === 201) {
             toast.success("Thêm thành công");
@@ -146,6 +206,46 @@ export default function ThucHienCongDoanForm(props: any) {
                     onChange={handleChange}
                     readOnly
                   />
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="thang" className="form-label">
+                    Tháng thực hiện
+                  </label>
+                  <select
+                    className="form-control"
+                    id="thang"
+                    value={selectedThang}
+                    onChange={(e) => setSelectedThang(Number(e.target.value))}
+                    required
+                  >
+                    <option value="">Chọn tháng</option>
+                    {months.map((month) => (
+                      <option key={month} value={month}>
+                        {month}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="nam" className="form-label">
+                    Năm thực hiện
+                  </label>
+                  <select
+                    className="form-control"
+                    id="nam"
+                    value={selectedNam}
+                    onChange={(e) => setSelectedNam(Number(e.target.value))}
+                    required
+                  >
+                    <option value="">Chọn năm</option>
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <button type="submit" className="btn btn-primary">

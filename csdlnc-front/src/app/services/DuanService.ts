@@ -25,6 +25,17 @@ export class DuanService {
     });
   }
 
+  public getLstNhanVienThamGiaDuan(model: { maDa: any; thang: any; nam: any }) {
+    const params = ParamUtil.toRequestParams(model);
+    const url = ApiUrlUtil.buildQueryString(
+      process.env.REACT_APP_API_URL + "/duan/nhanvien",
+      params,
+    );
+    return axios.get(url, {
+      headers: HeadersUtil.getHeaders(),
+    });
+  }
+
   public getDuanById(maDa: string) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/duan/" + maDa,

@@ -61,8 +61,9 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ maDa, onClose }) => {
     }
   };
 
-  const handleThucHien = (maCd: string) => {
-    setSelectedMaCd(maCd);
+  const handleThucHien = (item: any) => {
+    setEditingModel(item);
+    setSelectedMaCd(item.maCd);
     setShowThucHienModal(true);
   };
 
@@ -126,13 +127,13 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ maDa, onClose }) => {
                   <td>{item.ketQua}</td>
                   <td>{item.trangThaiTienDo}</td>
                   <td>
-                    <button
+                    {/* <button
                       type="button"
                       className="btn btn-sm btn-warning me-2"
                       onClick={() => handleEdit(item)}
                     >
                       Sửa
-                    </button>
+                    </button> */}
                     <button
                       type="button"
                       className="btn btn-sm btn-danger me-2"
@@ -143,7 +144,7 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ maDa, onClose }) => {
                     <button
                       type="button"
                       className="btn btn-sm btn-info"
-                      onClick={() => handleThucHien(item.maCd!)}
+                      onClick={() => handleThucHien(item)}
                     >
                       Người thực hiện
                     </button>
@@ -163,9 +164,11 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ maDa, onClose }) => {
         />
       )}
 
-      {showThucHienModal && (
+      {showThucHienModal && editingModel && (
         <ThucHienCongDoanList
+          congDoan={editingModel}
           maCd={selectedMaCd}
+          maDa={maDa}
           onClose={closeThucHienModal}
         />
       )}

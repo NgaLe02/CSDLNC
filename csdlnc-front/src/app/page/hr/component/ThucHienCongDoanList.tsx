@@ -4,14 +4,19 @@ import { toast } from "react-toastify";
 import ThucHienCongDoanForm from "./ThucHienCongDoanForm";
 import { ThucHienCongDoanModel } from "../../../model/ThucHienCongDoanModel";
 import { ThucHienCongDoanService } from "../../../services/ThucHienCongDoanService";
+import { CongDoanModel } from "../../../model/CongDoanModel";
 
 interface ThucHienCongDoanListProps {
+  congDoan: CongDoanModel;
   maCd: string;
+  maDa: string;
   onClose: () => void;
 }
 
 const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
+  congDoan,
   maCd,
+  maDa,
   onClose,
 }) => {
   const [listData, setListData] = useState<ThucHienCongDoanModel[]>([]);
@@ -21,18 +26,20 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
     useState<ThucHienCongDoanModel | null>(null);
 
   const getLstThucHienCongDoan = useCallback(async () => {
-    try {
-      const resp =
-        await ThucHienCongDoanService.getInstance().getLstThucHienCongDoan({
-          maCd,
-        });
-      if (resp.status === HttpStatusCode.Ok) {
-        setListData(resp.data);
+    if (maCd && maDa) {
+      try {
+        const resp =
+          await ThucHienCongDoanService.getInstance().getLstThucHienCongDoan({
+            maCd,
+          });
+        if (resp.status === HttpStatusCode.Ok) {
+          setListData(resp.data);
+        }
+      } catch (error) {
+        console.error("Lỗi khi tải danh sách thực hiện công đoạn:", error);
       }
-    } catch (error) {
-      console.error("Lỗi khi tải danh sách thực hiện công đoạn:", error);
     }
-  }, [maCd]);
+  }, [maDa, maCd]);
 
   useEffect(() => {
     getLstThucHienCongDoan();
@@ -132,6 +139,8 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
 
       {showForm && editingModel && (
         <ThucHienCongDoanForm
+          congDoan={congDoan}
+          maDa={maDa}
           thucHienCongDoan={editingModel}
           type={type}
           onClose={closeModal}

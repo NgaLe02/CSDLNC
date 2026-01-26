@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.csdlnc.model.DuAn;
+import com.ptit.csdlnc.model.NhanVien;
 import com.ptit.csdlnc.service.DuAnService;
 
 @RestController
@@ -34,6 +36,12 @@ public class DuAnController {
     public ResponseEntity<DuAn> getById(@PathVariable String maDa) {
         DuAn duAn = duAnService.getById(maDa);
         return ResponseEntity.ok(duAn);
+    }
+
+    @GetMapping("/nhanvien")
+    public ResponseEntity<List<NhanVien>> getAssignedEmployees(@RequestParam String maDa, @RequestParam(required=false) String thang, @RequestParam(required=false) String nam) {
+        List<NhanVien> list = duAnService.getAssignedEmployees(maDa, thang, nam);
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping
