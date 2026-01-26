@@ -55,14 +55,14 @@ CREATE TABLE duan (
 ) ENGINE=InnoDB;
 
 CREATE TABLE congdoan (
-    ma_cd VARCHAR(10) auto_increment PRIMARY KEY,
+    ma_cd int auto_increment PRIMARY KEY,
     ten_cong_doan VARCHAR(150) NOT NULL,
     thu_tu INT NOT NULL,
     ngay_bat_dau DATE not null ,
     so_ngay_hoan_thanh INT NOT NULL,
     ngay_hoan_thanh_thuc_te DATE,
     ket_qua TEXT,
-    trang_thai_tien_do ENUM('DungHan', 'TreHan'),
+    trang_thai ENUM('ChuaThucHien', 'DangThucHien', 'DungHan', 'TreHan'),
     ma_da int NOT NULL,
 
     CONSTRAINT fk_cd_duan
@@ -90,10 +90,7 @@ CREATE TABLE thamgia_duan (
 
 CREATE TABLE thuchien_congdoan (
     ma_nv VARCHAR(15),
-    ma_cd VARCHAR(10),
-    vai_tro ENUM('ThucHien', 'ChuTri'),
-    ket_qua TEXT,
-    dung_han BOOLEAN,
+    ma_cd int,
 
     PRIMARY KEY (ma_nv, ma_cd),
 

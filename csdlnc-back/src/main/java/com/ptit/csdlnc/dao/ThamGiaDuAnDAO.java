@@ -9,6 +9,7 @@ import com.ptit.csdlnc.model.ThamGiaDuAn;
 @Mapper
 public interface ThamGiaDuAnDAO {
     List<ThamGiaDuAn> getAll();
+    List<ThamGiaDuAn> getByMaDA(String maDa);
     ThamGiaDuAn getById(String maNv, String maDa, Integer thang, Integer nam);
     void insert(ThamGiaDuAn thamGiaDuAn);
     void update(ThamGiaDuAn thamGiaDuAn);

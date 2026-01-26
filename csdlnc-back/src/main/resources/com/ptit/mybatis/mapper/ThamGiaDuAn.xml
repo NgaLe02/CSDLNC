@@ -14,6 +14,10 @@
         SELECT * FROM thamgia_duan
     </select>
 
+    <select id="getByMaDA" parameterType="map" resultMap="ThamGiaDuAnResultMap">
+        SELECT * FROM thamgia_duan where ma_da = #{maDa}
+    </select>
+
     <select id="getById" parameterType="map" resultMap="ThamGiaDuAnResultMap">
         SELECT * FROM thamgia_duan WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
     </select>

@@ -30,6 +30,13 @@ public class ThamGiaDuAnController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/getByMaDa")
+    public ResponseEntity<List<ThamGiaDuAn>> getByMaDA(@RequestParam String maDa) {
+        List<ThamGiaDuAn> list = thamGiaDuAnService.getByMaDA(maDa);
+        return ResponseEntity.ok(list);
+    }
+
+
     @GetMapping("/get")
     public ResponseEntity<ThamGiaDuAn> getById(@RequestParam String maNv, @RequestParam String maDa, @RequestParam Integer thang, @RequestParam Integer nam) {
         ThamGiaDuAn thamGiaDuAn = thamGiaDuAnService.getById(maNv, maDa, thang, nam);

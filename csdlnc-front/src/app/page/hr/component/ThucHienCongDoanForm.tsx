@@ -1,12 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { ThucHienCongDoanModel } from "../../../model/ThucHienCongDoanModel";
 import { ThucHienCongDoanService } from "../../../services/ThucHienCongDoanService";
+import { HttpStatusCode } from "axios";
+import { NhanVienService } from "../../../services/NhanVienService";
+import { NhanVienModel } from "../../../model/NhanVienModel";
 
 export default function ThucHienCongDoanForm(props: any) {
   const [model, setModel] = useState<ThucHienCongDoanModel>(
-    props.model ?? new ThucHienCongDoanModel(),
+    props.thucHienCongDoan ?? new ThucHienCongDoanModel(),
   );
+  const [nhanVienList, setNhanVienList] = useState<NhanVienModel[]>([]);
+
+  useEffect(() => {
+    getLstNhanVien();
+  }, []);
+
+  const getLstNhanVien = async () => {
+    try {
+      const resp = await NhanVienService.getInstance().getLstNhanVien({});
+      if (resp.status === HttpStatusCode.Ok) {
+        setNhanVienList(resp.data);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tải danh sách nhân viên:", error);
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -22,19 +41,27 @@ export default function ThucHienCongDoanForm(props: any) {
     const { name, value } = e.target;
     setModel((prev) => ({
       ...prev,
-      [name]: value === "true" ? true : value === "false" ? false : value,
+      [name]: value,
+    }));
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setModel((prev) => ({
+      ...prev,
+      [name]: checked,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (model.maNv && model.maCd) {
+    if (props.type === "U") {
       ThucHienCongDoanService.getInstance()
         .updateThucHienCongDoan(model)
         .then((resp) => {
           if (resp.status === 200) {
-            toast.success("Cập nhật thực hiện công đoạn thành công");
-            props.closeModal(true);
+            toast.success("Cập nhật thành công");
+            props.onClose(true);
           } else {
             toast.error("Có lỗi xảy ra khi cập nhật");
           }
@@ -51,8 +78,8 @@ export default function ThucHienCongDoanForm(props: any) {
         .insertThucHienCongDoan(model)
         .then((resp) => {
           if (resp.status === 201) {
-            toast.success("Thêm thực hiện công đoạn thành công");
-            props.closeModal(true);
+            toast.success("Thêm thành công");
+            props.onClose(true);
           } else {
             toast.error("Có lỗi xảy ra khi thêm");
           }
@@ -68,89 +95,120 @@ export default function ThucHienCongDoanForm(props: any) {
   };
 
   return (
-    <div className="col-sm-12 col-xl-12">
-      <div
-        className="bg-light rounded p-4"
-        style={{ maxHeight: "70vh", overflowY: "auto" }}
-      >
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="maNv" className="form-label">
-              Mã NV
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="maNv"
-              name="maNv"
-              value={model.maNv ?? ""}
-              onChange={handleChange}
-              required
-            />
+    <div
+      className="modal show d-block"
+      tabIndex={-1}
+      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+    >
+      <div className="modal-dialog modal-lg">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">
+              {props.type === "U"
+                ? "Cập nhật người thực hiện"
+                : "Thêm người thực hiện"}
+            </h5>
+            <button
+              type="button"
+              className="btn-close"
+              onClick={() => props.onClose(false)}
+            ></button>
           </div>
-          <div className="mb-3">
-            <label htmlFor="maCd" className="form-label">
-              Mã CD
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="maCd"
-              name="maCd"
-              value={model.maCd ?? ""}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="vaiTro" className="form-label">
-              Vai Trò
-            </label>
-            <select
-              className="form-control"
-              id="vaiTro"
-              name="vaiTro"
-              value={model.vaiTro ?? ""}
-              onChange={handleSelectChange}
-              required
+          <div className="modal-body">
+            <div
+              className="bg-light rounded p-4"
+              style={{ maxHeight: "70vh", overflowY: "auto" }}
             >
-              <option value="">Chọn vai trò</option>
-              <option value="ThucHien">ThucHien</option>
-              <option value="ChuTri">ChuTri</option>
-            </select>
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label htmlFor="maNv" className="form-label">
+                    Nhân viên
+                  </label>
+                  <select
+                    className="form-control"
+                    id="maNv"
+                    name="maNv"
+                    value={model.maNv ?? ""}
+                    onChange={handleSelectChange}
+                    required
+                  >
+                    <option value="">Chọn nhân viên</option>
+                    {nhanVienList.map((nv) => (
+                      <option key={nv.maNv} value={nv.maNv}>
+                        {nv.hoTen} ({nv.maNv})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="maCd" className="form-label">
+                    Mã CD
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="maCd"
+                    name="maCd"
+                    value={model.maCd ?? ""}
+                    onChange={handleChange}
+                    readOnly
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="vaiTro" className="form-label">
+                    Vai trò
+                  </label>
+                  <select
+                    className="form-control"
+                    id="vaiTro"
+                    name="vaiTro"
+                    value={model.vaiTro ?? ""}
+                    onChange={handleSelectChange}
+                    required
+                  >
+                    <option value="">Chọn vai trò</option>
+                    <option value="ThucHien">Thực hiện</option>
+                    <option value="ChuTri">Chủ trì</option>
+                  </select>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="ketQua" className="form-label">
+                    Kết quả
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="ketQua"
+                    name="ketQua"
+                    value={model.ketQua ?? ""}
+                    onChange={handleChange}
+                    rows={3}
+                  />
+                </div>
+
+                <div className="mb-3 form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="dungHan"
+                    name="dungHan"
+                    checked={model.dungHan ?? false}
+                    onChange={handleCheckboxChange}
+                  />
+                  <label className="form-check-label" htmlFor="dungHan">
+                    Đúng hạn
+                  </label>
+                </div>
+
+                <button type="submit" className="btn btn-primary">
+                  Lưu
+                </button>
+              </form>
+            </div>
           </div>
-          <div className="mb-3">
-            <label htmlFor="ketQua" className="form-label">
-              Kết Quả
-            </label>
-            <textarea
-              className="form-control"
-              id="ketQua"
-              name="ketQua"
-              value={model.ketQua ?? ""}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="dungHan" className="form-label">
-              Đúng Hạn
-            </label>
-            <select
-              className="form-control"
-              id="dungHan"
-              name="dungHan"
-              value={model.dungHan?.toString() ?? ""}
-              onChange={handleSelectChange}
-            >
-              <option value="">Chọn</option>
-              <option value="true">Có</option>
-              <option value="false">Không</option>
-            </select>
-          </div>
-          <button type="submit" className="btn btn-primary">
-            Lưu
-          </button>
-        </form>
+        </div>
       </div>
     </div>
   );

@@ -25,8 +25,8 @@
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.DuAn">
-        INSERT INTO duan (ten_da, loai_da, ma_phong_ql, ma_nv_chu_tri, ngay_bat_dau, ngay_ket_thuc_du_kien, ngay_ket_thuc_thuc_te, ket_qua_thuc_hien, trang_thai)
-        VALUES (#{tenDa}, #{loaiDa}, #{maPhongQl}, #{maNvChuTri}, #{ngayBatDau}, #{ngayKetThucDuKien}, #{ngayKetThucThucTe}, #{ketQuaThucHien}, #{trangThai})
+        INSERT INTO duan (ten_da, loai_da, ma_phong_ql, ngay_bat_dau, ngay_ket_thuc_du_kien, ngay_ket_thuc_thuc_te, ket_qua_thuc_hien, trang_thai)
+        VALUES (#{tenDa}, #{loaiDa}, #{maPhongQl}, #{ngayBatDau}, #{ngayKetThucDuKien}, #{ngayKetThucThucTe}, #{ketQuaThucHien}, #{trangThai})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.DuAn">

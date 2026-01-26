@@ -98,37 +98,6 @@ function SideBarLeft() {
                 </a>
                 <a
                   href="#"
-                  className="dropdown-item "
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/system/cong-doan");
-                  }}
-                >
-                  Công đoạn
-                </a>
-
-                <a
-                  href="#"
-                  className="dropdown-item"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/system/tham-gia-du-an");
-                  }}
-                >
-                  Tham gia dự án
-                </a>
-                <a
-                  href="#"
-                  className="dropdown-item"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/system/thuc-hien-cong-doan");
-                  }}
-                >
-                  Thực hiện công đoạn
-                </a>
-                <a
-                  href="#"
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();

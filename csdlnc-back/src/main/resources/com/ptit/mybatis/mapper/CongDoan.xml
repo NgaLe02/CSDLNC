@@ -3,13 +3,15 @@
 <mapper namespace="com.ptit.csdlnc.dao.CongDoanDAO">
 
     <resultMap id="CongDoanResultMap" type="com.ptit.csdlnc.model.CongDoan">
-        <id column="ma_cong_doan" property="maCongDoan"/>
+        <id column="ma_cd" property="maCd"/>
         <result column="ten_cong_doan" property="tenCongDoan"/>
-        <result column="mo_ta" property="moTa"/>
+        <result column="thu_tu" property="thuTu"/>
         <result column="ngay_bat_dau" property="ngayBatDau"/>
-        <result column="ngay_ket_thuc_du_kien" property="ngayKetThucDuKien"/>
+        <result column="so_ngay_hoan_thanh" property="soNgayHoanThanh"/>
+        <result column="ngay_hoan_thanh_thuc_te" property="ngayHoanThanhThucTe"/>
+        <result column="ket_qua" property="ketQua"/>
         <result column="ma_da" property="maDa"/>
-        <result column="trang_thai" property="trangThai"/>
+        <result column="trang_thai_tien_do" property="trangThaiTienDo"/>
     </resultMap>
 
     <select id="getAll" resultMap="CongDoanResultMap">
@@ -17,27 +19,29 @@
     </select>
 
     <select id="getById" parameterType="string" resultMap="CongDoanResultMap">
-        SELECT * FROM congdoan WHERE ma_cong_doan = #{maCongDoan}
+        SELECT * FROM congdoan WHERE ma_cd = #{maCd}
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.CongDoan">
-        INSERT INTO congdoan (ma_cong_doan, ten_cong_doan, mo_ta, ngay_bat_dau, ngay_ket_thuc_du_kien, ma_da, trang_thai)
-        VALUES (#{maCongDoan}, #{tenCongDoan}, #{moTa}, #{ngayBatDau}, #{ngayKetThucDuKien}, #{maDa}, #{trangThai})
+        INSERT INTO congdoan (ten_cong_doan, thu_tu, ngay_bat_dau, so_ngay_hoan_thanh, ma_da, trang_thai_tien_do, ket_qua, ngay_hoan_thanh_thuc_te)
+        VALUES (#{tenCongDoan}, #{thuTu}, #{ngayBatDau}, #{soNgayHoanThanh}, #{maDa}, #{trangThaiTienDo}, #{ketQua}, #{ngayHoanThanhThucTe})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.CongDoan">
         UPDATE congdoan SET
         ten_cong_doan = #{tenCongDoan},
-        mo_ta = #{moTa},
+        thu_tu = #{thuTu},
         ngay_bat_dau = #{ngayBatDau},
-        ngay_ket_thuc_du_kien = #{ngayKetThucDuKien},
+        so_ngay_hoan_thanh = #{soNgayHoanThanh}
+        ngay_hoan_thanh_thuc_te = #{ngayHoanThanhThucTe},
         ma_da = #{maDa},
-        trang_thai = #{trangThai}
-        WHERE ma_cong_doan = #{maCongDoan}
+        ket_qua = #{ketQua},
+        trang_thai_tien_do = #{trangThaiTienDo}
+        WHERE ma_cd = #{maCd}
     </update>
 
     <delete id="delete" parameterType="string">
-        DELETE FROM congdoan WHERE ma_cong_doan = #{maCongDoan}
+        DELETE FROM congdoan WHERE ma_cd = #{maCd}
     </delete>
 
 </mapper>

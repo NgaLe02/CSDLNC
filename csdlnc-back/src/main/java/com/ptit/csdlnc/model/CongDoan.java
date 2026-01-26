@@ -1,10 +1,12 @@
 package com.ptit.csdlnc.model;
 
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -13,9 +15,11 @@ public class CongDoan {
     private String maCd;
     private String tenCongDoan;
     private Integer thuTu;
-    private Date ngayBatDau;
+     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+   private LocalDate ngayBatDau;
     private Integer soNgayHoanThanh;
-    private Date ngayHoanThanhThucTe;
+     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate ngayHoanThanhThucTe;
     private String ketQua;
     private String trangThaiTienDo; // ENUM('DungHan', 'TreHan')
     private String maDa;

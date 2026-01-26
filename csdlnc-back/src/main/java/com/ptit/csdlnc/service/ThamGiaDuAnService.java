@@ -1,11 +1,12 @@
 package com.ptit.csdlnc.service;
 
-import com.ptit.csdlnc.dao.ThamGiaDuAnDAO;
-import com.ptit.csdlnc.model.ThamGiaDuAn;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.ptit.csdlnc.dao.ThamGiaDuAnDAO;
+import com.ptit.csdlnc.model.ThamGiaDuAn;
 
 @Service
 public class ThamGiaDuAnService {
@@ -16,6 +17,11 @@ public class ThamGiaDuAnService {
     public List<ThamGiaDuAn> getAll() {
         return thamGiaDuAnDAO.getAll();
     }
+
+    public List<ThamGiaDuAn> getByMaDA(String maDa) {
+        return thamGiaDuAnDAO.getByMaDA(maDa);
+    }
+
 
     public ThamGiaDuAn getById(String maNv, String maDa, Integer thang, Integer nam) {
         return thamGiaDuAnDAO.getById(maNv, maDa, thang, nam);

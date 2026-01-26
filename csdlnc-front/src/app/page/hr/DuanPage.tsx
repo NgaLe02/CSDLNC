@@ -8,6 +8,7 @@ import { LoaiDuAnModel } from "../../model/LoaiDuAnModel";
 import { LoaiDuAnService } from "../../services/LoaiDuAnService";
 import DuanForm from "./component/DuanForm";
 import ThamGiaDuanList from "./component/ThamGiaDuanList";
+import CongDoanList from "./component/CongDoanList";
 
 const DuanPage: React.FC = () => {
   const [listData, setListData] = useState<DuanModel[]>([]);
@@ -17,6 +18,7 @@ const DuanPage: React.FC = () => {
   const [showThamGiaModal, setShowThamGiaModal] = useState(false);
   const [selectedMaDa, setSelectedMaDa] = useState<string>("");
   const [selectedTrangThai, setSelectedTrangThai] = useState<string>("");
+  const [showCongDoanModal, setShowCongDoanModal] = useState(false);
 
   useEffect(() => {
     getLstDuan();
@@ -81,7 +83,10 @@ const DuanPage: React.FC = () => {
     setSelectedTrangThai(duan?.trangThai || "");
     setShowThamGiaModal(true);
   }
-
+  function handleCongDoan(maDa: string) {
+    setSelectedMaDa(maDa);
+    setShowCongDoanModal(true);
+  }
   function handleDelete(maDa: string) {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       DuanService.getInstance()
@@ -175,6 +180,12 @@ const DuanPage: React.FC = () => {
                       >
                         Thành viên
                       </button>
+                      <button
+                        className="btn btn-sm btn-primary ms-2"
+                        onClick={() => handleCongDoan(item.maDa!)}
+                      >
+                        Công đoạn
+                      </button>
                     </td>
                     <td>
                       <button
@@ -241,8 +252,24 @@ const DuanPage: React.FC = () => {
         </div>
       )}
 
+      {showCongDoanModal && (
+        <div className="modal show d-block" tabIndex={-1}>
+          <div className="modal-dialog modal-xl">
+            <div className="modal-content">
+              <div className="modal-body">
+                <CongDoanList
+                  maDa={selectedMaDa}
+                  onClose={() => setShowCongDoanModal(false)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showForm && <div className="modal-backdrop fade show"></div>}
       {showThamGiaModal && <div className="modal-backdrop fade show"></div>}
+      {showCongDoanModal && <div className="modal-backdrop fade show"></div>}
     </>
   );
 };

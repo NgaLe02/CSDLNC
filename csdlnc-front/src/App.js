@@ -4,8 +4,6 @@ import SideBarLeft from "./app/page/layout/SideBarLeft";
 import PhongBanPage from "./app/page/hr/PhongBanPage";
 import NhanVienPage from "./app/page/hr/NhanVienPage";
 import DuanPage from "./app/page/hr/DuanPage";
-import CongDoanPage from "./app/page/hr/CongDoanPage";
-import ThucHienCongDoanPage from "./app/page/hr/ThucHienCongDoanPage";
 import ThucHienCongViecPage from "./app/page/hr/ThucHienCongViecPage";
 import CongViecPage from "./app/page/hr/CongViecPage";
 import { ToastContainer } from "react-toastify";
@@ -35,11 +33,7 @@ function App() {
                 <Route path="nhan-vien" element={<NhanVienPage />} />
                 <Route path="du-an" element={<DuanPage />} />
                 <Route path="loai-du-an" element={<LoaiDuAnPage />} />
-                <Route path="cong-doan" element={<CongDoanPage />} />
-                <Route
-                  path="thuc-hien-cong-doan"
-                  element={<ThucHienCongDoanPage />}
-                />
+
                 <Route
                   path="thuc-hien-cong-viec"
                   element={<ThucHienCongViecPage />}
