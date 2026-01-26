@@ -99,9 +99,6 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
               <tr>
                 <th>Mã NV</th>
                 <th>Mã CD</th>
-                <th>Vai trò</th>
-                <th>Kết quả</th>
-                <th>Đúng hạn</th>
                 <th>Hành động</th>
               </tr>
             </thead>
@@ -110,9 +107,6 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
                 <tr key={`${item.maNv}-${item.maCd}`}>
                   <td>{item.maNv}</td>
                   <td>{item.maCd}</td>
-                  <td>{item.vaiTro}</td>
-                  <td>{item.ketQua}</td>
-                  <td>{item.dungHan ? "Có" : "Không"}</td>
                   <td>
                     <button
                       type="button"

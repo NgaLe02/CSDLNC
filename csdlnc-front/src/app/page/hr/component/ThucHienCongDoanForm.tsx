@@ -45,14 +45,6 @@ export default function ThucHienCongDoanForm(props: any) {
     }));
   };
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setModel((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (props.type === "U") {
@@ -154,52 +146,6 @@ export default function ThucHienCongDoanForm(props: any) {
                     onChange={handleChange}
                     readOnly
                   />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="vaiTro" className="form-label">
-                    Vai trò
-                  </label>
-                  <select
-                    className="form-control"
-                    id="vaiTro"
-                    name="vaiTro"
-                    value={model.vaiTro ?? ""}
-                    onChange={handleSelectChange}
-                    required
-                  >
-                    <option value="">Chọn vai trò</option>
-                    <option value="ThucHien">Thực hiện</option>
-                    <option value="ChuTri">Chủ trì</option>
-                  </select>
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="ketQua" className="form-label">
-                    Kết quả
-                  </label>
-                  <textarea
-                    className="form-control"
-                    id="ketQua"
-                    name="ketQua"
-                    value={model.ketQua ?? ""}
-                    onChange={handleChange}
-                    rows={3}
-                  />
-                </div>
-
-                <div className="mb-3 form-check">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="dungHan"
-                    name="dungHan"
-                    checked={model.dungHan ?? false}
-                    onChange={handleCheckboxChange}
-                  />
-                  <label className="form-check-label" htmlFor="dungHan">
-                    Đúng hạn
-                  </label>
                 </div>
 
                 <button type="submit" className="btn btn-primary">

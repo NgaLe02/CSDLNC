@@ -1,8 +1,8 @@
 package com.ptit.csdlnc.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -10,7 +10,4 @@ import lombok.AllArgsConstructor;
 public class ThucHienCongDoan {
     private String maNv;
     private String maCd;
-    private String vaiTro; // ENUM('ThucHien', 'ChuTri')
-    private String ketQua;
-    private Boolean dungHan;
 }

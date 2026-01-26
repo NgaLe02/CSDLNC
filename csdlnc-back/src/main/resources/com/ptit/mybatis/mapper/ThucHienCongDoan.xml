@@ -4,11 +4,7 @@
 
     <resultMap id="ThucHienCongDoanResultMap" type="com.ptit.csdlnc.model.ThucHienCongDoan">
         <id column="ma_nv" property="maNv"/>
-        <id column="ma_cong_doan" property="maCongDoan"/>
-        <result column="ngay_bat_dau" property="ngayBatDau"/>
-        <result column="ngay_ket_thuc" property="ngayKetThuc"/>
-        <result column="dung_han" property="dungHan"/>
-        <result column="ghi_chu" property="ghiChu"/>
+        <id column="ma_cong_doan" property="maCd"/>
     </resultMap>
 
     <select id="getAll" resultMap="ThucHienCongDoanResultMap">
@@ -16,25 +12,23 @@
     </select>
 
     <select id="getById" parameterType="map" resultMap="ThucHienCongDoanResultMap">
-        SELECT * FROM thuchiencongdoan WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCongDoan}
+        SELECT * FROM thuchiencongdoan WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.ThucHienCongDoan">
-        INSERT INTO thuchiencongdoan (ma_nv, ma_cong_doan, ngay_bat_dau, ngay_ket_thuc, dung_han, ghi_chu)
-        VALUES (#{maNv}, #{maCongDoan}, #{ngayBatDau}, #{ngayKetThuc}, #{dungHan}, #{ghiChu})
+        INSERT INTO thuchiencongdoan (ma_nv, ma_cong_doan)
+        VALUES (#{maNv}, #{maCd})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.ThucHienCongDoan">
         UPDATE thuchiencongdoan SET
-        ngay_bat_dau = #{ngayBatDau},
-        ngay_ket_thuc = #{ngayKetThuc},
-        dung_han = #{dungHan},
-        ghi_chu = #{ghiChu}
-        WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCongDoan}
+        ma_nv = #{maNv},
+        ma_cong_doan = #{maCd}
+        WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
     </update>
 
     <delete id="delete" parameterType="map">
-        DELETE FROM thuchiencongdoan WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCongDoan}
+        DELETE FROM thuchiencongdoan WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
     </delete>
 
 </mapper>
