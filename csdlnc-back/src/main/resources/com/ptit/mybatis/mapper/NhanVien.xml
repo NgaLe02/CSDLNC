@@ -3,47 +3,245 @@
 <mapper namespace="com.ptit.csdlnc.dao.NhanVienDAO">
 
     <resultMap id="NhanVienResultMap" type="com.ptit.csdlnc.model.NhanVien">
-        <id column="ma_nv" property="maNv"/>
+
+        <id column="ma_nhan_vien" property="maNhanVien"/>
         <result column="ho_ten" property="hoTen"/>
-        <result column="ngay_sinh" property="ngaySinh"  jdbcType="DATE"/>
+        <result column="hoat_dong" property="hoatDong"/>
+        <result column="ngay_sinh" property="ngaySinh" jdbcType="DATE"/>
         <result column="gioi_tinh" property="gioiTinh"/>
-        <result column="chuc_vu" property="chucVu"/>
-        <result column="bac_luong" property="bacLuong"/>
-        <result column="luong_co_ban" property="luongCoBan"/>
-        <result column="ma_phong" property="maPhong"/>
+
+        <!-- PHÂN CÔNG / CHỨC VỤ -->
+        <association property="phanCong" javaType="com.ptit.csdlnc.model.ChucVu">
+            <result column="ma_phong_ban" property="maPhongBan"/>
+            <result column="ten_chuc_vu" property="tenChucVu"/>
+            <result column="cv_ngay_ap_dung" property="ngayApDung" jdbcType="DATE"/>
+
+            <!-- PHÒNG BAN -->
+            <association property="phongBan" javaType="com.ptit.csdlnc.model.PhongBan">
+                <id column="pb_ma_phong_ban" property="maPhongBan"/>
+                <result column="pb_ten_phong_ban" property="tenPhongBan"/>
+                <result column="loai_phong" property="loaiPhong"/>
+            </association>
+        </association>
+
+        <!-- XẾP BẬC LƯƠNG -->
+        <association property="xepBacLuong" javaType="com.ptit.csdlnc.model.XepBacLuong">
+            <result column="ma_bac_luong" property="maBacLuong"/>
+            <result column="xl_ngay_ap_dung" property="ngayApDung" jdbcType="DATE"/>
+
+            <!-- BẬC LƯƠNG -->
+            <association property="bacLuong" javaType="com.ptit.csdlnc.model.BacLuong">
+                <id column="bl_ma_bac_luong" property="maBacLuong"/>
+                <result column="ten_bac_luong" property="tenBacLuong"/>
+                <result column="muc_luong_co_ban" property="mucLuongCoBan"/>
+            </association>
+        </association>
+
     </resultMap>
 
+
     <select id="getAll" resultMap="NhanVienResultMap">
-        SELECT * FROM nhanvien
+        SELECT
+            nv.ma_nhan_vien,
+            nv.ho_ten,
+            nv.ngay_sinh,
+            nv.gioi_tinh,
+            nv.hoat_dong,
+
+            -- CHỨC VỤ
+            cv.ma_phong_ban,
+            cv.ten_chuc_vu,
+            cv.ngay_ap_dung AS cv_ngay_ap_dung,
+
+            -- PHÒNG BAN
+            pb.ma_phong_ban   AS pb_ma_phong_ban,
+            pb.ten_phong_ban  AS pb_ten_phong_ban,
+            pb.loai_phong,
+
+            -- XẾP BẬC LƯƠNG
+            xl.ma_bac_luong,
+            xl.ngay_ap_dung AS xl_ngay_ap_dung,
+
+            -- BẬC LƯƠNG
+            bl.ma_bac_luong   AS bl_ma_bac_luong,
+            bl.ten_bac_luong,
+            bl.muc_luong_co_ban
+
+        FROM nhan_vien nv
+
+        LEFT JOIN chuc_vu cv
+        ON nv.ma_nhan_vien = cv.ma_nhan_vien
+        AND cv.ngay_ap_dung = (
+            SELECT MAX(cv2.ngay_ap_dung)
+            FROM chuc_vu cv2
+            WHERE cv2.ma_nhan_vien = nv.ma_nhan_vien
+        )
+
+        LEFT JOIN phong_ban pb
+        ON pb.ma_phong_ban = cv.ma_phong_ban
+
+        LEFT JOIN xep_bac_luong xl
+        ON nv.ma_nhan_vien = xl.ma_nhan_vien
+        AND xl.ngay_ap_dung = (
+            SELECT MAX(xl2.ngay_ap_dung)
+            FROM xep_bac_luong xl2
+            WHERE xl2.ma_nhan_vien = nv.ma_nhan_vien
+        )
+
+        LEFT JOIN bac_luong bl
+        ON bl.ma_bac_luong = xl.ma_bac_luong;
+
+
     </select>
 
     <select id="getById" parameterType="string" resultMap="NhanVienResultMap">
-        SELECT * FROM nhanvien WHERE ma_nv = #{maNv}
+        SELECT
+            nv.ma_nhan_vien,
+            nv.ho_ten,
+            nv.ngay_sinh,
+            nv.gioi_tinh,
+            nv.hoat_dong,
+
+            -- CHỨC VỤ
+            cv.ma_phong_ban,
+            cv.ten_chuc_vu,
+            cv.ngay_ap_dung AS cv_ngay_ap_dung,
+
+            -- PHÒNG BAN
+            pb.ma_phong_ban   AS pb_ma_phong_ban,
+            pb.ten_phong_ban  AS pb_ten_phong_ban,
+            pb.loai_phong,
+
+            -- XẾP BẬC LƯƠNG
+            xl.ma_bac_luong,
+            xl.ngay_ap_dung AS xl_ngay_ap_dung,
+
+            -- BẬC LƯƠNG
+            bl.ma_bac_luong   AS bl_ma_bac_luong,
+            bl.ten_bac_luong,
+            bl.muc_luong_co_ban
+
+        FROM nhan_vien nv
+
+        LEFT JOIN chuc_vu cv
+        ON nv.ma_nhan_vien = cv.ma_nhan_vien
+        AND cv.ngay_ap_dung = (
+            SELECT MAX(cv2.ngay_ap_dung)
+            FROM chuc_vu cv2
+            WHERE cv2.ma_nhan_vien = nv.ma_nhan_vien
+        )
+
+        LEFT JOIN phong_ban pb
+        ON pb.ma_phong_ban = cv.ma_phong_ban
+
+        LEFT JOIN xep_bac_luong xl
+        ON nv.ma_nhan_vien = xl.ma_nhan_vien
+        AND xl.ngay_ap_dung = (
+            SELECT MAX(xl2.ngay_ap_dung)
+            FROM xep_bac_luong xl2
+            WHERE xl2.ma_nhan_vien = nv.ma_nhan_vien
+        )
+
+        LEFT JOIN bac_luong bl
+        ON bl.ma_bac_luong = xl.ma_bac_luong
+
+
+        WHERE nv.ma_nhan_vien = #{maNv};
     </select>
 
-    <select id="getByMaPhong" parameterType="string" resultMap="NhanVienResultMap">
-        SELECT * FROM nhanvien WHERE ma_phong = #{maPhong}
+    <select id="getByMaPhongBan" parameterType="string" resultMap="NhanVienResultMap">
+        SELECT
+            nv.ma_nhan_vien,
+            nv.ho_ten,
+            nv.ngay_sinh,
+            nv.gioi_tinh,
+            nv.hoat_dong,
+
+            -- CHỨC VỤ
+            cv.ma_phong_ban,
+            cv.ten_chuc_vu,
+            cv.ngay_ap_dung AS cv_ngay_ap_dung,
+
+            -- PHÒNG BAN
+            pb.ma_phong_ban   AS pb_ma_phong_ban,
+            pb.ten_phong_ban  AS pb_ten_phong_ban,
+            pb.loai_phong,
+
+            -- XẾP BẬC LƯƠNG
+            xl.ma_bac_luong,
+            xl.ngay_ap_dung AS xl_ngay_ap_dung,
+
+            -- BẬC LƯƠNG
+            bl.ma_bac_luong   AS bl_ma_bac_luong,
+            bl.ten_bac_luong,
+            bl.muc_luong_co_ban
+
+        FROM nhan_vien nv
+
+        LEFT JOIN chuc_vu cv
+        ON nv.ma_nhan_vien = cv.ma_nhan_vien
+        AND cv.ngay_ap_dung = (
+            SELECT MAX(cv2.ngay_ap_dung)
+            FROM chuc_vu cv2
+            WHERE cv2.ma_nhan_vien = nv.ma_nhan_vien
+        )
+
+        LEFT JOIN phong_ban pb
+        ON pb.ma_phong_ban = cv.ma_phong_ban
+
+        LEFT JOIN xep_bac_luong xl
+        ON nv.ma_nhan_vien = xl.ma_nhan_vien
+        AND xl.ngay_ap_dung = (
+            SELECT MAX(xl2.ngay_ap_dung)
+            FROM xep_bac_luong xl2
+            WHERE xl2.ma_nhan_vien = nv.ma_nhan_vien
+        )
+
+        LEFT JOIN bac_luong bl
+        ON bl.ma_bac_luong = xl.ma_bac_luong
+        WHERE cv.ma_phong_ban = #{maPhongBan};
     </select>
 
-    <insert id="insert" parameterType="com.ptit.csdlnc.model.NhanVien">
-        INSERT INTO nhanvien (ho_ten, ngay_sinh, gioi_tinh, chuc_vu, bac_luong, luong_co_ban, ma_phong)
-        VALUES (#{hoTen}, #{ngaySinh}, #{gioiTinh}, #{chucVu}, #{bacLuong}, #{luongCoBan}, #{maPhong})
+
+    <insert id="insertNhanVien">
+        INSERT INTO nhan_vien (ma_nhan_vien, ho_ten, ngay_sinh, gioi_tinh)
+        VALUES (#{maNhanVien}, #{hoTen}, #{ngaySinh}, #{gioiTinh})
+    </insert>
+
+    <insert id="insertChucVu" parameterType="com.ptit.csdlnc.model.ChucVu">
+        INSERT INTO chuc_vu (ma_nhan_vien, ma_phong_ban, ten_chuc_vu, ngay_ap_dung)
+        VALUES (#{maNhanVien}, #{maPhongBan}, #{tenChucVu}, #{ngayApDung})
+    </insert>
+
+    <insert id="insertXepBacLuong" parameterType="com.ptit.csdlnc.model.XepBacLuong">
+        INSERT INTO xep_bac_luong (ma_nhan_vien, ma_bac_luong, ngay_ap_dung)
+        VALUES (#{maNhanVien}, #{maBacLuong}, #{ngayApDung})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.NhanVien">
-        UPDATE nhanvien SET
+        UPDATE nhan_vien SET
         ho_ten = #{hoTen},
         ngay_sinh = #{ngaySinh},
-        gioi_tinh = #{gioiTinh},
-        chuc_vu = #{chucVu},
-        bac_luong = #{bacLuong},
-        luong_co_ban = #{luongCoBan},
-        ma_phong = #{maPhong}
-        WHERE ma_nv = #{maNv}
+        gioi_tinh = #{gioiTinh}
+        WHERE ma_nhan_vien = #{maNhanVien}
+    </update>
+
+    <update id="activeNhanVien" parameterType="string">
+        UPDATE nhan_vien SET
+            hoat_dong = true
+        WHERE ma_nhan_vien = #{maNhanVien}
     </update>
 
     <delete id="delete" parameterType="string">
-        DELETE FROM nhanvien WHERE ma_nv = #{maNv}
+        UPDATE nhan_vien SET
+            hoat_dong = false
+        WHERE ma_nhan_vien = #{maNhanVien}
     </delete>
+
+    <select id="getMaxNhanVienIndexByPhongBan" resultType="int">
+        SELECT IFNULL(MAX(CAST(RIGHT(ma_nhan_vien, 4) AS UNSIGNED)), 0)
+        FROM chuc_vu
+        WHERE ma_phong_ban = #{maPhongBan}
+    </select>
 
 </mapper>

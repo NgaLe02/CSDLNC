@@ -1,7 +1,6 @@
 package com.ptit.csdlnc.model;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -15,19 +14,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DuAn {
 
-    private String maDa;
-    private String tenDa;
-    private String loaiDa;
-    private Integer soNhanVienToiDa;
-    private String maPhongQl;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Long maDuAn;
+    private String tenDuAn;
+    private String maLoaiDuAn;
+    private String maPhongQuanLy;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate ngayBatDau;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate ngayKetThucDuKien;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date ngayKetThucThucTe;
-    private LocalDate ketQuaThucHien;
+    private LocalDate ngayKetThucThucTe;
     private String trangThai;
 
-    private List<ThamGiaDuAn> thamGiaLst; 
+    private LoaiDuAn loaiDuAn;
+    private PhongBan phongQuanLy;
+    private List<ThamGiaDuAn> thamGiaLst;
 }

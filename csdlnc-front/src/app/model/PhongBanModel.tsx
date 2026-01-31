@@ -1,7 +1,7 @@
 export class PhongBanModel {
-  maPhong?: string;
-  tenPhong?: string;
-  moTa?: string;
+  maPhongBan?: string;
+  tenPhongBan?: string;
+  loaiPhong?: string;
   ngayThanhLap?: string; // Date as string
 
   constructor(init?: Partial<PhongBanModel>) {

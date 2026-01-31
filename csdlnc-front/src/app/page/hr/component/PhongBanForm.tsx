@@ -25,10 +25,10 @@ export default function PhongBanForm(props: any) {
     const formattedModel = {
       ...model,
       ngayThanhLap: model.ngayThanhLap
-        ? dayjs(model.ngayThanhLap).format("DD-MM-YYYY")
+        ? dayjs(model.ngayThanhLap).format("YYYY-MM-DD")
         : model.ngayThanhLap,
     };
-    if (model.maPhong) {
+    if (model.maPhongBan) {
       PhongBanService.getInstance()
         .updatePhongBan(formattedModel)
         .then((resp) => {
@@ -67,49 +67,59 @@ export default function PhongBanForm(props: any) {
     }
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setModel((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   return (
     <div className="col-sm-12 col-xl-12">
       <div className="bg-light rounded h-100 p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="maPhong" className="form-label">
+            <label htmlFor="maPhongBan" className="form-label">
               Mã Phòng
             </label>
             <input
               type="text"
               className="form-control"
-              id="maPhong"
-              name="maPhong"
-              value={model.maPhong ?? ""}
+              id="maPhongBan"
+              name="maPhongBan"
+              value={model.maPhongBan ?? ""}
               onChange={handleChange}
               readOnly
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="tenPhong" className="form-label">
+            <label htmlFor="tenPhongBan" className="form-label">
               Tên Phòng
             </label>
             <input
               type="text"
               className="form-control"
-              id="tenPhong"
-              name="tenPhong"
-              value={model.tenPhong ?? ""}
+              id="tenPhongBan"
+              name="tenPhongBan"
+              value={model.tenPhongBan ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="moTa" className="form-label">
-              Mô tả
-            </label>
-            <textarea
+            <label className="form-label">Loại phòng</label>
+            <select
               className="form-control"
-              id="moTa"
-              name="moTa"
-              value={model.moTa ?? ""}
-              onChange={handleChange}
-            />
+              name="loaiPhong"
+              value={model.loaiPhong ?? ""}
+              onChange={handleSelectChange}
+            >
+              <option value="">Chọn loại phòng</option>
+              <option value="PHONG_NHAN_SU">Phòng nhân sự</option>
+              <option value="PHONG_QUAN_LY_DU_AN">Phòng quản lý dự án</option>
+              <option value="Khác">Khác</option>
+            </select>
           </div>
           <div className="mb-3">
             <label htmlFor="ngayThanhLap" className="form-label">

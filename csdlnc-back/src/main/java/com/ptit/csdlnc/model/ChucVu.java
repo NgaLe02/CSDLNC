@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PhongBan {
+public class ChucVu {
 
     private String maPhongBan;
-    private String tenPhongBan;
-    private String loaiPhong;
+    private String maNhanVien;
+    private String tenChucVu;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate ngayThanhLap;
+    private LocalDate ngayApDung;
+
+    private PhongBan phongBan;
 }

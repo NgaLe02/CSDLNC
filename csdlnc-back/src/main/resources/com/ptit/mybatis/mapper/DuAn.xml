@@ -3,65 +3,126 @@
 <mapper namespace="com.ptit.csdlnc.dao.DuAnDAO">
 
     <resultMap id="DuAnResultMap" type="com.ptit.csdlnc.model.DuAn">
-        <id column="ma_da" property="maDa"/>
-        <result column="ten_da" property="tenDa"/>
-        <result column="loai_da" property="loaiDa"/>
-        <result column="so_nhan_vien_toi_da" property="soNhanVienToiDa"/>
-        <result column="ma_phong_ql" property="maPhongQl"/>
-        <result column="ma_nv_chu_tri" property="maNvChuTri"/>
-        <result column="ngay_bat_dau" property="ngayBatDau"/>
-        <result column="ngay_ket_thuc_du_kien" property="ngayKetThucDuKien"/>
-        <result column="ngay_ket_thuc_thuc_te" property="ngayKetThucThucTe"/>
-        <result column="ket_qua_thuc_hien" property="ketQuaThucHien"/>
+
+        <id column="ma_du_an" property="maDuAn"/>
+        <result column="ten_du_an" property="tenDuAn"/>
+
+        <result column="ngay_bat_dau" property="ngayBatDau" jdbcType="DATE"/>
+        <result column="ngay_ket_thuc_du_kien" property="ngayKetThucDuKien" jdbcType="DATE"/>
+        <result column="ngay_ket_thuc_thuc_te" property="ngayKetThucThucTe" jdbcType="DATE"/>
+
         <result column="trang_thai" property="trangThai"/>
+
+        <!--  LOẠI DỰ ÁN -->
+        <association property="loaiDuAn"
+                    javaType="com.ptit.csdlnc.model.LoaiDuAn">
+            <id column="ma_loai_du_an" property="maLoaiDuAn"/>
+            <result column="ten_loai_du_an" property="tenLoaiDuAn"/>
+        </association>
+
+        <!--  PHÒNG QUẢN LÝ -->
+        <association property="phongQuanLy"
+                    javaType="com.ptit.csdlnc.model.PhongBan">
+            <id column="ma_phong_ban" property="maPhongBan"/>
+            <result column="ten_phong_ban" property="tenPhongBan"/>
+        </association>
+
     </resultMap>
 
+
     <select id="getAll" resultMap="DuAnResultMap">
-        SELECT * FROM duan
+        SELECT
+            da.ma_du_an,
+            da.ten_du_an,
+            da.ngay_bat_dau,
+            da.ngay_ket_thuc_du_kien,
+            da.ngay_ket_thuc_thuc_te,
+            da.trang_thai,
+
+            lda.ma_loai_du_an,
+            lda.ten_loai_du_an,
+
+            pb.ma_phong_ban,
+            pb.ten_phong_ban
+        FROM du_an da
+        JOIN loai_du_an lda ON da.ma_loai_du_an = lda.ma_loai_du_an
+        JOIN phong_ban pb ON da.ma_phong_quan_ly = pb.ma_phong_ban
     </select>
 
-    <select id="getById" parameterType="string" resultMap="DuAnResultMap">
-        SELECT * FROM duan WHERE ma_da = #{maDa}
+    <select id="getById" parameterType="long" resultMap="DuAnResultMap">
+        SELECT
+            da.ma_du_an,
+            da.ten_du_an,
+            da.ngay_bat_dau,
+            da.ngay_ket_thuc_du_kien,
+            da.ngay_ket_thuc_thuc_te,
+            da.trang_thai,
+
+            lda.ma_loai_du_an,
+            lda.ten_loai_du_an,
+
+            pb.ma_phong_ban,
+            pb.ten_phong_ban
+        FROM du_an da
+        JOIN loai_du_an lda ON da.ma_loai_du_an = lda.ma_loai_du_an
+        JOIN phong_ban pb ON da.ma_phong_quan_ly = pb.ma_phong_ban
+        WHERE da.ma_du_an = #{maDuAn}
     </select>
+
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.DuAn">
-        INSERT INTO duan (ten_da, loai_da, ma_phong_ql, ngay_bat_dau, ngay_ket_thuc_du_kien, ngay_ket_thuc_thuc_te, ket_qua_thuc_hien, trang_thai)
-        VALUES (#{tenDa}, #{loaiDa}, #{maPhongQl}, #{ngayBatDau}, #{ngayKetThucDuKien}, #{ngayKetThucThucTe}, #{ketQuaThucHien}, #{trangThai})
+        INSERT INTO du_an (
+            ten_du_an,
+            ngay_bat_dau,
+            ngay_ket_thuc_du_kien,
+            ngay_ket_thuc_thuc_te,
+            trang_thai,
+            ma_loai_du_an,
+            ma_phong_quan_ly
+        )
+        VALUES (
+            #{tenDuAn},
+            #{ngayBatDau},
+            #{ngayKetThucDuKien},
+            #{ngayKetThucThucTe},
+            #{trangThai},
+            #{loaiDuAn.maLoaiDuAn},
+            #{phongQuanLy.maPhongBan}
+        )
     </insert>
 
-    <update id="update" parameterType="com.ptit.csdlnc.model.DuAn">
-        UPDATE duan SET
-        ten_da = #{tenDa},
-        loai_da = #{loaiDa},
-        ma_phong_ql = #{maPhongQl},
-        ngay_bat_dau = #{ngayBatDau},
-        ngay_ket_thuc_du_kien = #{ngayKetThucDuKien},
-        ngay_ket_thuc_thuc_te = #{ngayKetThucThucTe},
-        ket_qua_thuc_hien = #{ketQuaThucHien},
-        trang_thai = #{trangThai}
-        WHERE ma_da = #{maDa}
-    </update>
 
-    <delete id="delete" parameterType="string">
-        DELETE FROM duan WHERE ma_da = #{maDa}
+    <update id="update" parameterType="com.ptit.csdlnc.model.DuAn">
+        UPDATE du_an SET
+            ten_du_an = #{tenDuAn},
+            ngay_bat_dau = #{ngayBatDau},
+            ngay_ket_thuc_du_kien = #{ngayKetThucDuKien},
+            ngay_ket_thuc_thuc_te = #{ngayKetThucThucTe},
+            trang_thai = #{trangThai},
+            ma_loai_du_an = #{loaiDuAn.maLoaiDuAn},
+            ma_phong_quan_ly = #{phongQuanLy.maPhongBan}
+        WHERE ma_du_an = #{maDuAn}
+    </update>
+    
+    <delete id="delete" parameterType="long">
+        DELETE FROM du_an WHERE ma_du_an = #{maDuAn}
     </delete>
 
     <resultMap id="NhanVienResultMap" type="com.ptit.csdlnc.model.NhanVien">
-        <id column="ma_nv" property="maNv"/>
+        <id column="ma_nhan_vien" property="maNhanVien"/>
         <result column="ho_ten" property="hoTen"/>
         <result column="ngay_sinh" property="ngaySinh" jdbcType="DATE"/>
         <result column="gioi_tinh" property="gioiTinh"/>
-        <result column="chuc_vu" property="chucVu"/>
-        <result column="bac_luong" property="bacLuong"/>
-        <result column="luong_co_ban" property="luongCoBan"/>
-        <result column="ma_phong" property="maPhong"/>
     </resultMap>
 
-    <select id="getAssignedEmployees" parameterType="string" resultMap="NhanVienResultMap">
+    <select id="getAssignedEmployees" resultMap="NhanVienResultMap">
         SELECT DISTINCT nv.*
-        FROM nhanvien nv
-        INNER JOIN thamgia_duan thc ON nv.ma_nv = thc.ma_nv
-        WHERE thc.ma_da = #{maDa} and thc.thang = #{thang} and thc.nam=#{nam}
+        FROM nhan_vien nv
+        JOIN tham_gia_du_an tgd
+            ON nv.ma_nhan_vien = tgd.ma_nhan_vien
+        WHERE tgd.ma_du_an = #{maDuAn}
+        AND tgd.thang = #{thang}
+        AND tgd.nam = #{nam}
     </select>
 
 </mapper>

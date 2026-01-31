@@ -14,43 +14,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ptit.csdlnc.model.ChiTietPhat;
-import com.ptit.csdlnc.service.ChiTietPhatService;
+import com.ptit.csdlnc.model.LoaiCongViec;
+import com.ptit.csdlnc.service.LoaiCongViecService;
 
 @RestController
-@RequestMapping("api/chitietphat")
-public class ChiTietPhatController {
+@RequestMapping("api/loai-cong-viec")
+public class LoaiCongViecController {
 
     @Autowired
-    private ChiTietPhatService chiTietPhatService;
+    private LoaiCongViecService service;
 
     @GetMapping
-    public ResponseEntity<List<ChiTietPhat>> getAll() {
-        List<ChiTietPhat> list = chiTietPhatService.getAll();
+    public ResponseEntity<List<LoaiCongViec>> getAll() {
+        List<LoaiCongViec> list = service.getAll();
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/{maPhat}")
-    public ResponseEntity<ChiTietPhat> getById(@PathVariable Integer maPhat) {
-        ChiTietPhat chiTietPhat = chiTietPhatService.getById(maPhat);
-        return ResponseEntity.ok(chiTietPhat);
+    @GetMapping("/{maLoaiCv}")
+    public ResponseEntity<LoaiCongViec> getById(@PathVariable String maLoaiCv) {
+        LoaiCongViec loaiCv = service.getById(maLoaiCv);
+        return ResponseEntity.ok(loaiCv);
     }
 
     @PostMapping
-    public ResponseEntity<Void> insert(@RequestBody ChiTietPhat chiTietPhat) {
-        chiTietPhatService.insert(chiTietPhat);
+    public ResponseEntity<Void> insert(@RequestBody LoaiCongViec loaICv) {
+        service.insert(loaICv);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody ChiTietPhat chiTietPhat) {
-        chiTietPhatService.update(chiTietPhat);
+    public ResponseEntity<Void> update(@RequestBody LoaiCongViec loaICv) {
+        service.update(loaICv);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{maPhat}")
-    public ResponseEntity<Void> delete(@PathVariable Integer maPhat) {
-        chiTietPhatService.delete(maPhat);
+    @DeleteMapping("/{maLoaiCv}")
+    public ResponseEntity<Void> delete(@PathVariable String maLoaiCv) {
+        service.delete(maLoaiCv);
         return ResponseEntity.noContent().build();
     }
 }

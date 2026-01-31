@@ -1,6 +1,5 @@
 package com.ptit.csdlnc.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -13,13 +12,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NhanVien {
-    private String maNv;
+
+    private String maNhanVien;
     private String hoTen;
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate ngaySinh;
-    private String gioiTinh; // ENUM('Nam', 'Nữ', 'Khác')
-    private String chucVu; // ENUM('NhanVien', 'TruongPhong', 'PhoPhong')
-    private BigDecimal bacLuong;
-    private BigDecimal luongCoBan;
-    private String maPhong;
+    private String gioiTinh; // 'Nam','Nu','Khac'
+    private Boolean hoatDong;
+
+    private ChucVu phanCong;
+    private XepBacLuong xepBacLuong;
 }

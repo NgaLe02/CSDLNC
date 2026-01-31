@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.LoaiCongViecDAO">
+
+    <resultMap id="LoaiCVResultMap" type="com.ptit.csdlnc.model.LoaiCongViec">
+        <id column="ma_loai_cv" property="maLoaiCv"/>
+        <result column="ten_loai_cong_viec" property="tenLoaiCongViec"/>
+        <result column="muc_luong_nang_suat" property="mucLuongNangSuat"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="LoaiCVResultMap">
+        SELECT * FROM loai_cong_viec
+    </select>
+
+    <select id="getById" parameterType="string" resultMap="LoaiCVResultMap">
+        SELECT * FROM loai_cong_viec WHERE ma_loai_cv = #{maLoaiCv}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.LoaiCongViec">
+        INSERT INTO loai_cong_viec (ten_loai_cong_viec, muc_luong_nang_suat)
+        VALUES (#{tenLoaiCongViec}, #{mucLuongNangSuat})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.LoaiCongViec">
+        UPDATE loai_cong_viec SET
+        ten_loai_cong_viec = #{tenLoaiCongViec},
+        muc_luong_nang_suat = #{mucLuongNangSuat}
+        WHERE ma_loai_cv = #{maLoaiCv}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM loai_cong_viec WHERE ma_loai_cv = #{maLoaiCv}
+    </delete>
+
+</mapper>

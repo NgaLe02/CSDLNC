@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { NhanVienModel } from "../../model/NhanVienModel";
 import { NhanVienService } from "../../services/NhanVienService";
 import NhanVienForm from "./component/NhanVienForm";
+import { BacLuongModel } from "../../model/BacLuongModel";
 
 const NhanVienPage: React.FC = () => {
   const [listData, setListData] = useState<NhanVienModel[]>([]);
@@ -72,6 +73,28 @@ const NhanVienPage: React.FC = () => {
     }
   }
 
+  function handleActive(maNv: string) {
+    if (window.confirm("Bạn có chắc chắn muốn kích hoạt?")) {
+      NhanVienService.getInstance()
+        .activeNhanVien(maNv)
+        .then((resp) => {
+          if (resp.status === 200) {
+            toast.success("Kích hoạt nhân viên thành công");
+            getLstNhanVien();
+          } else {
+            toast.error("Có lỗi xảy ra khi xóa");
+          }
+        })
+        .catch((err) => {
+          if (err.response && err.response.data) {
+            toast.error(err.response.data.message || "Có lỗi xảy ra");
+          } else {
+            toast.error("Có lỗi xảy ra");
+          }
+        });
+    }
+  }
+
   function closeModal(status: boolean) {
     setShowForm(false);
     getLstNhanVien();
@@ -100,41 +123,50 @@ const NhanVienPage: React.FC = () => {
                   <th scope="col">Giới Tính</th>
                   <th scope="col">Chức Vụ</th>
                   <th scope="col">Bậc Lương</th>
-                  <th scope="col">Lương Cơ Bản</th>
                   <th scope="col">Mã Phòng</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
                 {listData.map((item: NhanVienModel, index: number) => (
-                  <tr key={item.maNv}>
+                  <tr key={item.maNhanVien}>
                     <td>{index + 1}</td>
-                    <td>{item.maNv}</td>
+                    <td>{item.maNhanVien}</td>
                     <td>{item.hoTen}</td>
                     <td>
-                      {/* {item.ngaySinh
+                      {item.ngaySinh
                         ? dayjs(item.ngaySinh).format("DD-MM-YYYY")
-                        : ""} */}
-                      {item.ngaySinh}
+                        : ""}
+                      {/* {item.ngaySinh} */}
                     </td>
                     <td>{item.gioiTinh}</td>
-                    <td>{item.chucVu}</td>
-                    <td>{item.bacLuong}</td>
-                    <td>{item.luongCoBan}</td>
-                    <td>{item.maPhong}</td>
+                    <td>{item?.phanCong?.tenChucVu}</td>
+                    <td>{item?.xepBacLuong?.bacLuong?.tenBacLuong}</td>
+                    <td>{item?.phanCong?.phongBan?.tenPhongBan}</td>
                     <td>
-                      <button
-                        className="btn btn-sm btn-info ms-2"
-                        onClick={() => handleEdit(item)}
-                      >
-                        Sửa
-                      </button>
-                      <button
-                        className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maNv!)}
-                      >
-                        Xóa
-                      </button>
+                      {item.hoatDong ? (
+                        <>
+                          <button
+                            className="btn btn-sm btn-info ms-2"
+                            onClick={() => handleEdit(item)}
+                          >
+                            Sửa
+                          </button>
+                          <button
+                            className="btn btn-sm btn-danger ms-2"
+                            onClick={() => handleDelete(item.maNhanVien!)}
+                          >
+                            Xóa
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          className="btn btn-sm btn-info ms-2"
+                          onClick={() => handleActive(item.maNhanVien!)}
+                        >
+                          Kích hoạt
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -150,7 +182,7 @@ const NhanVienPage: React.FC = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel.maNv ? "Sửa nhân viên" : "Thêm nhân viên"}
+                  {editingModel.maNhanVien ? "Sửa nhân viên" : "Thêm nhân viên"}
                 </h5>
                 <button
                   type="button"

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.BacLuongDAO">
+
+    <resultMap id="BacLuongResultMap" type="com.ptit.csdlnc.model.BacLuong">
+        <id column="ma_bac_luong" property="maBacLuong"/>
+        <result column="ten_bac_luong" property="tenBacLuong"/>
+        <result column="muc_luong_co_ban" property="mucLuongCoBan"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="BacLuongResultMap">
+        SELECT * FROM bac_luong
+    </select>
+
+    <select id="getById" parameterType="string" resultMap="BacLuongResultMap">
+        SELECT * FROM bac_luong WHERE ma_bac_luong = #{maBacLuong}
+    </select>
+
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.BacLuong">
+        INSERT INTO bac_luong (ma_bac_luong, ten_bac_luong, muc_luong_co_ban)
+        VALUES (#{maBacLuong}, #{tenBacLuong}, #{mucLuongCoBan})
+    </insert>
+
+    <update id="update" parameterType="com.ptit.csdlnc.model.BacLuong">
+        UPDATE bac_luong SET
+        ten_bac_luong = #{tenBacLuong},
+        muc_luong_co_ban = #{mucLuongCoBan}
+        WHERE ma_bac_luong = #{maBacLuong}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM bac_luong WHERE ma_bac_luong = #{maBacLuong}
+    </delete>
+
+</mapper>

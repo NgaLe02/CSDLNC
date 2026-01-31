@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { LoaiDuAnModel } from "../../../model/LoaiDuAnModel";
-import { LoaiDuAnService } from "../../../services/LoaiDuAnService";
+import { LoaiCongViecModel } from "../../../model/LoaiCongViecModel";
+import { LoaiCongViecService } from "../../../services/LoaiCongViecService";
 
-export default function LoaiDuAnForm(props: any) {
-  const [model, setModel] = useState<LoaiDuAnModel>(new LoaiDuAnModel());
+export default function LoaiCongViecForm(props: any) {
+  const [model, setModel] = useState<LoaiCongViecModel>(
+    new LoaiCongViecModel(),
+  );
 
   useEffect(() => {
     if (props.model) {
@@ -32,12 +34,12 @@ export default function LoaiDuAnForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (model.maLoaiDuAn) {
-      LoaiDuAnService.getInstance()
-        .updateLoaiDuAn(model)
+    if (model.maLoaiCv) {
+      LoaiCongViecService.getInstance()
+        .updateLoaiCv(model)
         .then((resp) => {
           if (resp.status === 200) {
-            toast.success("Cập nhật loại dự án thành công");
+            toast.success("Cập nhật loại công việc thành công");
             props.closeModal(true);
           } else {
             toast.error("Có lỗi xảy ra khi cập nhật");
@@ -51,11 +53,11 @@ export default function LoaiDuAnForm(props: any) {
           }
         });
     } else {
-      LoaiDuAnService.getInstance()
-        .insertLoaiDuAn(model)
+      LoaiCongViecService.getInstance()
+        .insertLoaiCv(model)
         .then((resp) => {
           if (resp.status === 201) {
-            toast.success("Thêm loại dự án thành công");
+            toast.success("Thêm loại công việc thành công");
             props.closeModal(true);
           } else {
             toast.error("Có lỗi xảy ra khi thêm");
@@ -79,62 +81,50 @@ export default function LoaiDuAnForm(props: any) {
       >
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="maLoaiDuAn" className="form-label">
-              Mã Loại Dự Án
+            <label htmlFor="maLoaiCv" className="form-label">
+              Mã Loại Công Việc
             </label>
             <input
               type="text"
               className="form-control"
-              id="maLoaiDuAn"
-              name="maLoaiDuAn"
-              value={model?.maLoaiDuAn ?? ""}
+              id="maLoaiCv"
+              name="maLoaiCv"
+              value={model?.maLoaiCv ?? ""}
               onChange={handleChange}
               readOnly
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="tenLoaiDuAn" className="form-label">
-              Tên Loại Dự Án
+            <label htmlFor="tenLoaiCongViec" className="form-label">
+              Tên Loại Công Việc
             </label>
             <input
               type="text"
               className="form-control"
-              id="tenLoaiDuAn"
-              name="tenLoaiDuAn"
-              value={model?.tenLoaiDuAn ?? ""}
+              id="tenLoaiCongViec"
+              name="tenLoaiCongViec"
+              value={model?.tenLoaiCongViec ?? ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="soNhanVienToiDa" className="form-label">
-              Số NV Tối Đa
+            <label htmlFor="mucLuongNangSuat" className="form-label">
+              Mức lương năng suất
             </label>
             <input
               type="number"
               className="form-control"
-              id="soNhanVienToiDa"
-              name="soNhanVienToiDa"
-              value={model?.soNhanVienToiDa ?? ""}
+              id="mucLuongNangSuat"
+              name="mucLuongNangSuat"
+              value={model?.mucLuongNangSuat ?? ""}
               onChange={handleNumberChange}
               required
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="moTa" className="form-label">
-              Mô Tả
-            </label>
-            <textarea
-              className="form-control"
-              id="moTa"
-              name="moTa"
-              value={model?.moTa ?? ""}
-              onChange={handleChange}
-              rows={3}
-            />
-          </div>
+
           <button type="submit" className="btn btn-primary">
-            {model?.maLoaiDuAn ? "Cập Nhật" : "Thêm Mới"}
+            {model?.maLoaiCv ? "Cập Nhật" : "Thêm Mới"}
           </button>
         </form>
       </div>

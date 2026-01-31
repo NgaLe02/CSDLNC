@@ -5,7 +5,7 @@
     <resultMap id="LoaiDuAnResultMap" type="com.ptit.csdlnc.model.LoaiDuAn">
         <id column="ma_loai_du_an" property="maLoaiDuAn"/>
         <result column="ten_loai_du_an" property="tenLoaiDuAn"/>
-        <result column="so_nv_toi_da" property="soNvToiDa"/>
+        <result column="so_nhan_vien_toi_da" property="soNhanVienToiDa"/>
         <result column="mo_ta" property="moTa"/>
     </resultMap>
 
@@ -18,14 +18,14 @@
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.LoaiDuAn">
-        INSERT INTO loai_du_an (ma_loai_du_an, ten_loai_du_an, so_nv_toi_da, mo_ta)
-        VALUES (#{maLoaiDuAn}, #{tenLoaiDuAn}, #{soNvToiDa}, #{moTa})
+        INSERT INTO loai_du_an (ma_loai_du_an, ten_loai_du_an, so_nhan_vien_toi_da, mo_ta)
+        VALUES (#{maLoaiDuAn}, #{tenLoaiDuAn}, #{soNhanVienToiDa}, #{moTa})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.LoaiDuAn">
         UPDATE loai_du_an SET
         ten_loai_du_an = #{tenLoaiDuAn},
-        so_nv_toi_da = #{soNvToiDa},
+        so_nhan_vien_toi_da = #{soNhanVienToiDa},
         mo_ta = #{moTa}
         WHERE ma_loai_du_an = #{maLoaiDuAn}
     </update>

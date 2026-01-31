@@ -1,5 +1,7 @@
 package com.ptit.csdlnc.model;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoaiDuAn {
+public class BacLuong {
 
-    private String maLoaiDuAn;
-    private String tenLoaiDuAn;
-    private Integer soNhanVienToiDa;
-    private String moTa;
+    private String maBacLuong;
+    private String tenBacLuong;
+    private BigDecimal mucLuongCoBan;
 }

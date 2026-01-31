@@ -48,21 +48,21 @@ export default function DuanForm(props: any) {
   }, []);
 
   useEffect(() => {
-    if (model.maPhongQl) {
-      getLstNhanVienByPhong(model.maPhongQl);
+    if (model.maPhongQuanLy) {
+      getLstNhanVienByPhong(model.maPhongQuanLy);
     } else {
       setNhanVienList([]);
     }
-  }, [model.maPhongQl]);
+  }, [model.maPhongQuanLy]);
 
   useEffect(() => {
-    if (model.loaiDa) {
+    if (model.maLoaiDuAn) {
       const selectedLoai = listLoaiDuAn.find(
-        (loai) => loai.maLoaiDuAn === model.loaiDa,
+        (loai) => loai.maLoaiDuAn === model.maLoaiDuAn,
       );
-      setSoNvToiDa(selectedLoai?.soNvToiDa || 0);
+      setSoNvToiDa(selectedLoai?.soNhanVienToiDa || 0);
     }
-  }, [model.loaiDa, listLoaiDuAn]);
+  }, [model.maLoaiDuAn, listLoaiDuAn]);
 
   useEffect(() => {
     if (model.thamGiaLst && model.thamGiaLst.length > 0) {
@@ -139,7 +139,7 @@ export default function DuanForm(props: any) {
       const selectedLoai = listLoaiDuAn.find(
         (loai) => loai.maLoaiDuAn === value,
       );
-      setSoNvToiDa(selectedLoai?.soNvToiDa || 0);
+      setSoNvToiDa(selectedLoai?.soNhanVienToiDa || 0);
       // Reset thamGiaList khi đổi loại dự án
       setThamGiaList([]);
     }
@@ -223,9 +223,8 @@ export default function DuanForm(props: any) {
       //     ? dayjs(model.ngayKetThucThucTe).format("DD-MM-YYYY")
       //     : model.ngayKetThucThucTe,
     };
-    console.log(formattedModel);
 
-    if (model.maDa) {
+    if (model.maDuAn) {
       DuanService.getInstance()
         .updateDuan(formattedModel)
         .then(async (resp) => {
@@ -274,35 +273,35 @@ export default function DuanForm(props: any) {
         <form onSubmit={handleSubmit}>
           <div className="row mb-3">
             <div className="col-md-6">
-              <label htmlFor="maDa" className="form-label">
+              <label htmlFor="maDuAn" className="form-label">
                 Mã DA
               </label>
               <input
                 type="text"
                 className="form-control"
-                id="maDa"
-                name="maDa"
-                value={model.maDa ?? ""}
+                id="maDuAn"
+                name="maDuAn"
+                value={model.maDuAn ?? ""}
                 onChange={handleChange}
                 readOnly
               />
             </div>
             <div className="col-md-6">
-              <label htmlFor="loaiDa" className="form-label">
+              <label htmlFor="maLoaiDuAn" className="form-label">
                 Loại DA
               </label>
               <select
                 className="form-control"
-                id="loaiDa"
-                name="loaiDa"
-                value={model.loaiDa ?? ""}
+                id="maLoaiDuAn"
+                name="maLoaiDuAn"
+                value={model.maLoaiDuAn ?? ""}
                 onChange={handleSelectChange}
                 required
               >
                 <option value="">Chọn loại dự án</option>
                 {listLoaiDuAn.map((loai) => (
                   <option key={loai.maLoaiDuAn} value={loai.maLoaiDuAn}>
-                    {loai.tenLoaiDuAn} - Tối đa {loai.soNvToiDa} nhân viên
+                    {loai.tenLoaiDuAn} - Tối đa {loai.soNhanVienToiDa} nhân viên
                   </option>
                 ))}
               </select>
@@ -310,15 +309,15 @@ export default function DuanForm(props: any) {
           </div>
           <div className="row mb-3">
             <div className="col-md-12">
-              <label htmlFor="tenDa" className="form-label">
+              <label htmlFor="tenDuAn" className="form-label">
                 Tên DA
               </label>
               <input
                 type="text"
                 className="form-control"
-                id="tenDa"
-                name="tenDa"
-                value={model.tenDa ?? ""}
+                id="tenDuAn"
+                name="tenDuAn"
+                value={model.tenDuAn ?? ""}
                 onChange={handleChange}
                 required
               />
@@ -327,20 +326,20 @@ export default function DuanForm(props: any) {
           </div>
           <div className="row mb-3">
             <div className="col-md-6">
-              <label htmlFor="maPhongQl" className="form-label">
+              <label htmlFor="maPhongQuanLy" className="form-label">
                 Phòng quản lý
               </label>
               <select
                 className="form-control"
-                name="maPhongQl"
-                value={model.maPhongQl ?? ""}
+                name="maPhongQuanLy"
+                value={model.maPhongQuanLy ?? ""}
                 onChange={handleSelectChange}
                 required
               >
                 <option value="">Chọn phòng ban</option>
                 {phongBanList.map((pb) => (
-                  <option key={pb.maPhong} value={pb.maPhong}>
-                    {pb.maPhong} - {pb.tenPhong}
+                  <option key={pb.maPhongBan} value={pb.maPhongBan}>
+                    {pb.maPhongBan} - {pb.tenPhongBan}
                   </option>
                 ))}
               </select>
@@ -360,8 +359,7 @@ export default function DuanForm(props: any) {
                 <option value="">Chọn trạng thái</option>
                 <option value="ChuaThucHien">Chưa thực hiện</option>
                 <option value="DangThucHien">Đang thực hiện</option>
-                <option value="DungHan">Đúng hạn</option>
-                <option value="QuaHan">Quá hạn</option>
+                <option value="DaThucHien">Đã thực hiện</option>
               </select>
             </div>
           </div>
@@ -376,27 +374,30 @@ export default function DuanForm(props: any) {
                   style={{ maxHeight: "200px", overflowY: "auto" }}
                 >
                   {nhanVienList
-                    .filter((nv) => nv.maNv !== maNvChuTri)
+                    .filter((nv) => nv.maNhanVien !== maNvChuTri)
                     .map((nv) => (
-                      <div key={nv.maNv} className="form-check">
+                      <div key={nv.maNhanVien} className="form-check">
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          id={`thamgia-${nv.maNv}`}
+                          id={`thamgia-${nv.maNhanVien}`}
                           checked={thamGiaList.some(
-                            (tg) => tg.maNv === nv.maNv,
+                            (tg) => tg.maNv === nv.maNhanVien,
                           )}
                           onChange={(e) =>
-                            handleThamGiaChange(nv.maNv!, e.target.checked)
+                            handleThamGiaChange(
+                              nv.maNhanVien!,
+                              e.target.checked,
+                            )
                           }
                           disabled={
                             thamGiaList.length >= soNvToiDa - 1 &&
-                            !thamGiaList.some((tg) => tg.maNv === nv.maNv)
+                            !thamGiaList.some((tg) => tg.maNv === nv.maNhanVien)
                           }
                         />
                         <label
                           className="form-check-label"
-                          htmlFor={`thamgia-${nv.maNv}`}
+                          htmlFor={`thamgia-${nv.maNhanVien}`}
                         >
                           {nv.hoTen}
                         </label>
@@ -436,20 +437,6 @@ export default function DuanForm(props: any) {
                 onChange={handleChange}
               />
             </div>
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="ketQuaThucHien" className="form-label">
-              Kết Quả Thực Hiện
-            </label>
-            <textarea
-              className="form-control"
-              id="ketQuaThucHien"
-              name="ketQuaThucHien"
-              value={model.ketQuaThucHien ?? ""}
-              onChange={handleChange}
-              rows={3}
-            />
           </div>
 
           <button type="submit" className="btn btn-primary">

@@ -61,6 +61,16 @@ function SideBarLeft() {
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
+                    navigate("/system/bac-luong");
+                  }}
+                >
+                  Bậc lương{" "}
+                </a>
+                <a
+                  href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
                     navigate("/system/phong-ban");
                   }}
                 >
@@ -95,6 +105,16 @@ function SideBarLeft() {
                   }}
                 >
                   Dự án
+                </a>
+                <a
+                  href="#"
+                  className="dropdown-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/system/loai-cong-viec");
+                  }}
+                >
+                  Loại công việc
                 </a>
                 <a
                   href="#"

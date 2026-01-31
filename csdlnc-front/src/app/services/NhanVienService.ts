@@ -52,6 +52,15 @@ export class NhanVienService {
     });
   }
 
+  public activeNhanVien(maNv: string) {
+    const url = ApiUrlUtil.buildQueryString(
+      process.env.REACT_APP_API_URL + "/nhanvien/active/" + maNv,
+    );
+    return axios.put(url, {
+      headers: HeadersUtil.getHeaders(),
+    });
+  }
+
   public deleteNhanVien(maNv: string) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/nhanvien/" + maNv,
@@ -62,10 +71,8 @@ export class NhanVienService {
   }
 
   public getLstNhanVienByPhong(maPhong: string) {
-    const params = ParamUtil.toRequestParams({ maPhong });
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/nhanvien/by-phong",
-      params,
+      process.env.REACT_APP_API_URL + "/nhanvien/by-phong-ban/" + maPhong,
     );
     return axios.get(url, {
       headers: HeadersUtil.getHeaders(),

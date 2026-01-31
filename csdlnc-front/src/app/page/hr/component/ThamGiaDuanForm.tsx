@@ -137,8 +137,8 @@ export default function ThamGiaDuanForm(props: any) {
             >
               <option value="">Chọn nhân viên</option>
               {nhanVienList.map((nv) => (
-                <option key={nv.maNv} value={nv.maNv}>
-                  {nv.hoTen} ({nv.maNv})
+                <option key={nv.maNhanVien} value={nv.maNhanVien}>
+                  {nv.hoTen} ({nv.maNhanVien})
                 </option>
               ))}
             </select>

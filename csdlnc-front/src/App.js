@@ -14,6 +14,8 @@ import Request04 from "./app/page/request/Request04";
 import Request05 from "./app/page/request/Request05";
 import Request06 from "./app/page/request/Request06";
 import LoaiDuAnPage from "./app/page/hr/LoaiDuAnPage";
+import BacLuongPage from "./app/page/hr/BacLuongPage";
+import LoaiCongViecPage from "./app/page/hr/LoaiCongViecPage";
 
 function App() {
   return (
@@ -29,10 +31,12 @@ function App() {
           <div className="container-fluid pt-4 px-4">
             <Routes>
               <Route path="/system">
+                <Route path="bac-luong" element={<BacLuongPage />} />
                 <Route path="phong-ban" element={<PhongBanPage />} />
                 <Route path="nhan-vien" element={<NhanVienPage />} />
                 <Route path="du-an" element={<DuanPage />} />
                 <Route path="loai-du-an" element={<LoaiDuAnPage />} />
+                <Route path="loai-cong-viec" element={<LoaiCongViecPage />} />
 
                 <Route
                   path="thuc-hien-cong-viec"

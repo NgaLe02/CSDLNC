@@ -101,11 +101,11 @@ const PhongBanPage: React.FC = () => {
               </thead>
               <tbody>
                 {listData.map((item: PhongBanModel, index: number) => (
-                  <tr key={item.maPhong}>
+                  <tr key={item.maPhongBan}>
                     <td>{index + 1}</td>
-                    <td>{item.maPhong}</td>
-                    <td>{item.tenPhong}</td>
-                    <td>{item.moTa}</td>
+                    <td>{item.maPhongBan}</td>
+                    <td>{item.tenPhongBan}</td>
+                    <td>{item.loaiPhong}</td>
                     <td>
                       {/* {item.ngayThanhLap
                         ? dayjs(item.ngayThanhLap).format("DD-MM-YYYY")
@@ -121,7 +121,7 @@ const PhongBanPage: React.FC = () => {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maPhong!)}
+                        onClick={() => handleDelete(item.maPhongBan!)}
                       >
                         Xóa
                       </button>
@@ -140,7 +140,7 @@ const PhongBanPage: React.FC = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel.maPhong ? "Sửa phòng ban" : "Thêm phòng ban"}
+                  {editingModel.maPhongBan ? "Sửa phòng ban" : "Thêm phòng ban"}
                 </h5>
                 <button
                   type="button"

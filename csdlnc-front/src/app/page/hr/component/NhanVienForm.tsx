@@ -5,17 +5,32 @@ import { NhanVienModel } from "../../../model/NhanVienModel";
 import { NhanVienService } from "../../../services/NhanVienService";
 import { PhongBanService } from "../../../services/PhongBanService";
 import { HttpStatusCode } from "axios";
+import { PhongBanModel } from "../../../model/PhongBanModel";
+import { BacLuongModel } from "../../../model/BacLuongModel";
+import { BacLuongService } from "../../../services/BacLuongService";
 
 export default function NhanVienForm(props: any) {
   const [model, setModel] = useState<NhanVienModel>(
     props.model ?? new NhanVienModel(),
   );
 
-  const [phongBanList, setPhongBanList] = useState<any[]>([]);
+  const [phongBanList, setPhongBanList] = useState<PhongBanModel[]>([]);
+  const [listBacLuong, setListBacLuong] = useState<BacLuongModel[]>([]);
 
   useEffect(() => {
+    getLstBacLuong();
     getLstPhongBan();
   }, []);
+
+  const getLstBacLuong = async () => {
+    BacLuongService.getInstance()
+      .getLstBacLuong()
+      .then((resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          setListBacLuong(resp.data);
+        }
+      });
+  };
 
   function getLstPhongBan() {
     PhongBanService.getInstance()
@@ -33,7 +48,9 @@ export default function NhanVienForm(props: any) {
       });
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNhanVienChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setModel((prev) => ({
       ...prev,
@@ -41,24 +58,61 @@ export default function NhanVienForm(props: any) {
     }));
   };
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChucVuChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setModel((prev) => ({
       ...prev,
-      [name]: value,
+      phanCong: {
+        ...prev.phanCong,
+        [name]: value,
+      },
+    }));
+  };
+
+  const handleBacLuongChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setModel((prev) => ({
+      ...prev,
+      xepBacLuong: {
+        ...prev.xepBacLuong,
+        [name]: value,
+      },
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Format ngaySinh to DD-MM-YYYY before sending
     const formattedModel = {
       ...model,
+
       ngaySinh: model.ngaySinh
-        ? dayjs(model.ngaySinh).format("DD-MM-YYYY")
-        : model.ngaySinh,
+        ? dayjs(model.ngaySinh).format("YYYY-MM-DD")
+        : undefined,
+
+      phanCong: model.phanCong
+        ? {
+            ...model.phanCong,
+            ngayApDung: model.phanCong.ngayApDung
+              ? dayjs(model.phanCong.ngayApDung).format("YYYY-MM-DD")
+              : undefined,
+          }
+        : undefined,
+
+      xepBacLuong: model.xepBacLuong
+        ? {
+            ...model.xepBacLuong,
+            ngayApDung: model.xepBacLuong.ngayApDung
+              ? dayjs(model.xepBacLuong.ngayApDung).format("YYYY-MM-DD")
+              : undefined,
+          }
+        : undefined,
     };
-    if (model.maNv) {
+
+    if (model.maNhanVien) {
       NhanVienService.getInstance()
         .updateNhanVien(formattedModel)
         .then((resp) => {
@@ -104,41 +158,37 @@ export default function NhanVienForm(props: any) {
         style={{ maxHeight: "70vh", overflowY: "auto" }}
       >
         <form onSubmit={handleSubmit}>
+          <h5>Thông tin cá nhân</h5>
           <div className="row mb-3">
             <div className="col-md-6">
-              <label htmlFor="maNv" className="form-label">
+              <label htmlFor="maNhanVien" className="form-label">
                 Mã NV
               </label>
               <input
                 type="text"
                 className="form-control"
-                id="maNv"
-                name="maNv"
-                value={model.maNv ?? ""}
-                onChange={handleChange}
+                id="maNhanVien"
+                name="maNhanVien"
+                value={model.maNhanVien ?? ""}
+                onChange={handleNhanVienChange}
                 readOnly
               />
             </div>
 
             <div className="col-md-6">
-              <label className="form-label">Phòng Ban</label>
+              <label className="form-label">Giới Tính</label>
               <select
                 className="form-control"
-                name="maPhong"
-                value={model.maPhong ?? ""}
-                onChange={handleSelectChange}
-                required
+                name="gioiTinh"
+                value={model.gioiTinh ?? ""}
+                onChange={handleNhanVienChange}
               >
-                <option value="">Chọn phòng ban</option>
-                {phongBanList.map((pb) => (
-                  <option key={pb.maPhong} value={pb.maPhong}>
-                    {pb.maPhong} - {pb.tenPhong}
-                  </option>
-                ))}
+                <option value="">Chọn giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+                <option value="Khác">Khác</option>
               </select>
             </div>
-          </div>
-          <div className="row mb-3">
             <div className="col-md-6">
               <label className="form-label">Họ Tên</label>
               <input
@@ -146,7 +196,7 @@ export default function NhanVienForm(props: any) {
                 className="form-control"
                 name="hoTen"
                 value={model.hoTen ?? ""}
-                onChange={handleChange}
+                onChange={handleNhanVienChange}
                 required
               />
             </div>
@@ -158,19 +208,37 @@ export default function NhanVienForm(props: any) {
                 className="form-control"
                 name="ngaySinh"
                 value={model.ngaySinh ?? ""}
-                onChange={handleChange}
+                onChange={handleNhanVienChange}
               />
             </div>
           </div>
 
+          <h5>Phân công phòng</h5>
           <div className="row mb-3">
+            <div className="col-md-6">
+              <label className="form-label">Phòng Ban</label>
+              <select
+                className="form-control"
+                name="maPhongBan"
+                value={model?.phanCong?.maPhongBan ?? ""}
+                onChange={handleChucVuChange}
+                required
+              >
+                <option value="">Chọn phòng ban</option>
+                {phongBanList.map((pb) => (
+                  <option key={pb.maPhongBan} value={pb.maPhongBan}>
+                    {pb.maPhongBan} - {pb.tenPhongBan}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="col-md-6">
               <label className="form-label">Chức Vụ</label>
               <select
                 className="form-control"
-                name="chucVu"
-                value={model.chucVu ?? ""}
-                onChange={handleSelectChange}
+                name="tenChucVu"
+                value={model?.phanCong?.tenChucVu ?? ""}
+                onChange={handleChucVuChange}
                 required
               >
                 <option value="">Chọn chức vụ</option>
@@ -181,44 +249,44 @@ export default function NhanVienForm(props: any) {
             </div>
 
             <div className="col-md-6">
-              <label className="form-label">Giới Tính</label>
-              <select
+              <label className="form-label">Ngày áp dụng</label>
+              <input
+                type="date"
                 className="form-control"
-                name="gioiTinh"
-                value={model.gioiTinh ?? ""}
-                onChange={handleSelectChange}
-              >
-                <option value="">Chọn giới tính</option>
-                <option value="Nam">Nam</option>
-                <option value="Nữ">Nữ</option>
-                <option value="Khác">Khác</option>
-              </select>
+                name="ngayApDung"
+                value={model?.phanCong?.ngayApDung ?? ""}
+                onChange={handleChucVuChange}
+              />
             </div>
           </div>
 
+          <h5>Lương</h5>
           <div className="row mb-3">
             <div className="col-md-6">
-              <label className="form-label">Bậc Lương</label>
-              <input
-                type="number"
+              <label className="form-label">Bậc lương</label>
+              <select
                 className="form-control"
-                name="bacLuong"
-                value={model.bacLuong ?? ""}
-                onChange={handleChange}
-                required
-              />
+                name="maBacLuong"
+                value={model.xepBacLuong?.maBacLuong ?? ""}
+                onChange={handleBacLuongChange}
+              >
+                <option value="">Chọn bậc lương</option>
+                {listBacLuong.map((pb) => (
+                  <option key={pb.maBacLuong} value={pb.maBacLuong}>
+                    {pb.tenBacLuong} - {pb.mucLuongCoBan} VNĐ
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="col-md-6">
-              <label className="form-label">Lương Cơ Bản</label>
+              <label className="form-label">Ngày áp dụng</label>
               <input
-                type="number"
-                step="0.01"
+                type="date"
                 className="form-control"
-                name="luongCoBan"
-                value={model.luongCoBan ?? ""}
-                onChange={handleChange}
-                required
+                name="ngayApDung"
+                value={model?.xepBacLuong?.ngayApDung ?? ""}
+                onChange={handleBacLuongChange}
               />
             </div>
           </div>

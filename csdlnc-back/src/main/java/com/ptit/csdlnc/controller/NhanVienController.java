@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.csdlnc.model.NhanVien;
@@ -37,10 +36,10 @@ public class NhanVienController {
         return ResponseEntity.ok(nhanVien);
     }
 
-    @GetMapping("/by-phong")
-    public ResponseEntity<List<NhanVien>> getByMaPhong(@RequestParam String maPhong) {
-        List<NhanVien> list = nhanVienService.getByMaPhong(maPhong);
-        return ResponseEntity.ok(list);
+    @GetMapping("by-phong-ban/{maPhongBan}")
+    public ResponseEntity<List<NhanVien>> getByMaPhongBan(@PathVariable String maPhongBan) {
+        List<NhanVien> nhanVien = nhanVienService.getByMaPhongBan(maPhongBan);
+        return ResponseEntity.ok(nhanVien);
     }
 
     @PostMapping
@@ -52,6 +51,12 @@ public class NhanVienController {
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody NhanVien nhanVien) {
         nhanVienService.update(nhanVien);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/active/{maNv}")
+    public ResponseEntity<Void> activeNhanVien(@PathVariable String maNv) {
+        nhanVienService.activeNhanVien(maNv);
         return ResponseEntity.ok().build();
     }
 

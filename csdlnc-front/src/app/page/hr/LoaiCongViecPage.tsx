@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { HttpStatusCode } from "axios";
 import { toast } from "react-toastify";
-import dayjs from "dayjs";
-import { LoaiDuAnModel } from "../../model/LoaiDuAnModel";
 import { LoaiDuAnService } from "../../services/LoaiDuAnService";
-import LoaiDuAnForm from "./component/LoaiDuAnForm";
+import { LoaiCongViecModel } from "../../model/LoaiCongViecModel";
+import { LoaiCongViecService } from "../../services/LoaiCongViecService";
+import LoaiCongViecForm from "./component/LoaiCongViecForm";
 
-const LoaiDuAnPage: React.FC = () => {
-  const [listData, setListData] = useState<LoaiDuAnModel[]>([]);
+const LoaiCongViecPage: React.FC = () => {
+  const [listData, setListData] = useState<LoaiCongViecModel[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingModel, setEditingModel] = useState<LoaiDuAnModel>(
-    new LoaiDuAnModel(),
+  const [editingModel, setEditingModel] = useState<LoaiCongViecModel>(
+    new LoaiCongViecModel(),
   );
 
   useEffect(() => {
-    getLstLoaiDuAn();
+    getLstLoaiCV();
   }, []);
 
-  const getLstLoaiDuAn = async () => {
-    LoaiDuAnService.getInstance()
-      .getLstLoaiDuAn({})
+  const getLstLoaiCV = async () => {
+    LoaiCongViecService.getInstance()
+      .getLstLoaiCv({})
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           setListData(resp.data);
@@ -31,23 +31,23 @@ const LoaiDuAnPage: React.FC = () => {
   };
 
   const handleAdd = () => {
-    setEditingModel(new LoaiDuAnModel());
+    setEditingModel(new LoaiCongViecModel());
     setShowForm(true);
   };
 
-  const handleEdit = (model: LoaiDuAnModel) => {
+  const handleEdit = (model: LoaiCongViecModel) => {
     setEditingModel(model);
     setShowForm(true);
   };
 
   const handleDelete = (maLoaiDuAn: string) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
-      LoaiDuAnService.getInstance()
-        .deleteLoaiDuAn(maLoaiDuAn)
+      LoaiCongViecService.getInstance()
+        .deleteLoaiCv(maLoaiDuAn)
         .then((resp) => {
           if (resp.status === 204) {
-            toast.success("Xóa loại dự án thành công");
-            getLstLoaiDuAn();
+            toast.success("Xóa loại công việc thành công");
+            getLstLoaiCV();
           } else {
             toast.error("Có lỗi xảy ra khi xóa");
           }
@@ -65,7 +65,7 @@ const LoaiDuAnPage: React.FC = () => {
   const closeModal = (refresh: boolean) => {
     setShowForm(false);
     if (refresh) {
-      getLstLoaiDuAn();
+      getLstLoaiCV();
     }
   };
 
@@ -73,7 +73,7 @@ const LoaiDuAnPage: React.FC = () => {
     <div className="container-fluid pt-4 px-4">
       <div className="bg-light rounded h-100 p-4">
         <div className="d-flex justify-content-between align-items-center mb-4">
-          <h6 className="mb-0">Danh sách Loại Dự Án</h6>
+          <h6 className="mb-0">Danh sách Loại Công Việc</h6>
           <button type="button" className="btn btn-primary" onClick={handleAdd}>
             Thêm mới
           </button>
@@ -84,18 +84,16 @@ const LoaiDuAnPage: React.FC = () => {
               <tr className="text-dark">
                 <th scope="col">Mã Loại</th>
                 <th scope="col">Tên Loại</th>
-                <th scope="col">Số NV Tối Đa</th>
-                <th scope="col">Mô Tả</th>
+                <th scope="col">Mức lương năng suất</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
               {listData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.maLoaiDuAn}</td>
-                  <td>{item.tenLoaiDuAn}</td>
-                  <td>{item.soNhanVienToiDa}</td>
-                  <td>{item.moTa}</td>
+                  <td>{item.maLoaiCv}</td>
+                  <td>{item.tenLoaiCongViec}</td>
+                  <td>{item.mucLuongNangSuat}</td>
                   <td>
                     <button
                       type="button"
@@ -107,7 +105,7 @@ const LoaiDuAnPage: React.FC = () => {
                     <button
                       type="button"
                       className="btn btn-sm btn-danger ms-2"
-                      onClick={() => handleDelete(item.maLoaiDuAn!)}
+                      onClick={() => handleDelete(item.maLoaiCv!)}
                     >
                       Xóa
                     </button>
@@ -130,7 +128,9 @@ const LoaiDuAnPage: React.FC = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">
-                {editingModel ? "Chỉnh sửa Loại Dự Án" : "Thêm Loại Dự Án"}
+                {editingModel
+                  ? "Chỉnh sửa Loại Công Việc"
+                  : "Thêm Loại Công Việc"}
               </h5>
               <button
                 type="button"
@@ -140,7 +140,7 @@ const LoaiDuAnPage: React.FC = () => {
               ></button>
             </div>
             <div className="modal-body">
-              <LoaiDuAnForm model={editingModel} closeModal={closeModal} />
+              <LoaiCongViecForm model={editingModel} closeModal={closeModal} />
             </div>
           </div>
         </div>
@@ -150,4 +150,4 @@ const LoaiDuAnPage: React.FC = () => {
   );
 };
 
-export default LoaiDuAnPage;
+export default LoaiCongViecPage;

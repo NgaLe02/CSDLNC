@@ -1,12 +1,15 @@
+import { ChucVuModel } from "./ChucVuModel";
+import { XepBacLuongModel } from "./XepBacLuongModel";
+
 export class NhanVienModel {
-  maNv?: string;
+  maNhanVien?: string;
   hoTen?: string;
   ngaySinh?: string; // Date as string
-  gioiTinh?: "Nam" | "Nữ" | "Khác";
-  chucVu?: "NhanVien" | "TruongPhong" | "PhoPhong";
-  bacLuong?: number;
-  luongCoBan?: number;
-  maPhong?: string;
+  gioiTinh?: string;
+  hoatDong?: boolean;
+
+  phanCong?: ChucVuModel;
+  xepBacLuong?: XepBacLuongModel;
 
   constructor(init?: Partial<NhanVienModel>) {
     Object.assign(this, init);

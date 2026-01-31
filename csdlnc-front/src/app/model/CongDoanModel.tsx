@@ -6,7 +6,7 @@ export class CongDoanModel {
   soNgayHoanThanh?: number;
   ngayHoanThanhThucTe?: string;
   ketQua?: string;
-  trangThaiTienDo?: "DungHan" | "TreHan";
+  trangThaiTienDo?: string;
   maDa?: string;
 
   constructor(init?: Partial<CongDoanModel>) {

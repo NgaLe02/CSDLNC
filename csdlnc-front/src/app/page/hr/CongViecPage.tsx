@@ -95,10 +95,10 @@ const CongViecPage: React.FC = () => {
                 <tbody>
                   {listData.map((item, index) => (
                     <tr key={index}>
-                      <td>{item.maCv}</td>
-                      <td>{item.tenCv}</td>
-                      <td>{item.loaiCv}</td>
-                      <td>{item.mucLuongNangSuat}</td>
+                      <td>{item.maCongViec}</td>
+                      <td>{item.tenCongViec}</td>
+                      <td>{item?.loaiCongViec?.tenLoaiCongViec}</td>
+                      <td>{item?.loaiCongViec?.mucLuongNangSuat}</td>
                       <td>
                         <button
                           type="button"
@@ -110,7 +110,7 @@ const CongViecPage: React.FC = () => {
                         <button
                           type="button"
                           className="btn btn-sm btn-danger"
-                          onClick={() => handleDelete(item.maCv!)}
+                          onClick={() => handleDelete(item.maCongViec!)}
                         >
                           Xóa
                         </button>

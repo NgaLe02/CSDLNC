@@ -6,14 +6,14 @@ USE quan_ly_nhan_su_du_an;
 
 -- 1. Bậc lương
 CREATE TABLE bac_luong (
-    ma_bac_luong VARCHAR(10) PRIMARY KEY,
+    ma_bac_luong bigint auto_increment PRIMARY KEY,
     ten_bac_luong VARCHAR(50) NOT NULL,
     muc_luong_co_ban DECIMAL(18,2) NOT NULL
 ) ENGINE=InnoDB;
 
 -- 2. Phòng ban
 CREATE TABLE phong_ban (
-    ma_phong_ban VARCHAR(10) PRIMARY KEY,
+    ma_phong_ban bigint auto_increment PRIMARY KEY,
     ten_phong_ban VARCHAR(100) NOT NULL,
     ngay_thanh_lap DATE,
     loai_phong VARCHAR(50) NOT NULL
@@ -25,6 +25,7 @@ CREATE TABLE nhan_vien (
     ho_ten VARCHAR(100) NOT NULL,
     ngay_sinh DATE,
     gioi_tinh VARCHAR(10),
+    hoat_dong boolean,
     CONSTRAINT CK_NV_GIOI_TINH
         CHECK (gioi_tinh IN ('Nam','Nu','Khac'))
 ) ENGINE=InnoDB;
@@ -32,7 +33,7 @@ CREATE TABLE nhan_vien (
 -- 4. Chức vụ
 CREATE TABLE chuc_vu (
     ma_nhan_vien VARCHAR(15),
-    ma_phong_ban VARCHAR(10),
+    ma_phong_ban bigint,
     ten_chuc_vu ENUM('TruongPhong','PhoPhong','NhanVien'),
     ngay_ap_dung DATE NOT NULL,
     PRIMARY KEY (ma_nhan_vien, ma_phong_ban, ngay_ap_dung),
@@ -42,7 +43,7 @@ CREATE TABLE chuc_vu (
 
 -- 5. Xếp bậc lương
 CREATE TABLE xep_bac_luong (
-    ma_bac_luong VARCHAR(10),
+    ma_bac_luong bigint,
     ma_nhan_vien VARCHAR(15),
     ngay_ap_dung DATE NOT NULL,
     PRIMARY KEY (ma_bac_luong, ma_nhan_vien, ngay_ap_dung),
@@ -52,7 +53,7 @@ CREATE TABLE xep_bac_luong (
 
 -- 6. Loại dự án
 CREATE TABLE loai_du_an (
-    ma_loai_du_an VARCHAR(10) PRIMARY KEY,
+    ma_loai_du_an bigint auto_increment PRIMARY KEY,
     ten_loai_du_an VARCHAR(100) NOT NULL,
     so_nhan_vien_toi_da INT NOT NULL,
     mo_ta TEXT
@@ -60,14 +61,14 @@ CREATE TABLE loai_du_an (
 
 -- 7. Dự án
 CREATE TABLE du_an (
-    ma_du_an VARCHAR(10) PRIMARY KEY,
+    ma_du_an bigint auto_increment PRIMARY KEY,
     ten_du_an VARCHAR(100) NOT NULL,
     ngay_bat_dau DATE NOT NULL,
     ngay_ket_thuc_du_kien DATE NOT NULL,
     ngay_ket_thuc_thuc_te DATE,
     trang_thai ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
-    ma_loai_du_an VARCHAR(10) NOT NULL,
-    ma_phong_quan_ly VARCHAR(10) NOT NULL,
+    ma_loai_du_an bigint NOT NULL,
+    ma_phong_quan_ly bigint NOT NULL,
     CONSTRAINT FK_DA_LDA FOREIGN KEY (ma_loai_du_an) REFERENCES loai_du_an(ma_loai_du_an),
     CONSTRAINT FK_DA_PB FOREIGN KEY (ma_phong_quan_ly) REFERENCES phong_ban(ma_phong_ban),
     CONSTRAINT CK_DA_NGAY_KT
@@ -77,7 +78,7 @@ CREATE TABLE du_an (
 -- 8. Tham gia dự án
 CREATE TABLE tham_gia_du_an (
     ma_nhan_vien VARCHAR(15),
-    ma_du_an VARCHAR(10),
+    ma_du_an bigint,
     thang INT NOT NULL CHECK (thang BETWEEN 1 AND 12),
     nam INT NOT NULL CHECK (nam > 2000),
     vai_tro ENUM('ChuTri','ThanhVien'),
@@ -90,7 +91,7 @@ CREATE TABLE tham_gia_du_an (
 -- 9. Công đoạn
 CREATE TABLE cong_doan (
     stt_cong_doan INT,
-    ma_du_an VARCHAR(10),
+    ma_du_an bigint,
     ten_cong_doan VARCHAR(100) NOT NULL,
     thu_tu INT NOT NULL,
     ngay_bat_dau DATE NOT NULL,
@@ -111,7 +112,7 @@ CREATE TABLE cong_doan (
 -- 10. Thực hiện công đoạn
 CREATE TABLE thuc_hien_cong_doan (
     stt_cong_doan INT,
-    ma_du_an VARCHAR(10),
+    ma_du_an bigint,
     ma_nhan_vien VARCHAR(15),
     vai_tro ENUM('ChuTri','ThanhVien'),
     PRIMARY KEY (stt_cong_doan, ma_du_an, ma_nhan_vien),
@@ -123,16 +124,16 @@ CREATE TABLE thuc_hien_cong_doan (
 
 -- 11. Loại công việc
 CREATE TABLE loai_cong_viec (
-    ma_loai_cv VARCHAR(10) PRIMARY KEY,
+    ma_loai_cv bigint auto_increment PRIMARY KEY,
     ten_loai_cong_viec VARCHAR(100) NOT NULL,
     muc_luong_nang_suat DECIMAL(18,2) NOT NULL
 ) ENGINE=InnoDB;
 
 -- 12. Công việc
 CREATE TABLE cong_viec (
-    ma_cong_viec VARCHAR(10) PRIMARY KEY,
+    ma_cong_viec bigint auto_increment PRIMARY KEY,
     ten_cong_viec VARCHAR(100) NOT NULL,
-    ma_loai_cv VARCHAR(10) NOT NULL,
+    ma_loai_cv bigint NOT NULL,
     ngay_bat_dau DATE NOT NULL,
     ngay_hoan_thanh_du_kien DATE NOT NULL,
     ngay_hoan_thanh_thuc_te DATE,
@@ -150,7 +151,7 @@ CREATE TABLE cong_viec (
 -- 13. Thực hiện công việc
 CREATE TABLE thuc_hien_cong_viec (
     ma_nhan_vien VARCHAR(15),
-    ma_cong_viec VARCHAR(10),
+    ma_cong_viec bigint,
     PRIMARY KEY (ma_nhan_vien, ma_cong_viec),
     CONSTRAINT FK_THCV_NV FOREIGN KEY (ma_nhan_vien) REFERENCES nhan_vien(ma_nhan_vien),
     CONSTRAINT FK_THCV_CV FOREIGN KEY (ma_cong_viec) REFERENCES cong_viec(ma_cong_viec)

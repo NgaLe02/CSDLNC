@@ -1,39 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.ptit.csdlnc.dao.CongViecDAO">
 
     <resultMap id="CongViecResultMap" type="com.ptit.csdlnc.model.CongViec">
+
         <id column="ma_cong_viec" property="maCongViec"/>
         <result column="ten_cong_viec" property="tenCongViec"/>
-        <result column="mo_ta" property="moTa"/>
-        <result column="ma_cong_doan" property="maCongDoan"/>
-        <result column="trang_thai" property="trangThai"/>
+        <result column="ma_loai_cv" property="maLoaiCv"/>
+
+        <result column="ngay_bat_dau" property="ngayBatDau" jdbcType="DATE"/>
+        <result column="ngay_hoan_thanh_du_kien" property="ngayHoanThanhDuKien" jdbcType="DATE"/>
+        <result column="ngay_hoan_thanh_thuc_te" property="ngayHoanThanhThucTe" jdbcType="DATE"/>
+
+        <result column="ket_qua" property="ketQua"/>
+        <result column="trang_thai_tien_do" property="trangThaiTienDo"/>
+
+        <association property="loaiCongViec"
+                    javaType="com.ptit.csdlnc.model.LoaiCongViec">
+
+            <id column="ma_loai_cv" property="maLoaiCv"/>
+            <result column="ten_loai_cong_viec" property="tenLoaiCongViec"/>
+            <result column="muc_luong_nang_suat" property="mucLuongNangSuat"/>
+
+        </association>
+
     </resultMap>
 
     <select id="getAll" resultMap="CongViecResultMap">
-        SELECT * FROM congviec
+        SELECT
+            cv.ma_cong_viec,
+            cv.ten_cong_viec,
+
+            cv.ngay_bat_dau,
+            cv.ngay_hoan_thanh_du_kien,
+            cv.ngay_hoan_thanh_thuc_te,
+
+            cv.ket_qua,
+            cv.trang_thai_tien_do,
+
+            lcv.ma_loai_cv,
+            lcv.ten_loai_cong_viec,
+            lcv.muc_luong_nang_suat
+        FROM cong_viec cv
+        LEFT JOIN loai_cong_viec lcv
+            ON cv.ma_loai_cv = lcv.ma_loai_cv
     </select>
 
-    <select id="getById" parameterType="string" resultMap="CongViecResultMap">
-        SELECT * FROM congviec WHERE ma_cong_viec = #{maCongViec}
+
+    <select id="getById" parameterType="long" resultMap="CongViecResultMap">
+        SELECT
+            cv.ma_cong_viec,
+            cv.ten_cong_viec,
+
+            cv.ngay_bat_dau,
+            cv.ngay_hoan_thanh_du_kien,
+            cv.ngay_hoan_thanh_thuc_te,
+
+            cv.ket_qua,
+            cv.trang_thai_tien_do,
+
+            lcv.ma_loai_cv,
+            lcv.ten_loai_cong_viec,
+            lcv.muc_luong_nang_suat
+        FROM cong_viec cv
+        LEFT JOIN loai_cong_viec lcv
+            ON cv.ma_loai_cv = lcv.ma_loai_cv
+        WHERE ma_cong_viec = #{maCongViec}
     </select>
 
-    <insert id="insert" parameterType="com.ptit.csdlnc.model.CongViec">
-        INSERT INTO congviec (ma_cong_viec, ten_cong_viec, mo_ta, ma_cong_doan, trang_thai)
-        VALUES (#{maCongViec}, #{tenCongViec}, #{moTa}, #{maCongDoan}, #{trangThai})
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.CongViec"
+            useGeneratedKeys="true" keyProperty="maCongViec">
+
+        INSERT INTO cong_viec (
+            ten_cong_viec,
+            ma_loai_cv,
+            ngay_bat_dau,
+            ngay_hoan_thanh_du_kien,
+            ngay_hoan_thanh_thuc_te,
+            ket_qua,
+            trang_thai_tien_do
+        )
+        VALUES (
+            #{tenCongViec},
+            #{maLoaiCv},
+            #{ngayBatDau},
+            #{ngayHoanThanhDuKien},
+            #{ngayHoanThanhThucTe},
+            #{ketQua},
+            #{trangThaiTienDo}
+        )
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.CongViec">
-        UPDATE congviec SET
-        ten_cong_viec = #{tenCongViec},
-        mo_ta = #{moTa},
-        ma_cong_doan = #{maCongDoan},
-        trang_thai = #{trangThai}
+        UPDATE cong_viec
+        SET
+            ten_cong_viec = #{tenCongViec},
+            ma_loai_cv = #{maLoaiCv},
+            ngay_bat_dau = #{ngayBatDau},
+            ngay_hoan_thanh_du_kien = #{ngayHoanThanhDuKien},
+            ngay_hoan_thanh_thuc_te = #{ngayHoanThanhThucTe},
+            ket_qua = #{ketQua},
+            trang_thai_tien_do = #{trangThaiTienDo}
         WHERE ma_cong_viec = #{maCongViec}
     </update>
 
-    <delete id="delete" parameterType="string">
-        DELETE FROM congviec WHERE ma_cong_viec = #{maCongViec}
+    <delete id="delete" parameterType="long">
+        DELETE FROM cong_viec
+        WHERE ma_cong_viec = #{maCongViec}
     </delete>
 
 </mapper>

@@ -78,7 +78,7 @@ const DuanPage: React.FC = () => {
   }
 
   function handleThamGia(maDa: string) {
-    const duan = listData.find((d) => d.maDa === maDa);
+    const duan = listData.find((d) => d.maDuAn === maDa);
     setSelectedMaDa(maDa);
     setSelectedTrangThai(duan?.trangThai || "");
     setShowThamGiaModal(true);
@@ -140,7 +140,6 @@ const DuanPage: React.FC = () => {
                   <th scope="col">Ngày Bắt Đầu</th>
                   <th scope="col">Ngày Kết Thúc Dự Kiến</th>
                   <th scope="col">Ngày Kết Thúc Thực Tế</th>
-                  <th scope="col">Kết Quả Thực Hiện</th>
                   <th scope="col">Trạng Thái</th>
                   <th scope="col">Thành viên</th>
                   <th scope="col"></th>
@@ -148,16 +147,17 @@ const DuanPage: React.FC = () => {
               </thead>
               <tbody>
                 {listData.map((item: DuanModel, index: number) => (
-                  <tr key={item.maDa}>
+                  <tr key={item.maDuAn}>
                     <td>{index + 1}</td>
-                    <td>{item.maDa}</td>
-                    <td>{item.tenDa}</td>
+                    <td>{item.maDuAn}</td>
+                    <td>{item.tenDuAn}</td>
                     <td>
-                      {listLoaiDuAn.find((l) => l.maLoaiDuAn === item.loaiDa)
-                        ?.tenLoaiDuAn || item.loaiDa}
+                      {listLoaiDuAn.find(
+                        (l) => l.maLoaiDuAn === item.maLoaiDuAn,
+                      )?.tenLoaiDuAn || item.maLoaiDuAn}
                     </td>
-                    <td>{item?.loaiDuAn?.soNvToiDa}</td>
-                    <td>{item.maPhongQl}</td>
+                    <td>{item?.loaiDuAn?.soNhanVienToiDa}</td>
+                    <td>{item.maPhongQuanLy}</td>
                     <td>
                       {
                         item.thamGiaLst?.find((tg) => tg.vaiTro === "ChuTri")
@@ -171,18 +171,17 @@ const DuanPage: React.FC = () => {
                     <td>
                       {item.ngayKetThucThucTe ? item.ngayKetThucThucTe : ""}
                     </td>
-                    <td>{item.ketQuaThucHien}</td>
                     <td>{item.trangThai}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-success"
-                        onClick={() => handleThamGia(item.maDa!)}
+                        onClick={() => handleThamGia(item.maDuAn!)}
                       >
                         Thành viên
                       </button>
                       <button
                         className="btn btn-sm btn-primary ms-2"
-                        onClick={() => handleCongDoan(item.maDa!)}
+                        onClick={() => handleCongDoan(item.maDuAn!)}
                       >
                         Công đoạn
                       </button>
@@ -196,7 +195,7 @@ const DuanPage: React.FC = () => {
                       </button>
                       <button
                         className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maDa!)}
+                        onClick={() => handleDelete(item.maDuAn!)}
                       >
                         Xóa
                       </button>
@@ -215,7 +214,7 @@ const DuanPage: React.FC = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingModel.maDa ? "Sửa dự án" : "Thêm dự án"}
+                  {editingModel.maDuAn ? "Sửa dự án" : "Thêm dự án"}
                 </h5>
                 <button
                   type="button"
