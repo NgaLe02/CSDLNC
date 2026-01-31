@@ -7,27 +7,27 @@ USE quan_ly_nhan_su_du_an;
 -- 1. Bậc lương
 CREATE TABLE bac_luong (
     ma_bac_luong VARCHAR(10) PRIMARY KEY,
-    ten_bac_luong NVARCHAR(50) NOT NULL,
+    ten_bac_luong VARCHAR(50) NOT NULL,
     muc_luong_co_ban DECIMAL(18, 2) NOT NULL
 );
 
 -- 2. Phòng ban
 CREATE TABLE phong_ban (
     ma_phong_ban VARCHAR(10) PRIMARY KEY,
-    ten_phong_ban NVARCHAR(100) NOT NULL,
+    ten_phong_ban VARCHAR(100) NOT NULL,
     ngay_thanh_lap DATE,
-    loai_phong NVARCHAR(50) NOT NULL
+    loai_phong VARCHAR(50) NOT NULL
 );
 
 -- 3. Nhân viên
 CREATE TABLE nhan_vien (
     ma_nhan_vien VARCHAR(15) PRIMARY KEY, -- Định dạng: MaPB + 4 số
-    ho_ten NVARCHAR(100) NOT NULL,
+    ho_ten VARCHAR(100) NOT NULL,
     ngay_sinh DATE,
-    gioi_tinh NVARCHAR(10),,
+    gioi_tinh VARCHAR(10),
 
-    CONSTRAINT CK_CD_KET_QUA_VALUE
-    CHECK (ket_qua IN ('Nam','Nu','Khac')),
+    CONSTRAINT CK_NV_GIOI_TINH
+    CHECK (gioi_tinh IN ('Nam','Nu','Khac'))
 );
 
 -- 4. Chức vụ
@@ -50,19 +50,19 @@ CREATE TABLE xep_bac_luong (
 -- 6. Loại dự án 
 CREATE TABLE loai_du_an (
     ma_loai_du_an VARCHAR(10) PRIMARY KEY,
-    ten_loai_du_an NVARCHAR(100) NOT NULL,
+    ten_loai_du_an VARCHAR(100) NOT NULL,
     so_nhan_vien_toi_da INT NOT NULL,
-    mo_ta NVARCHAR(MAX)
+    mo_ta text
 );
 
 -- 7. Dự án
 CREATE TABLE du_an (
     ma_du_an VARCHAR(10) PRIMARY KEY,
-    ten_du_an NVARCHAR(100) NOT NULL,
+    ten_du_an VARCHAR(100) NOT NULL,
     ngay_bat_dau DATE NOT NULL,
     ngay_ket_thuc_du_kien DATE NOT NULL,
     ngay_ket_thuc_thuc_te DATE,
-    trang_thai NVARCHAR(50) ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
+    trang_thai ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
     ma_loai_du_an VARCHAR(10) REFERENCES loai_du_an(ma_loai_du_an) NOT NULL,
     ma_phong_quan_ly VARCHAR(10) REFERENCES phong_ban(ma_phong_ban)  NOT NULL,
 
@@ -88,15 +88,15 @@ CREATE TABLE tham_gia_du_an (
 CREATE TABLE cong_doan (
     stt_cong_doan INT,
     ma_du_an VARCHAR(10) REFERENCES du_an(ma_du_an),
-    ten_cong_doan NVARCHAR(100) NOT NULL,
+    ten_cong_doan VARCHAR(100) NOT NULL,
     thu_tu INT NOT NULL,
     ngay_bat_dau DATE NOT NULL,
     ngay_hoan_thanh_du_kien DATE NOT NULL,
     ngay_hoan_thanh_thuc_te DATE,
-    ket_qua NVARCHAR(10),
+    ket_qua VARCHAR(10),
     trang_thai_tien_do ENUM('ChuaThucHien','DangThucHien','DaThucHien'), 
     PRIMARY KEY (stt_cong_doan, ma_du_an),
-    CONSTRAINT CK_DUAN_NGAY_KET_THUC
+    CONSTRAINT CK_CD_NGAY_KET_THUC
     CHECK (
         ngay_hoan_thanh_thuc_te IS NULL
         OR ngay_hoan_thanh_thuc_te >= ngay_bat_dau
@@ -109,7 +109,7 @@ CREATE TABLE cong_doan (
     ),
 
     CONSTRAINT CK_CD_KET_QUA_VALUE
-    CHECK (ket_qua IN ('KEM','TOT')),
+    CHECK (ket_qua IN ('KEM','TOT'))
 );
 
 -- 10. Thực hiện công đoạn
@@ -125,34 +125,34 @@ CREATE TABLE thuc_hien_cong_doan (
 -- 11. Loại công việc (Cho nhân viên không làm dự án)
 CREATE TABLE loai_cong_viec (
     ma_loai_cv VARCHAR(10) PRIMARY KEY,
-    ten_loai_cong_viec NVARCHAR(100) NOT NULL,
+    ten_loai_cong_viec VARCHAR(100) NOT NULL,
     muc_luong_nang_suat DECIMAL(18, 2) NOT NULL
 );
 
 -- 12. Công việc
 CREATE TABLE cong_viec (
     ma_cong_viec VARCHAR(10) PRIMARY KEY,
-    ten_cong_viec NVARCHAR(100) NOT NULL,
+    ten_cong_viec VARCHAR(100) NOT NULL,
     ma_loai_cv VARCHAR(10) REFERENCES loai_cong_viec(ma_loai_cv) NOT NULL,
     ngay_bat_dau DATE NOT NULL,
     ngay_hoan_thanh_du_kien DATE NOT NULL,
     ngay_hoan_thanh_thuc_te DATE,
-    ket_qua NVARCHAR(10),
+    ket_qua VARCHAR(10),
     trang_thai_tien_do ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
-    CONSTRAINT CK_DUAN_NGAY_KET_THUC
+    CONSTRAINT CK_CV_NGAY_KET_THUC
     CHECK (
         ngay_hoan_thanh_thuc_te IS NULL
         OR ngay_hoan_thanh_thuc_te >= ngay_bat_dau
     ),
 
-    CONSTRAINT CK_CD_KET_QUA
+    CONSTRAINT CK_CV_KET_QUA
     CHECK (
         ngay_hoan_thanh_thuc_te IS NULL
         OR ket_qua IS NOT NULL
     ),
 
     CONSTRAINT CK_CD_KET_QUA_VALUE
-    CHECK (ket_qua IN ('KEM','TOT')),
+    CHECK (ket_qua IN ('KEM','TOT'))
 );
 
 -- 13. Thực hiện công việc
@@ -164,14 +164,23 @@ CREATE TABLE thuc_hien_cong_viec (
 
 -- 14. Bảng lương hàng tháng
 CREATE TABLE bang_luong (
-    ma_bang_luong IDENTITY(1,1) PRIMARY KEY,
-    thang INT NOT NULL CHECK (thang BETWEEN 1 AND 12),
+    ma_bang_luong BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    thang TINYINT NOT NULL CHECK (thang BETWEEN 1 AND 12),
     nam INT NOT NULL CHECK (nam > 2000),
-    ma_nhan_vien VARCHAR(15) REFERENCES nhan_vien(ma_nhan_vien) NOT NULL,
+
+    ma_nhan_vien VARCHAR(15) NOT NULL,
+
     luong_cung DECIMAL(18, 2) NOT NULL,
     luong_trach_nhiem DECIMAL(18, 2) NOT NULL,
     luong_nang_suat DECIMAL(18, 2) NOT NULL,
-    so_phan_viec_khong_tot INT NOT NULL, -- Số lần trễ hạn/kết quả kém
-    -- tong_luong AS (luong_cung + luong_trach_nhiem + luong_nang_suat) * (1 - (so_phan_viec_khong_tot * 0.08))
-    CONSTRAINT UQ_Luong_NhanVien_Thang_Nam UNIQUE (ma_nhan_vien, thang, nam)
+
+    so_phan_viec_khong_tot INT NOT NULL COMMENT 'Số lần trễ hạn / kết quả kém',
+
+    CONSTRAINT fk_bang_luong_nhan_vien
+        FOREIGN KEY (ma_nhan_vien)
+        REFERENCES nhan_vien(ma_nhan_vien),
+
+    CONSTRAINT uq_luong_nhan_vien_thang_nam
+        UNIQUE (ma_nhan_vien, thang, nam)
 );
