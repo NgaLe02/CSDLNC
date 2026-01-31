@@ -1,6 +1,8 @@
 export class ThucHienCongDoanModel {
-  maNv?: string;
-  maCd?: string;
+  maNhanVien?: string;
+  sttCongDoan?: string;
+  maDuAn?: string;
+  vaiTro?: string;
 
   constructor(init?: Partial<ThucHienCongDoanModel>) {
     Object.assign(this, init);

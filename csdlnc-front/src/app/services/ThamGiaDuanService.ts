@@ -25,9 +25,15 @@ export class ThamGiaDuanService {
     });
   }
 
-  public getLstThamGiaDuanOfDuAn(maDa: string) {
+  public getLstThamGiaDuanOfDuAn(model: {
+    maDa: string;
+    thang?: string;
+    nam?: string;
+  }) {
+    const params = ParamUtil.toRequestParams(model);
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/thamgiaduan/getByMaDa?maDa=" + maDa,
+      process.env.REACT_APP_API_URL + "/thamgiaduan/getByMaDa",
+      params,
     );
     return axios.get(url, {
       headers: HeadersUtil.getHeaders(),

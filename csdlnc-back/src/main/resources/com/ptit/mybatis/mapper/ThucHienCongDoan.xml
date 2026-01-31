@@ -2,33 +2,69 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ptit.csdlnc.dao.ThucHienCongDoanDAO">
 
-    <resultMap id="ThucHienCongDoanResultMap" type="com.ptit.csdlnc.model.ThucHienCongDoan">
-        <id column="ma_nv" property="maNv"/>
-        <id column="ma_cong_doan" property="maCd"/>
+    <resultMap id="ThucHienCongDoanResultMap"
+            type="com.ptit.csdlnc.model.ThucHienCongDoan">
+
+        <id column="stt_cong_doan" property="sttCongDoan"/>
+        <id column="ma_du_an" property="maDuAn"/>
+        <id column="ma_nhan_vien" property="maNhanVien"/>
+
+        <result column="vai_tro" property="vaiTro"/>
+
     </resultMap>
 
+
     <select id="getAll" resultMap="ThucHienCongDoanResultMap">
-        SELECT * FROM thuchien_congdoan
+        SELECT *
+        FROM thuc_hien_cong_doan
     </select>
 
-    <select id="getById" parameterType="map" resultMap="ThucHienCongDoanResultMap">
-        SELECT * FROM thuchien_congdoan WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
+    <select id="getLstThucHienCongDoan"
+            parameterType="map"
+            resultMap="ThucHienCongDoanResultMap">
+
+        SELECT *
+        FROM thuc_hien_cong_doan
+        WHERE stt_cong_doan = #{sttCongDoan}
+        AND ma_du_an = #{maDuAn}
     </select>
 
-    <insert id="insert" parameterType="com.ptit.csdlnc.model.ThucHienCongDoan">
-        INSERT INTO thuchien_congdoan (ma_nv, ma_cong_doan)
-        VALUES (#{maNv}, #{maCd})
+    <insert id="insert"
+            parameterType="com.ptit.csdlnc.model.ThucHienCongDoan">
+
+        INSERT INTO thuc_hien_cong_doan (
+            stt_cong_doan,
+            ma_du_an,
+            ma_nhan_vien,
+            vai_tro
+        )
+        VALUES (
+            #{sttCongDoan},
+            #{maDuAn},
+            #{maNhanVien},
+            #{vaiTro}
+        )
+
     </insert>
 
-    <update id="update" parameterType="com.ptit.csdlnc.model.ThucHienCongDoan">
-        UPDATE thuchien_congdoan SET
-        ma_nv = #{maNv},
-        ma_cong_doan = #{maCd}
-        WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
+    <update id="updateVaiTro"
+            parameterType="com.ptit.csdlnc.model.ThucHienCongDoan">
+
+        UPDATE thuc_hien_cong_doan
+        SET vai_tro = #{vaiTro}
+        WHERE stt_cong_doan = #{sttCongDoan}
+        AND ma_du_an = #{maDuAn}
+        AND ma_nhan_vien = #{maNhanVien}
+
     </update>
 
-    <delete id="delete" parameterType="map">
-        DELETE FROM thuchien_congdoan WHERE ma_nv = #{maNv} AND ma_cong_doan = #{maCd}
+
+    <delete id="delete"
+            parameterType="map">
+        DELETE FROM thuc_hien_cong_doan
+        WHERE stt_cong_doan = #{sttCongDoan}
+        AND ma_du_an = #{maDuAn}
+        AND ma_nhan_vien = #{maNhanVien}
     </delete>
 
 </mapper>

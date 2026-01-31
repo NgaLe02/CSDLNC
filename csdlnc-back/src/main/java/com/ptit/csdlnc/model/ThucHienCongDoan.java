@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ThucHienCongDoan {
-    private String maNv;
-    private String maCd;
+
+    private int sttCongDoan;
+    private String maDuAn;
+    private String maNhanVien;
+    private String vaiTro;
 }

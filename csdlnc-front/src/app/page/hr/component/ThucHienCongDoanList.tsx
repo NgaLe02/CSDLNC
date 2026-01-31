@@ -8,15 +8,11 @@ import { CongDoanModel } from "../../../model/CongDoanModel";
 
 interface ThucHienCongDoanListProps {
   congDoan: CongDoanModel;
-  maCd: string;
-  maDa: string;
   onClose: () => void;
 }
 
 const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
   congDoan,
-  maCd,
-  maDa,
   onClose,
 }) => {
   const [listData, setListData] = useState<ThucHienCongDoanModel[]>([]);
@@ -25,29 +21,31 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
   const [editingModel, setEditingModel] =
     useState<ThucHienCongDoanModel | null>(null);
 
-  const getLstThucHienCongDoan = useCallback(async () => {
-    if (maCd && maDa) {
-      try {
-        const resp =
-          await ThucHienCongDoanService.getInstance().getLstThucHienCongDoan({
-            maCd,
-          });
+  useEffect(() => {
+    if (congDoan.maDuAn && congDoan.sttCongDoan) {
+      getLstThucHienCongDoan();
+    }
+  }, [congDoan.maDuAn, congDoan.sttCongDoan]);
+
+  const getLstThucHienCongDoan = () => {
+    ThucHienCongDoanService.getInstance()
+      .getLstThucHienCongDoan({
+        maDuAn: congDoan.maDuAn!,
+        sttCongDoan: congDoan.sttCongDoan!,
+      })
+      .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           setListData(resp.data);
         }
-      } catch (error) {
-        console.error("Lỗi khi tải danh sách thực hiện công đoạn:", error);
-      }
-    }
-  }, [maDa, maCd]);
-
-  useEffect(() => {
-    getLstThucHienCongDoan();
-  }, [getLstThucHienCongDoan]);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   const handleAdd = () => {
     setType("C");
-    setEditingModel(new ThucHienCongDoanModel({ maCd }));
+    setEditingModel(new ThucHienCongDoanModel({ maDuAn: congDoan.maDuAn }));
     setShowForm(true);
   };
 
@@ -57,13 +55,14 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
     setShowForm(true);
   };
 
-  const handleDelete = async (maNv: string, maCd: string) => {
+  const handleDelete = async (maNv: string, sttCd: string, maDuAn: string) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       try {
         const resp =
           await ThucHienCongDoanService.getInstance().deleteThucHienCongDoan(
             maNv,
-            maCd,
+            sttCd,
+            maDuAn,
           );
         if (resp.status === 204) {
           toast.success("Xóa thành công");
@@ -90,7 +89,7 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
         style={{ maxHeight: "70vh", overflowY: "auto" }}
       >
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5>Danh sách người thực hiện công đoạn {maCd}</h5>
+          <h5>Danh sách người thực hiện công đoạn {congDoan.tenCongDoan}</h5>
           <button type="button" className="btn btn-secondary" onClick={onClose}>
             Đóng
           </button>
@@ -106,14 +105,16 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
               <tr>
                 <th>Mã NV</th>
                 <th>Mã CD</th>
+                <th>Vai trò</th>
                 <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
               {listData.map((item) => (
-                <tr key={`${item.maNv}-${item.maCd}`}>
-                  <td>{item.maNv}</td>
-                  <td>{item.maCd}</td>
+                <tr key={`${item.maNhanVien}-${item.sttCongDoan}`}>
+                  <td>{item.maNhanVien}</td>
+                  <td>{item.sttCongDoan}</td>
+                  <td>{item.vaiTro}</td>
                   <td>
                     <button
                       type="button"
@@ -125,7 +126,13 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
                     <button
                       type="button"
                       className="btn btn-sm btn-danger"
-                      onClick={() => handleDelete(item.maNv!, item.maCd!)}
+                      onClick={() =>
+                        handleDelete(
+                          item.maNhanVien!,
+                          item.sttCongDoan!,
+                          item.maDuAn!,
+                        )
+                      }
                     >
                       Xóa
                     </button>
@@ -140,7 +147,6 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
       {showForm && editingModel && (
         <ThucHienCongDoanForm
           congDoan={congDoan}
-          maDa={maDa}
           thucHienCongDoan={editingModel}
           type={type}
           onClose={closeModal}

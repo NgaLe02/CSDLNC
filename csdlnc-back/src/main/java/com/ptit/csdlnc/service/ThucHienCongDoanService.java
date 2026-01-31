@@ -1,11 +1,12 @@
 package com.ptit.csdlnc.service;
 
-import com.ptit.csdlnc.dao.ThucHienCongDoanDAO;
-import com.ptit.csdlnc.model.ThucHienCongDoan;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.ptit.csdlnc.dao.ThucHienCongDoanDAO;
+import com.ptit.csdlnc.model.ThucHienCongDoan;
 
 @Service
 public class ThucHienCongDoanService {
@@ -17,8 +18,8 @@ public class ThucHienCongDoanService {
         return thucHienCongDoanDAO.getAll();
     }
 
-    public ThucHienCongDoan getById(String maNv, String maCd) {
-        return thucHienCongDoanDAO.getById(maNv, maCd);
+    public List<ThucHienCongDoan> getLstThucHienCongDoan(String maDuAn, String sttCongDoan) {
+        return thucHienCongDoanDAO.getLstThucHienCongDoan(maDuAn, sttCongDoan);
     }
 
     public void insert(ThucHienCongDoan thucHienCongDoan) {

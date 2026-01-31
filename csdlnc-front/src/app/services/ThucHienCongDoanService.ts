@@ -15,8 +15,11 @@ export class ThucHienCongDoanService {
     return ThucHienCongDoanService._thucHienCongDoanService;
   }
 
-  public getLstThucHienCongDoan(request: any) {
-    const params = ParamUtil.toRequestParams(request);
+  public getLstThucHienCongDoan(model: {
+    maDuAn: string;
+    sttCongDoan: string;
+  }) {
+    const params = ParamUtil.toRequestParams(model);
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/thuchiencongdoan",
       params,
@@ -25,6 +28,17 @@ export class ThucHienCongDoanService {
       headers: HeadersUtil.getHeaders(),
     });
   }
+
+  // public getLstThucHienCongDoanByMaDuAn(maDuAn: string) {
+  //   const url = ApiUrlUtil.buildQueryString(
+  //     process.env.REACT_APP_API_URL +
+  //       "/thuchiencongdoan/getByMaDuAn?maDuAn=" +
+  //       maDuAn,
+  //   );
+  //   return axios.get(url, {
+  //     headers: HeadersUtil.getHeaders(),
+  //   });
+  // }
 
   public insertThucHienCongDoan(model: ThucHienCongDoanModel) {
     const url = ApiUrlUtil.buildQueryString(
@@ -44,9 +58,10 @@ export class ThucHienCongDoanService {
     });
   }
 
-  public deleteThucHienCongDoan(maNv: string, maCd: string) {
+  public deleteThucHienCongDoan(maNv: string, sttCd: string, maDuAn: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thuchiencongdoan/${maNv}/${maCd}`,
+      process.env.REACT_APP_API_URL +
+        `/thuchiencongdoan/${maNv}/${sttCd}/${maDuAn}`,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

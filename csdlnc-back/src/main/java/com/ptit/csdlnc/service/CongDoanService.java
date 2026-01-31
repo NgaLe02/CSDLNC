@@ -1,6 +1,7 @@
 package com.ptit.csdlnc.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,4 +38,12 @@ public class CongDoanService {
     public void delete(String maDuAn, String sttCongDoan) {
         congDoanDAO.delete(maDuAn, sttCongDoan);
     }
+
+    public List<Map<String, Object>> getNhanVienTheoCongDoan(
+            String maDuAn,
+            Integer sttCongDoan
+    ) {
+        return congDoanDAO.getNhanVienThamGiaTrongThoiGianCongDoan(maDuAn, sttCongDoan);
+    }
+
 }

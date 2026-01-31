@@ -31,7 +31,7 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
 
   const getLstThamGiaDuan = async () => {
     ThamGiaDuanService.getInstance()
-      .getLstThamGiaDuanOfDuAn(da.maDuAn!)
+      .getLstThamGiaDuanOfDuAn({ maDa: da.maDuAn! })
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           setListData(resp.data);

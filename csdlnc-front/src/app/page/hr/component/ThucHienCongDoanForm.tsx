@@ -8,6 +8,7 @@ import { NhanVienModel } from "../../../model/NhanVienModel";
 import { CongDoanService } from "../../../services/CongDoanService";
 import { DuanService } from "../../../services/DuanService";
 import { CongDoanModel } from "../../../model/CongDoanModel";
+import { ThamGiaDuanService } from "../../../services/ThamGiaDuanService";
 
 export default function ThucHienCongDoanForm(props: any) {
   const [model, setModel] = useState<ThucHienCongDoanModel>(
@@ -16,45 +17,30 @@ export default function ThucHienCongDoanForm(props: any) {
   const [congDoan, setCongDoan] = useState<CongDoanModel>(
     props.congDoan ?? new CongDoanModel(),
   );
-  const [maDa, setMaDa] = useState<string>(props.maDa ?? "");
-  const [nhanVienList, setNhanVienList] = useState<NhanVienModel[]>([]);
+  const [nhanVienList, setNhanVienList] = useState<any[]>([]);
 
-  const getLstNhanVien = useCallback(async () => {
-    if (maDa) {
-      try {
-        // Lấy danh sách nhân viên tham gia dự án
-        const thamGiaResp =
-          await DuanService.getInstance().getLstNhanVienThamGiaDuan({
-            maDa: maDa,
-            thang: congDoan.ngayBatDau,
-            nam: "2025",
-          });
-        if (thamGiaResp.status === HttpStatusCode.Ok) {
-          setNhanVienList(thamGiaResp.data);
+  const getLstNhanVien = () => {
+    CongDoanService.getInstance()
+      .getNhanVienTheoCongDoan(congDoan.maDuAn!, congDoan.sttCongDoan!)
+      .then((resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          setNhanVienList(resp.data);
         }
-      } catch (error) {
-        console.error("Lỗi khi tải danh sách nhân viên:", error);
-      }
-    }
-  }, [maDa]);
-
-  useEffect(() => {
-    if (model.maCd) {
-      getLstNhanVien();
-    }
-  }, [model.maCd, getLstNhanVien]);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setModel((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  useEffect(() => {
+    if (congDoan.maDuAn && congDoan.sttCongDoan) {
+      getLstNhanVien();
+    }
+  }, [congDoan.maDuAn, congDoan.sttCongDoan]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setModel((prev) => ({
       ...prev,
@@ -64,9 +50,16 @@ export default function ThucHienCongDoanForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const formattedModel = {
+      ...model,
+      sttCongDoan: congDoan.sttCongDoan,
+      maDuAn: congDoan.maDuAn,
+    };
+
     if (props.type === "U") {
       ThucHienCongDoanService.getInstance()
-        .updateThucHienCongDoan(model)
+        .updateThucHienCongDoan(formattedModel)
         .then((resp) => {
           if (resp.status === 200) {
             toast.success("Cập nhật thành công");
@@ -84,7 +77,7 @@ export default function ThucHienCongDoanForm(props: any) {
         });
     } else {
       ThucHienCongDoanService.getInstance()
-        .insertThucHienCongDoan(model)
+        .insertThucHienCongDoan(formattedModel)
         .then((resp) => {
           if (resp.status === 201) {
             toast.success("Thêm thành công");
@@ -130,39 +123,41 @@ export default function ThucHienCongDoanForm(props: any) {
             >
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="maNv" className="form-label">
+                  <label htmlFor="maNhanVien" className="form-label">
                     Nhân viên
                   </label>
                   <select
                     className="form-control"
-                    id="maNv"
-                    name="maNv"
-                    value={model.maNv ?? ""}
-                    onChange={handleSelectChange}
+                    id="maNhanVien"
+                    name="maNhanVien"
+                    value={model.maNhanVien ?? ""}
+                    onChange={handleChange}
                     required
                   >
                     <option value="">Chọn nhân viên</option>
                     {nhanVienList.map((nv) => (
-                      <option key={nv.maNhanVien} value={nv.maNhanVien}>
-                        {nv.hoTen} ({nv.maNhanVien})
+                      <option key={nv.maNv} value={nv.maNv}>
+                        {nv.hoTen} ({nv.thang}/{nv.nam})
                       </option>
                     ))}
                   </select>
                 </div>
-
                 <div className="mb-3">
-                  <label htmlFor="maCd" className="form-label">
-                    Mã CD
+                  <label htmlFor="vaiTro" className="form-label">
+                    Vai Trò
                   </label>
-                  <input
-                    type="text"
+                  <select
                     className="form-control"
-                    id="maCd"
-                    name="maCd"
-                    value={model.maCd ?? ""}
+                    id="vaiTro"
+                    name="vaiTro"
+                    value={model.vaiTro ?? ""}
                     onChange={handleChange}
-                    readOnly
-                  />
+                    required
+                  >
+                    <option value="">Chọn vai trò</option>
+                    <option value="ThanhVien">Thành viên</option>
+                    <option value="ChuTri">Chủ trì</option>
+                  </select>
                 </div>
 
                 <button type="submit" className="btn btn-primary">

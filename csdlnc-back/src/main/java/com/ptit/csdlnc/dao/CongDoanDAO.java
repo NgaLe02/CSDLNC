@@ -1,6 +1,7 @@
 package com.ptit.csdlnc.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -20,4 +21,6 @@ public interface CongDoanDAO {
     void delete(String maDuAn, String sttCongDoan);
 
     int countCongDoanByMaDuAn(String maDuAn);
+
+    List<Map<String, Object>> getNhanVienThamGiaTrongThoiGianCongDoan(String maDuAn, Integer sttCongDoan);
 }

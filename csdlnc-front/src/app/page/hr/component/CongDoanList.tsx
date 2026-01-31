@@ -174,8 +174,6 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
       {showThucHienModal && editingModel && (
         <ThucHienCongDoanList
           congDoan={editingModel}
-          maCd={selectedMaCd}
-          maDa={da.maDuAn!}
           onClose={closeThucHienModal}
         />
       )}

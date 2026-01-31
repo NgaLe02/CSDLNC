@@ -23,6 +23,19 @@ export class CongDoanService {
     });
   }
 
+  public getNhanVienTheoCongDoan(maDuAn: string, sttCongDoan: string) {
+    const url = ApiUrlUtil.buildQueryString(
+      process.env.REACT_APP_API_URL +
+        "/congdoan/nhan-vien-theo-cong-doan?maDuAn=" +
+        maDuAn +
+        "&sttCongDoan=" +
+        sttCongDoan,
+    );
+    return axios.get(url, {
+      headers: HeadersUtil.getHeaders(),
+    });
+  }
+
   public getCongDoanById(maCd: string) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/congdoan/" + maCd,

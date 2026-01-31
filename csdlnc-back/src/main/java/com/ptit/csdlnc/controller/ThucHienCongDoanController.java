@@ -30,9 +30,9 @@ public class ThucHienCongDoanController {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<ThucHienCongDoan> getById(@RequestParam String maNv, @RequestParam String maCd) {
-        ThucHienCongDoan thucHienCongDoan = thucHienCongDoanService.getById(maNv, maCd);
+    @GetMapping("/getLstThucHienCongDoan")
+    public ResponseEntity<List<ThucHienCongDoan>> getLstThucHienCongDoan(@RequestParam String maDuAn, @RequestParam String sttCongDoan) {
+        List<ThucHienCongDoan> thucHienCongDoan = thucHienCongDoanService.getLstThucHienCongDoan(maDuAn, sttCongDoan);
         return ResponseEntity.ok(thucHienCongDoan);
     }
 

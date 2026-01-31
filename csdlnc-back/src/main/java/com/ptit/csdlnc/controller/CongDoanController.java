@@ -54,4 +54,13 @@ public class CongDoanController {
         congDoanService.delete(maDuAn, sttCongDoan);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/nhan-vien-theo-cong-doan")
+    public ResponseEntity<?> getNhanVienTheoCongDoan(
+            @RequestParam String maDuAn,
+            @RequestParam Integer sttCongDoan
+    ) {
+        return ResponseEntity.ok(congDoanService.getNhanVienTheoCongDoan(maDuAn, sttCongDoan));
+    }
+
 }

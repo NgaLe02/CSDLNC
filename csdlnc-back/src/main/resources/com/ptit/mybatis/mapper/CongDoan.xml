@@ -85,5 +85,30 @@
         WHERE ma_du_an = #{maDuAn}
     </delete>
 
+    <select id="getNhanVienThamGiaTrongThoiGianCongDoan"
+            parameterType="map"
+            resultType="map">
+
+        SELECT DISTINCT
+            tgd.ma_nhan_vien AS maNv,
+            nv.ho_ten        AS hoTen,
+            tgd.vai_tro      AS vaiTro,
+            tgd.thang        AS thang,
+            tgd.nam          AS nam
+        FROM tham_gia_du_an tgd
+        JOIN nhan_vien nv
+            ON nv.ma_nhan_vien = tgd.ma_nhan_vien
+        JOIN cong_doan cd
+            ON cd.ma_du_an = tgd.ma_du_an
+        WHERE cd.ma_du_an = #{maDuAn}
+        AND cd.stt_cong_doan = #{sttCongDoan}
+
+        -- THÁNG THAM GIA GIAO VỚI THỜI GIAN CÔNG ĐOẠN
+        AND LAST_DAY(STR_TO_DATE(CONCAT(tgd.nam,'-',tgd.thang,'-01'),'%Y-%m-%d'))
+                &gt;= cd.ngay_bat_dau
+        AND STR_TO_DATE(CONCAT(tgd.nam,'-',tgd.thang,'-01'),'%Y-%m-%d')
+                &lt;= cd.ngay_hoan_thanh_du_kien
+    </select>
+
 
 </mapper>
