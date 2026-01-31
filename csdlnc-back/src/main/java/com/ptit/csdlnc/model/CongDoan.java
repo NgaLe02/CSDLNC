@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CongDoan {
 
-    private String maCd;
+    private int sttCongDoan;
     private String tenCongDoan;
     private Integer thuTu;
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -24,5 +24,7 @@ public class CongDoan {
     private LocalDate ngayHoanThanhThucTe;
     private String ketQua;
     private String trangThaiTienDo; // ENUM('DungHan', 'TreHan')
-    private String maDa;
+    private String maDuAn;
+
+    private DuAn duAn;
 }

@@ -14,11 +14,9 @@ export class CongDoanService {
     return CongDoanService._congDoanService;
   }
 
-  public getLstCongDoan(request: any) {
-    const params = ParamUtil.toRequestParams(request);
+  public getLstCongDoanByMaDuAn(maDuAn: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/congdoan",
-      params,
+      process.env.REACT_APP_API_URL + "/congdoan/getByMaDuAn?maDuAn=" + maDuAn,
     );
     return axios.get(url, {
       headers: HeadersUtil.getHeaders(),
@@ -52,9 +50,11 @@ export class CongDoanService {
     });
   }
 
-  public deleteCongDoan(maCd: string) {
+  public deleteCongDoan(model: { maDuAn: string; sttCongDoan: string }) {
+    const params = ParamUtil.toRequestParams(model);
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/congdoan/" + maCd,
+      process.env.REACT_APP_API_URL + "/congdoan",
+      params,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

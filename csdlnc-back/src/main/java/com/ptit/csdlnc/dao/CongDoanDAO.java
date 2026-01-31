@@ -1,14 +1,23 @@
 package com.ptit.csdlnc.dao;
 
-import com.ptit.csdlnc.model.CongDoan;
-import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.ptit.csdlnc.model.CongDoan;
 
 @Mapper
 public interface CongDoanDAO {
-    List<CongDoan> getAll();
+
+    List<CongDoan> getByMaDuAn(String maDuAn);
+
     CongDoan getById(String maCd);
+
     void insert(CongDoan congDoan);
+
     void update(CongDoan congDoan);
-    void delete(String maCd);
+
+    void delete(String maDuAn, String sttCongDoan);
+
+    int countCongDoanByMaDuAn(String maDuAn);
 }

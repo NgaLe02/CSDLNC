@@ -201,7 +201,7 @@ export default function CongViecForm(props: any) {
                 onChange={handleChange}
                 required
               >
-                <option value="">Chọn kết quả</option>
+                <option value="">Chọn trạng thái tiến độ</option>
                 <option value="ChuaThucHien">Chưa thực hiện</option>
                 <option value="DangThucHien">Đang thực hiện</option>
                 <option value="DaThucHien">Đã thực hiện</option>

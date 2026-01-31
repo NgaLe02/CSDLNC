@@ -52,9 +52,16 @@ export class ThamGiaDuanService {
     });
   }
 
-  public deleteThamGiaDuan(maNv: string, maDa: string) {
+  public deleteThamGiaDuan(model: {
+    maNv: string;
+    maDa: string;
+    thang: number;
+    nam: number;
+  }) {
+    const params = ParamUtil.toRequestParams(model);
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thamgiaduan/${maNv}/${maDa}`,
+      process.env.REACT_APP_API_URL + `/thamgiaduan/delete`,
+      params,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

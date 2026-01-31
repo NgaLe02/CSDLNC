@@ -9,10 +9,18 @@ import com.ptit.csdlnc.model.NhanVien;
 
 @Mapper
 public interface DuAnDAO {
+
     List<DuAn> getAll();
+
     DuAn getById(String maDa);
-    List<NhanVien> getAssignedEmployees(String maDa, String thang, String nam);
+
+    List<NhanVien> getAssignedEmployees(String maDa, int thang, int nam);
+
+    List<NhanVien> getNhanVienChuaThamGiaDuAn(String maDa, int thang, int nam);
+
     void insert(DuAn duAn);
+
     void update(DuAn duAn);
+
     void delete(String maDa);
 }

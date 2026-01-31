@@ -39,8 +39,14 @@ public class DuAnController {
     }
 
     @GetMapping("/nhanvien")
-    public ResponseEntity<List<NhanVien>> getAssignedEmployees(@RequestParam String maDa, @RequestParam(required=false) String thang, @RequestParam(required=false) String nam) {
+    public ResponseEntity<List<NhanVien>> getAssignedEmployees(@RequestParam String maDa, @RequestParam(required = false) int thang, @RequestParam(required = false) int nam) {
         List<NhanVien> list = duAnService.getAssignedEmployees(maDa, thang, nam);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/nhanvien/chua-tham-gia")
+    public ResponseEntity<List<NhanVien>> getNhanVienChuaThamGiaDuAn(@RequestParam String maDa, @RequestParam(required = false) int thang, @RequestParam(required = false) int nam) {
+        List<NhanVien> list = duAnService.getNhanVienChuaThamGiaDuAn(maDa, thang, nam);
         return ResponseEntity.ok(list);
     }
 

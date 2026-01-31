@@ -1,13 +1,13 @@
 export class CongDoanModel {
-  maCd?: string;
+  sttCongDoan?: string;
   tenCongDoan?: string;
   thuTu?: number;
   ngayBatDau?: string;
-  soNgayHoanThanh?: number;
+  ngayHoanThanhDuKien?: string;
   ngayHoanThanhThucTe?: string;
   ketQua?: string;
   trangThaiTienDo?: string;
-  maDa?: string;
+  maDuAn?: string;
 
   constructor(init?: Partial<CongDoanModel>) {
     Object.assign(this, init);

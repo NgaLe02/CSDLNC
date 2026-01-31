@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.csdlnc.model.CongDoan;
@@ -24,9 +25,9 @@ public class CongDoanController {
     @Autowired
     private CongDoanService congDoanService;
 
-    @GetMapping
-    public ResponseEntity<List<CongDoan>> getAll() {
-        List<CongDoan> list = congDoanService.getAll();
+    @GetMapping("getByMaDuAn")
+    public ResponseEntity<List<CongDoan>> getByMaDuAn(@RequestParam String maDuAn) {
+        List<CongDoan> list = congDoanService.getByMaDuAn(maDuAn);
         return ResponseEntity.ok(list);
     }
 
@@ -48,9 +49,9 @@ public class CongDoanController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{maCd}")
-    public ResponseEntity<Void> delete(@PathVariable String maCd) {
-        congDoanService.delete(maCd);
+    @DeleteMapping("")
+    public ResponseEntity<Void> delete(@RequestParam String maDuAn, @RequestParam String sttCongDoan) {
+        congDoanService.delete(maDuAn, sttCongDoan);
         return ResponseEntity.noContent().build();
     }
 }

@@ -23,7 +23,6 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
   const [editingModel, setEditingModel] = useState<ThamGiaDuanModel | null>(
     null,
   );
-
   useEffect(() => {
     if (da.maDuAn) {
       getLstThamGiaDuan();
@@ -55,10 +54,15 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
     setShowForm(true);
   };
 
-  const handleDelete = (maNv: string, maDa: string) => {
+  const handleDelete = (
+    maNv: string,
+    maDa: string,
+    thang: number,
+    nam: number,
+  ) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       ThamGiaDuanService.getInstance()
-        .deleteThamGiaDuan(maNv, maDa)
+        .deleteThamGiaDuan({ maNv, maDa, thang, nam })
         .then((resp) => {
           if (resp.status === 204) {
             toast.success("Xóa tham gia dự án thành công");
@@ -110,6 +114,7 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
             <thead>
               <tr>
                 <th>Mã NV</th>
+                <th>Tên NV</th>
                 <th>Vai trò</th>
                 <th>Tháng</th>
                 <th>Năm</th>
@@ -120,21 +125,29 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
               {listData.map((item) => (
                 <tr key={`${item.maNv}-${item.maDa}`}>
                   <td>{item.maNv}</td>
+                  <td>{item?.nhanVien?.hoTen}</td>
                   <td>{item.vaiTro}</td>
                   <td>{item.thang}</td>
                   <td>{item.nam}</td>
                   <td>
-                    <button
+                    {/* <button
                       type="button"
                       className="btn btn-sm btn-warning me-2"
                       onClick={() => handleEdit(item)}
                     >
                       Sửa
-                    </button>
+                    </button> */}
                     <button
                       type="button"
                       className="btn btn-sm btn-danger"
-                      onClick={() => handleDelete(item.maNv!, item.maDa!)}
+                      onClick={() =>
+                        handleDelete(
+                          item.maNv!,
+                          item.maDa!,
+                          item.thang!,
+                          item.nam!,
+                        )
+                      }
                     >
                       Xóa
                     </button>
@@ -167,6 +180,7 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
                   type={type}
                   model={editingModel}
                   closeModal={closeModal}
+                  duAn={da}
                 />
               </div>
             </div>

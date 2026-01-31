@@ -11,36 +11,63 @@ export default function ThamGiaDuanForm(props: any) {
   const [model, setModel] = useState<ThamGiaDuanModel>(
     props.model ?? new ThamGiaDuanModel(),
   );
-  const [nhanVienList, setNhanVienList] = useState<NhanVienModel[]>([]);
-
+  const [nhanVienChuaThamList, setNhanVienChuaThamGiaList] = useState<
+    NhanVienModel[]
+  >([]);
+  //  Lấy tháng – năm bắt đầu dự án
+  const startDate = props.duAn?.ngayBatDau
+    ? new Date(props.duAn.ngayBatDau)
+    : null;
+  const startYear = startDate?.getFullYear();
+  const startMonth = startDate ? startDate.getMonth() + 1 : 1;
+  // Tạo danh sách năm hợp lệ
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  const years = startYear
+    ? Array.from(
+        { length: currentYear - startYear + 1 },
+        (_, i) => startYear + i,
+      )
+    : [];
+  // Tạo danh sách tháng PHỤ THUỘC năm đang chọn
+  const months = (() => {
+    if (!model.nam || !startYear || !startMonth) return [];
 
-  const loadNhanVienByDuAn = useCallback(async () => {
-    try {
-      // Get project to find maPhongQl
-      const duanResp = await DuanService.getInstance().getDuanById(model.maDa!);
-      if (duanResp.status === HttpStatusCode.Ok && duanResp.data.maPhongQl) {
-        // Get employees by department
-        const nvResp =
-          await NhanVienService.getInstance().getLstNhanVienByPhong(
-            duanResp.data.maPhongQl,
-          );
-        if (nvResp.status === HttpStatusCode.Ok) {
-          setNhanVienList(nvResp.data);
-        }
-      }
-    } catch (error) {
-      console.error("Lỗi khi tải danh sách nhân viên:", error);
+    const selectedYear = Number(model.nam);
+
+    // năm bắt đầu dự án
+    if (selectedYear === startYear) {
+      return Array.from(
+        { length: 12 - startMonth + 1 },
+        (_, i) => startMonth + i,
+      );
     }
-  }, [model.maDa]);
+
+    // các năm sau
+    return Array.from({ length: 12 }, (_, i) => i + 1);
+  })();
+
+  const loadNhanVienChuaThamGiaDuAn = (
+    maDa: string,
+    thang: number,
+    nam: number,
+  ) => {
+    DuanService.getInstance()
+      .getNhanVienChuaThamGiaDuAn({ maDa, thang, nam })
+      .then((resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          setNhanVienChuaThamGiaList(resp.data);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   useEffect(() => {
-    if (model.maDa) {
-      loadNhanVienByDuAn();
+    if (model.maDa && model.thang && model.nam) {
+      loadNhanVienChuaThamGiaDuAn(model.maDa, model.thang, model.nam);
     }
-  }, [model.maDa, loadNhanVienByDuAn]);
+  }, [model.maDa, model.thang, model.nam]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -54,10 +81,19 @@ export default function ThamGiaDuanForm(props: any) {
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setModel((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    setModel((prev) => {
+      const newModel: any = {
+        ...prev,
+        [name]: value,
+      };
+
+      if (name === "nam") {
+        newModel.thang = "";
+      }
+
+      return newModel;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -109,18 +145,45 @@ export default function ThamGiaDuanForm(props: any) {
       >
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="maDa" className="form-label">
-              Mã DA
+            <label htmlFor="nam" className="form-label">
+              Năm
             </label>
-            <input
-              type="text"
+            <select
               className="form-control"
-              id="maDa"
-              name="maDa"
-              value={model.maDa ?? ""}
-              onChange={handleChange}
-              readOnly
-            />
+              id="nam"
+              name="nam"
+              value={model.nam ?? ""}
+              onChange={handleSelectChange}
+              required
+            >
+              <option value="">Chọn năm</option>
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-3">
+            <label htmlFor="thang" className="form-label">
+              Tháng
+            </label>
+            <select
+              className="form-control"
+              id="thang"
+              name="thang"
+              value={model.thang ?? ""}
+              onChange={handleSelectChange}
+              required
+              disabled={!model.nam}
+            >
+              <option value="">Chọn tháng</option>
+              {months.map((month) => (
+                <option key={month} value={month}>
+                  {month}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="mb-3">
@@ -136,7 +199,7 @@ export default function ThamGiaDuanForm(props: any) {
               required
             >
               <option value="">Chọn nhân viên</option>
-              {nhanVienList.map((nv) => (
+              {nhanVienChuaThamList.map((nv) => (
                 <option key={nv.maNhanVien} value={nv.maNhanVien}>
                   {nv.hoTen} ({nv.maNhanVien})
                 </option>
@@ -160,46 +223,7 @@ export default function ThamGiaDuanForm(props: any) {
               <option value="ChuTri">Chủ trì</option>
             </select>
           </div>
-          <div className="mb-3">
-            <label htmlFor="thang" className="form-label">
-              Tháng
-            </label>
-            <select
-              className="form-control"
-              id="thang"
-              name="thang"
-              value={model.thang ?? ""}
-              onChange={handleSelectChange}
-              required
-            >
-              <option value="">Chọn tháng</option>
-              {months.map((month) => (
-                <option key={month} value={month}>
-                  {month}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="nam" className="form-label">
-              Năm
-            </label>
-            <select
-              className="form-control"
-              id="nam"
-              name="nam"
-              value={model.nam ?? ""}
-              onChange={handleSelectChange}
-              required
-            >
-              <option value="">Chọn năm</option>
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
+
           <button type="submit" className="btn btn-primary">
             Lưu
           </button>

@@ -138,7 +138,7 @@ const DuanPage: React.FC = () => {
                   <th scope="col">Phòng QL</th>
                   {/* <th scope="col">Mã NV Chủ Trì</th> */}
                   <th scope="col">Ngày Bắt Đầu</th>
-                  {/* <th scope="col">Ngày Kết Thúc Dự Kiến</th> */}
+                  <th scope="col">Ngày Kết Thúc Dự Kiến</th>
                   <th scope="col">Ngày Kết Thúc Thực Tế</th>
                   <th scope="col">Trạng Thái</th>
                   <th scope="col">Thành viên</th>
@@ -162,9 +162,9 @@ const DuanPage: React.FC = () => {
                       }
                     </td> */}
                     <td>{item.ngayBatDau ? item.ngayBatDau : ""}</td>
-                    {/* <td>
+                    <td>
                       {item.ngayKetThucDuKien ? item.ngayKetThucDuKien : ""}
-                    </td> */}
+                    </td>
                     <td>
                       {item.ngayKetThucThucTe ? item.ngayKetThucThucTe : ""}
                     </td>

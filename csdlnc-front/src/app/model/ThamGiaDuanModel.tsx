@@ -1,4 +1,5 @@
 import { DuanModel } from "./DuanModel";
+import { NhanVienModel } from "./NhanVienModel";
 
 export class ThamGiaDuanModel {
   maNv?: string;
@@ -8,7 +9,7 @@ export class ThamGiaDuanModel {
   nam?: number;
 
   duAn?: DuanModel;
-
+  nhanVien?: NhanVienModel;
   constructor(init?: Partial<ThamGiaDuanModel>) {
     Object.assign(this, init);
   }

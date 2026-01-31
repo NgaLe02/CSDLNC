@@ -139,3 +139,47 @@ BEGIN
 END$$
 
 DELIMITER ;
+# không cho thêm công đoạn có thời gian bé hơn thời gian bắt đầu của dự án
+DELIMITER $$
+
+CREATE TRIGGER trg_check_thoi_gian_cong_doan_insert
+BEFORE INSERT ON cong_doan
+FOR EACH ROW
+BEGIN
+    DECLARE ngay_bat_dau_du_an DATE;
+
+    -- Lấy ngày bắt đầu dự án
+    SELECT da.ngay_bat_dau
+    INTO ngay_bat_dau_du_an
+    FROM du_an da
+    WHERE da.ma_du_an = NEW.ma_du_an;
+
+    -- Nếu thời gian công đoạn < thời gian bắt đầu dự án → chặn
+    IF NEW.ngay_bat_dau < ngay_bat_dau_du_an THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Thời gian bắt đầu công đoạn không được nhỏ hơn thời gian bắt đầu dự án';
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_check_thoi_gian_cong_doan_update
+BEFORE UPDATE ON cong_doan
+FOR EACH ROW
+BEGIN
+    DECLARE ngay_bat_dau_du_an DATE;
+
+    SELECT da.ngay_bat_dau
+    INTO ngay_bat_dau_du_an
+    FROM du_an da
+    WHERE da.ma_du_an = NEW.ma_du_an;
+
+    IF NEW.ngay_bat_dau < ngay_bat_dau_du_an THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Thời gian bắt đầu công đoạn không được nhỏ hơn thời gian bắt đầu dự án';
+    END IF;
+END$$
+
+DELIMITER ;

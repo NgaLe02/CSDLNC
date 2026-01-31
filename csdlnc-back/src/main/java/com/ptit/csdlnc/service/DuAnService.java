@@ -28,8 +28,12 @@ public class DuAnService {
         return duAnDAO.getById(maDa);
     }
 
-    public List<NhanVien> getAssignedEmployees(String maDa, String thang, String nam) {
+    public List<NhanVien> getAssignedEmployees(String maDa, int thang, int nam) {
         return duAnDAO.getAssignedEmployees(maDa, thang, nam);
+    }
+
+    public List<NhanVien> getNhanVienChuaThamGiaDuAn(String maDa, int thang, int nam) {
+        return duAnDAO.getNhanVienChuaThamGiaDuAn(maDa, thang, nam);
     }
 
     @Transactional

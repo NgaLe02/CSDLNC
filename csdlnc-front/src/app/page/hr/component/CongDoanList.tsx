@@ -20,26 +20,27 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
   const [showThucHienModal, setShowThucHienModal] = useState(false);
   const [selectedMaCd, setSelectedMaCd] = useState<string>("");
 
-  const getLstCongDoan = useCallback(async () => {
-    try {
-      const resp = await CongDoanService.getInstance().getLstCongDoan({
-        maDa: da.maDuAn,
+  const getLstCongDoan = () => {
+    if (!da.maDuAn) return;
+    CongDoanService.getInstance()
+      .getLstCongDoanByMaDuAn(da.maDuAn)
+      .then((resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          setListData(resp.data);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
       });
-      if (resp.status === HttpStatusCode.Ok) {
-        setListData(resp.data);
-      }
-    } catch (error) {
-      console.error("Lỗi khi tải danh sách công đoạn:", error);
-    }
-  }, [da]);
+  };
 
   useEffect(() => {
     getLstCongDoan();
-  }, [getLstCongDoan]);
+  }, [da]);
 
   const handleAdd = () => {
     setType("C");
-    setEditingModel(new CongDoanModel({ maDa: da.maDuAn }));
+    setEditingModel(new CongDoanModel({ maDuAn: da.maDuAn }));
     setShowForm(true);
   };
 
@@ -49,11 +50,14 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
     setShowForm(true);
   };
 
-  const handleDelete = async (maCd: string) => {
+  const handleDelete = async (maDuAn: string, sttCongDoan: string) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa công đoạn này?")) {
       try {
         // Note: Assuming delete method exists, adjust if needed
-        const resp = await CongDoanService.getInstance().deleteCongDoan(maCd);
+        const resp = await CongDoanService.getInstance().deleteCongDoan({
+          maDuAn,
+          sttCongDoan,
+        });
         if (resp.status === 204) {
           toast.success("Xóa công đoạn thành công");
           getLstCongDoan();
@@ -107,11 +111,10 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
           <table className="table">
             <thead>
               <tr>
-                <th>Mã CD</th>
                 <th>Tên công đoạn</th>
                 <th>Thứ tự</th>
                 <th>Ngày bắt đầu</th>
-                <th>Số ngày hoàn thành</th>
+                <th>Ngày hoàn thành dự kiến</th>
                 <th>Ngày hoàn thành thực tế</th>
                 <th>Kết quả</th>
                 <th>Trạng thái tiến độ</th>
@@ -119,13 +122,12 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
               </tr>
             </thead>
             <tbody>
-              {listData.map((item) => (
-                <tr key={item.maCd}>
-                  <td>{item.maCd}</td>
+              {listData.map((item, index) => (
+                <tr key={index}>
                   <td>{item.tenCongDoan}</td>
                   <td>{item.thuTu}</td>
                   <td>{item.ngayBatDau}</td>
-                  <td>{item.soNgayHoanThanh}</td>
+                  <td>{item.ngayHoanThanhDuKien}</td>
                   <td>{item.ngayHoanThanhThucTe}</td>
                   <td>{item.ketQua}</td>
                   <td>{item.trangThaiTienDo}</td>
@@ -140,7 +142,9 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
                     <button
                       type="button"
                       className="btn btn-sm btn-danger me-2"
-                      onClick={() => handleDelete(item.maCd!)}
+                      onClick={() =>
+                        handleDelete(item.maDuAn!, item.sttCongDoan!)
+                      }
                     >
                       Xóa
                     </button>

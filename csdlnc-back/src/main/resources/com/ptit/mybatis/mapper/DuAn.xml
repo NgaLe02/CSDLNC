@@ -7,7 +7,7 @@
         <id column="ma_du_an" property="maDuAn"/>
         <result column="ten_du_an" property="tenDuAn"/>
         <result column="ma_loai_du_an" property="maLoaiDuAn"/>
-        <result column="ma_phong_quan_ly" property="maPhongBan"/>
+        <result column="ma_phong_quan_ly" property="maPhongQuanLy"/>
 
         <result column="ngay_bat_dau" property="ngayBatDau" jdbcType="DATE"/>
         <result column="ngay_ket_thuc_du_kien" property="ngayKetThucDuKien" jdbcType="DATE"/>
@@ -43,6 +43,7 @@
             da.ngay_ket_thuc_thuc_te,
             da.trang_thai,
             da.luong_trach_nhiem,
+            da.ma_phong_quan_ly,
 
             lda.ma_loai_du_an,
             lda.ten_loai_du_an,
@@ -135,8 +136,44 @@
         JOIN tham_gia_du_an tgd
             ON nv.ma_nhan_vien = tgd.ma_nhan_vien
         WHERE tgd.ma_du_an = #{maDuAn}
-        AND tgd.thang = #{thang}
-        AND tgd.nam = #{nam}
+        <if test="thang != null">
+            AND tgd.thang = #{thang}
+        </if>
+         <if test="nam != null">
+            AND tgd.nam = #{nam}
+        </if>
     </select>
+
+    <select id="getNhanVienChuaThamGiaDuAn"
+            parameterType="map"
+            resultMap="NhanVienResultMap">
+
+        SELECT nv.*
+        FROM nhan_vien nv
+
+        JOIN chuc_vu cv
+            ON cv.ma_nhan_vien = nv.ma_nhan_vien
+        AND cv.ngay_ap_dung = (
+                SELECT MAX(cv2.ngay_ap_dung)
+                FROM chuc_vu cv2
+                WHERE cv2.ma_nhan_vien = nv.ma_nhan_vien
+            )
+
+        JOIN du_an da
+            ON da.ma_phong_quan_ly = cv.ma_phong_ban
+
+        WHERE da.ma_du_an = #{maDa}
+
+        AND NOT EXISTS (
+            SELECT 1
+            FROM tham_gia_du_an tgd
+            WHERE tgd.ma_nhan_vien = nv.ma_nhan_vien
+            AND tgd.ma_du_an = #{maDa}
+            AND tgd.thang = #{thang}
+            AND tgd.nam = #{nam}
+        )
+
+    </select>
+
 
 </mapper>

@@ -10,16 +10,8 @@ export default function CongDoanForm(props: any) {
   );
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    const { name, value } = e.target;
-    setModel((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setModel((prev) => ({
       ...prev,
@@ -33,11 +25,14 @@ export default function CongDoanForm(props: any) {
     const formattedModel = {
       ...model,
       ngayBatDau: model.ngayBatDau
-        ? dayjs(model.ngayBatDau).format("DD-MM-YYYY")
-        : model.ngayBatDau,
+        ? dayjs(model.ngayBatDau).format("YYYY-MM-DD")
+        : undefined,
+      ngayHoanThanhDuKien: model.ngayHoanThanhDuKien
+        ? dayjs(model.ngayHoanThanhDuKien).format("YYYY-MM-DD")
+        : undefined,
       ngayHoanThanhThucTe: model.ngayHoanThanhThucTe
-        ? dayjs(model.ngayHoanThanhThucTe).format("DD-MM-YYYY")
-        : model.ngayHoanThanhThucTe,
+        ? dayjs(model.ngayHoanThanhThucTe).format("YYYY-MM-DD")
+        : undefined,
     };
     if (props.type === "U") {
       CongDoanService.getInstance()
@@ -104,15 +99,15 @@ export default function CongDoanForm(props: any) {
               <form onSubmit={handleSubmit}>
                 <div className="row mb-3">
                   <div className="col-md-12">
-                    <label htmlFor="maCd" className="form-label">
+                    <label htmlFor="sttCongDoan" className="form-label">
                       Mã CD
                     </label>
                     <input
                       type="text"
                       className="form-control"
-                      id="maCd"
-                      name="maCd"
-                      value={model.maCd ?? ""}
+                      id="sttCongDoan"
+                      name="sttCongDoan"
+                      value={model.sttCongDoan ?? ""}
                       onChange={handleChange}
                       readOnly
                     />
@@ -157,11 +152,13 @@ export default function CongDoanForm(props: any) {
                       id="trangThaiTienDo"
                       name="trangThaiTienDo"
                       value={model.trangThaiTienDo ?? ""}
-                      onChange={handleSelectChange}
+                      required
+                      onChange={handleChange}
                     >
-                      <option value="">Chọn trạng thái</option>
-                      <option value="DungHan">DungHan</option>
-                      <option value="TreHan">TreHan</option>
+                      <option value="">Chọn trạng thái tiến độ</option>
+                      <option value="ChuaThucHien">Chưa thực hiện</option>
+                      <option value="DangThucHien">Đang thực hiện</option>
+                      <option value="DaThucHien">Đã thực hiện</option>
                     </select>
                   </div>
                 </div>
@@ -178,35 +175,50 @@ export default function CongDoanForm(props: any) {
                       name="ngayBatDau"
                       value={model.ngayBatDau ?? ""}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                   <div className="col-6">
-                    <label htmlFor="soNgayHoanThanh" className="form-label">
-                      Số Ngày Hoàn Thành
+                    <label htmlFor="ngayHoanThanhDuKien" className="form-label">
+                      Ngày hoàn thành dự kiến
                     </label>
                     <input
-                      type="number"
+                      type="date"
                       className="form-control"
-                      id="soNgayHoanThanh"
-                      name="soNgayHoanThanh"
-                      value={model.soNgayHoanThanh ?? ""}
+                      id="ngayHoanThanhDuKien"
+                      name="ngayHoanThanhDuKien"
+                      value={model.ngayHoanThanhDuKien ?? ""}
                       onChange={handleChange}
                       required
                     />
                   </div>
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="ketQua" className="form-label">
-                    Kết Quả
-                  </label>
-                  <textarea
-                    className="form-control"
-                    id="ketQua"
-                    name="ketQua"
-                    value={model.ketQua ?? ""}
-                    onChange={handleChange}
-                  />
+                  <div className="col-md-6">
+                    <label className="form-label">Kết quả</label>
+                    <select
+                      className="form-control"
+                      name="ketQua"
+                      value={model?.ketQua ?? ""}
+                      onChange={handleChange}
+                    >
+                      <option value="">Chọn kết quả</option>
+                      <option value="KEM">Kém</option>
+                      <option value="TOT">Tốt</option>
+                    </select>
+                  </div>
+                  <div className="col-md-6">
+                    <label htmlFor="ngayBatDau" className="form-label">
+                      Ngày kết thúc thực tế
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="ngayHoanThanhDuKien"
+                      name="ngayHoanThanhDuKien"
+                      value={model?.ngayHoanThanhThucTe ?? ""}
+                      onChange={handleChange}
+                      readOnly
+                    />
+                  </div>
                 </div>
 
                 <button type="submit" className="btn btn-primary">

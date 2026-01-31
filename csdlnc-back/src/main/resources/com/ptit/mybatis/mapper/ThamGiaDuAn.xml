@@ -8,6 +8,12 @@
         <id column="thang" property="thang"/>
         <id column="nam" property="nam"/>
         <result column="vai_tro" property="vaiTro"/>
+
+        <association property="nhanVien"
+                    javaType="com.ptit.csdlnc.model.NhanVien">
+            <id column="ma_nhan_vien" property="maNhanVien"/>
+            <result column="ho_ten" property="hoTen"/>
+        </association>
     </resultMap>
 
     <select id="getAll" resultMap="ThamGiaDuAnResultMap">
@@ -15,7 +21,9 @@
     </select>
 
     <select id="getByMaDA" parameterType="map" resultMap="ThamGiaDuAnResultMap">
-        SELECT * FROM tham_gia_du_an where ma_du_an = #{maDa}
+        SELECT da.*, nv.* FROM tham_gia_du_an  da 
+        LEFT JOIN nhan_vien nv on nv.ma_nhan_vien = da.ma_nhan_vien
+        where da.ma_du_an = #{maDa}
     </select>
 
     <select id="getById" parameterType="map" resultMap="ThamGiaDuAnResultMap">
