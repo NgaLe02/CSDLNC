@@ -8,8 +8,8 @@ USE quan_ly_nhan_su_du_an;
 CREATE TABLE bac_luong (
     ma_bac_luong VARCHAR(10) PRIMARY KEY,
     ten_bac_luong VARCHAR(50) NOT NULL,
-    muc_luong_co_ban DECIMAL(18, 2) NOT NULL
-);
+    muc_luong_co_ban DECIMAL(18,2) NOT NULL
+) ENGINE=InnoDB;
 
 -- 2. Phòng ban
 CREATE TABLE phong_ban (
@@ -17,43 +17,46 @@ CREATE TABLE phong_ban (
     ten_phong_ban VARCHAR(100) NOT NULL,
     ngay_thanh_lap DATE,
     loai_phong VARCHAR(50) NOT NULL
-);
+) ENGINE=InnoDB;
 
 -- 3. Nhân viên
 CREATE TABLE nhan_vien (
-    ma_nhan_vien VARCHAR(15) PRIMARY KEY, -- Định dạng: MaPB + 4 số
+    ma_nhan_vien VARCHAR(15) PRIMARY KEY,
     ho_ten VARCHAR(100) NOT NULL,
     ngay_sinh DATE,
     gioi_tinh VARCHAR(10),
-
     CONSTRAINT CK_NV_GIOI_TINH
-    CHECK (gioi_tinh IN ('Nam','Nu','Khac'))
-);
+        CHECK (gioi_tinh IN ('Nam','Nu','Khac'))
+) ENGINE=InnoDB;
 
 -- 4. Chức vụ
 CREATE TABLE chuc_vu (
-    ma_nhan_vien VARCHAR(15) REFERENCES nhan_vien(ma_nhan_vien),
-    ma_phong_ban VARCHAR(10) REFERENCES phong_ban(ma_phong_ban),
-    ten_chuc_vu ENUM('TruongPhong','PhoPhong','NhanVien'), 
+    ma_nhan_vien VARCHAR(15),
+    ma_phong_ban VARCHAR(10),
+    ten_chuc_vu ENUM('TruongPhong','PhoPhong','NhanVien'),
     ngay_ap_dung DATE NOT NULL,
-    PRIMARY KEY (ma_nhan_vien, ma_phong_ban, ngay_ap_dung)
-);
+    PRIMARY KEY (ma_nhan_vien, ma_phong_ban, ngay_ap_dung),
+    CONSTRAINT FK_CV_NV FOREIGN KEY (ma_nhan_vien) REFERENCES nhan_vien(ma_nhan_vien),
+    CONSTRAINT FK_CV_PB FOREIGN KEY (ma_phong_ban) REFERENCES phong_ban(ma_phong_ban)
+) ENGINE=InnoDB;
 
 -- 5. Xếp bậc lương
 CREATE TABLE xep_bac_luong (
-    ma_bac_luong VARCHAR(10) REFERENCES bac_luong(ma_bac_luong),
-    ma_nhan_vien VARCHAR(15) REFERENCES nhan_vien(ma_nhan_vien),
+    ma_bac_luong VARCHAR(10),
+    ma_nhan_vien VARCHAR(15),
     ngay_ap_dung DATE NOT NULL,
-    PRIMARY KEY (ma_bac_luong, ma_nhan_vien, ngay_ap_dung)
-);
+    PRIMARY KEY (ma_bac_luong, ma_nhan_vien, ngay_ap_dung),
+    CONSTRAINT FK_XBL_BL FOREIGN KEY (ma_bac_luong) REFERENCES bac_luong(ma_bac_luong),
+    CONSTRAINT FK_XBL_NV FOREIGN KEY (ma_nhan_vien) REFERENCES nhan_vien(ma_nhan_vien)
+) ENGINE=InnoDB;
 
--- 6. Loại dự án 
+-- 6. Loại dự án
 CREATE TABLE loai_du_an (
     ma_loai_du_an VARCHAR(10) PRIMARY KEY,
     ten_loai_du_an VARCHAR(100) NOT NULL,
     so_nhan_vien_toi_da INT NOT NULL,
-    mo_ta text
-);
+    mo_ta TEXT
+) ENGINE=InnoDB;
 
 -- 7. Dự án
 CREATE TABLE du_an (
@@ -63,124 +66,106 @@ CREATE TABLE du_an (
     ngay_ket_thuc_du_kien DATE NOT NULL,
     ngay_ket_thuc_thuc_te DATE,
     trang_thai ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
-    ma_loai_du_an VARCHAR(10) REFERENCES loai_du_an(ma_loai_du_an) NOT NULL,
-    ma_phong_quan_ly VARCHAR(10) REFERENCES phong_ban(ma_phong_ban)  NOT NULL,
-
-    CONSTRAINT CK_DUAN_NGAY_KET_THUC
-    CHECK (
-        ngay_ket_thuc_thuc_te IS NULL
-        OR ngay_ket_thuc_thuc_te >= ngay_bat_dau
-    )
-);
+    ma_loai_du_an VARCHAR(10) NOT NULL,
+    ma_phong_quan_ly VARCHAR(10) NOT NULL,
+    CONSTRAINT FK_DA_LDA FOREIGN KEY (ma_loai_du_an) REFERENCES loai_du_an(ma_loai_du_an),
+    CONSTRAINT FK_DA_PB FOREIGN KEY (ma_phong_quan_ly) REFERENCES phong_ban(ma_phong_ban),
+    CONSTRAINT CK_DA_NGAY_KT
+        CHECK (ngay_ket_thuc_thuc_te IS NULL OR ngay_ket_thuc_thuc_te >= ngay_bat_dau)
+) ENGINE=InnoDB;
 
 -- 8. Tham gia dự án
 CREATE TABLE tham_gia_du_an (
-    ma_nhan_vien VARCHAR(15) REFERENCES nhan_vien(ma_nhan_vien),
-    ma_du_an VARCHAR(10) REFERENCES du_an(ma_du_an),
+    ma_nhan_vien VARCHAR(15),
+    ma_du_an VARCHAR(10),
     thang INT NOT NULL CHECK (thang BETWEEN 1 AND 12),
     nam INT NOT NULL CHECK (nam > 2000),
-    vai_tro ENUM('ChuTri','ThanhVien'), 
-    luong_trach_nhiem DECIMAL(18, 2) NOT NULL,
-    PRIMARY KEY (ma_nhan_vien, ma_du_an, thang, nam)
-);
+    vai_tro ENUM('ChuTri','ThanhVien'),
+    luong_trach_nhiem DECIMAL(18,2) NOT NULL,
+    PRIMARY KEY (ma_nhan_vien, ma_du_an, thang, nam),
+    CONSTRAINT FK_TGDA_NV FOREIGN KEY (ma_nhan_vien) REFERENCES nhan_vien(ma_nhan_vien),
+    CONSTRAINT FK_TGDA_DA FOREIGN KEY (ma_du_an) REFERENCES du_an(ma_du_an)
+) ENGINE=InnoDB;
 
--- 9. Công đoạn (Có ràng buộc thứ tự thực hiện)
+-- 9. Công đoạn
 CREATE TABLE cong_doan (
     stt_cong_doan INT,
-    ma_du_an VARCHAR(10) REFERENCES du_an(ma_du_an),
+    ma_du_an VARCHAR(10),
     ten_cong_doan VARCHAR(100) NOT NULL,
     thu_tu INT NOT NULL,
     ngay_bat_dau DATE NOT NULL,
     ngay_hoan_thanh_du_kien DATE NOT NULL,
     ngay_hoan_thanh_thuc_te DATE,
     ket_qua VARCHAR(10),
-    trang_thai_tien_do ENUM('ChuaThucHien','DangThucHien','DaThucHien'), 
+    trang_thai_tien_do ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
     PRIMARY KEY (stt_cong_doan, ma_du_an),
-    CONSTRAINT CK_CD_NGAY_KET_THUC
-    CHECK (
-        ngay_hoan_thanh_thuc_te IS NULL
-        OR ngay_hoan_thanh_thuc_te >= ngay_bat_dau
-    ),
-
-    CONSTRAINT CK_CD_KET_QUA
-    CHECK (
-        ngay_hoan_thanh_thuc_te IS NULL
-        OR ket_qua IS NOT NULL
-    ),
-
-    CONSTRAINT CK_CD_KET_QUA_VALUE
-    CHECK (ket_qua IN ('KEM','TOT'))
-);
+    CONSTRAINT FK_CD_DA FOREIGN KEY (ma_du_an) REFERENCES du_an(ma_du_an),
+    CONSTRAINT CK_CD_NGAY_KT
+        CHECK (ngay_hoan_thanh_thuc_te IS NULL OR ngay_hoan_thanh_thuc_te >= ngay_bat_dau),
+    CONSTRAINT CK_CD_KQ
+        CHECK (ngay_hoan_thanh_thuc_te IS NULL OR ket_qua IS NOT NULL),
+    CONSTRAINT CK_CD_KQ_VALUE
+        CHECK (ket_qua IN ('KEM','TOT'))
+) ENGINE=InnoDB;
 
 -- 10. Thực hiện công đoạn
 CREATE TABLE thuc_hien_cong_doan (
     stt_cong_doan INT,
     ma_du_an VARCHAR(10),
-    ma_nhan_vien VARCHAR(15) REFERENCES nhan_vien(ma_nhan_vien),
-    vai_tro ENUM('ChuTri','ThanhVien'), 
-    FOREIGN KEY (stt_cong_doan, ma_du_an) REFERENCES cong_doan(stt_cong_doan, ma_du_an),
-    PRIMARY KEY (stt_cong_doan, ma_du_an, ma_nhan_vien)
-);
+    ma_nhan_vien VARCHAR(15),
+    vai_tro ENUM('ChuTri','ThanhVien'),
+    PRIMARY KEY (stt_cong_doan, ma_du_an, ma_nhan_vien),
+    CONSTRAINT FK_THCD_CD FOREIGN KEY (stt_cong_doan, ma_du_an)
+        REFERENCES cong_doan(stt_cong_doan, ma_du_an),
+    CONSTRAINT FK_THCD_NV FOREIGN KEY (ma_nhan_vien)
+        REFERENCES nhan_vien(ma_nhan_vien)
+) ENGINE=InnoDB;
 
--- 11. Loại công việc (Cho nhân viên không làm dự án)
+-- 11. Loại công việc
 CREATE TABLE loai_cong_viec (
     ma_loai_cv VARCHAR(10) PRIMARY KEY,
     ten_loai_cong_viec VARCHAR(100) NOT NULL,
-    muc_luong_nang_suat DECIMAL(18, 2) NOT NULL
-);
+    muc_luong_nang_suat DECIMAL(18,2) NOT NULL
+) ENGINE=InnoDB;
 
 -- 12. Công việc
 CREATE TABLE cong_viec (
     ma_cong_viec VARCHAR(10) PRIMARY KEY,
     ten_cong_viec VARCHAR(100) NOT NULL,
-    ma_loai_cv VARCHAR(10) REFERENCES loai_cong_viec(ma_loai_cv) NOT NULL,
+    ma_loai_cv VARCHAR(10) NOT NULL,
     ngay_bat_dau DATE NOT NULL,
     ngay_hoan_thanh_du_kien DATE NOT NULL,
     ngay_hoan_thanh_thuc_te DATE,
     ket_qua VARCHAR(10),
     trang_thai_tien_do ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
-    CONSTRAINT CK_CV_NGAY_KET_THUC
-    CHECK (
-        ngay_hoan_thanh_thuc_te IS NULL
-        OR ngay_hoan_thanh_thuc_te >= ngay_bat_dau
-    ),
-
-    CONSTRAINT CK_CV_KET_QUA
-    CHECK (
-        ngay_hoan_thanh_thuc_te IS NULL
-        OR ket_qua IS NOT NULL
-    ),
-
-    CONSTRAINT CK_CD_KET_QUA_VALUE
-    CHECK (ket_qua IN ('KEM','TOT'))
-);
+    CONSTRAINT FK_CV_LCV FOREIGN KEY (ma_loai_cv) REFERENCES loai_cong_viec(ma_loai_cv),
+    CONSTRAINT CK_CV_NGAY_KT
+        CHECK (ngay_hoan_thanh_thuc_te IS NULL OR ngay_hoan_thanh_thuc_te >= ngay_bat_dau),
+    CONSTRAINT CK_CV_KQ
+        CHECK (ngay_hoan_thanh_thuc_te IS NULL OR ket_qua IS NOT NULL),
+    CONSTRAINT CK_CV_KQ_VALUE
+        CHECK (ket_qua IN ('KEM','TOT'))
+) ENGINE=InnoDB;
 
 -- 13. Thực hiện công việc
 CREATE TABLE thuc_hien_cong_viec (
-    ma_nhan_vien VARCHAR(15) REFERENCES nhan_vien(ma_nhan_vien),
-    ma_cong_viec VARCHAR(10) REFERENCES cong_viec(ma_cong_viec),
-    PRIMARY KEY (ma_nhan_vien, ma_cong_viec)
-);
+    ma_nhan_vien VARCHAR(15),
+    ma_cong_viec VARCHAR(10),
+    PRIMARY KEY (ma_nhan_vien, ma_cong_viec),
+    CONSTRAINT FK_THCV_NV FOREIGN KEY (ma_nhan_vien) REFERENCES nhan_vien(ma_nhan_vien),
+    CONSTRAINT FK_THCV_CV FOREIGN KEY (ma_cong_viec) REFERENCES cong_viec(ma_cong_viec)
+) ENGINE=InnoDB;
 
--- 14. Bảng lương hàng tháng
+-- 14. Bảng lương
 CREATE TABLE bang_luong (
     ma_bang_luong BIGINT AUTO_INCREMENT PRIMARY KEY,
-
     thang TINYINT NOT NULL CHECK (thang BETWEEN 1 AND 12),
     nam INT NOT NULL CHECK (nam > 2000),
-
     ma_nhan_vien VARCHAR(15) NOT NULL,
-
-    luong_cung DECIMAL(18, 2) NOT NULL,
-    luong_trach_nhiem DECIMAL(18, 2) NOT NULL,
-    luong_nang_suat DECIMAL(18, 2) NOT NULL,
-
-    so_phan_viec_khong_tot INT NOT NULL COMMENT 'Số lần trễ hạn / kết quả kém',
-
-    CONSTRAINT fk_bang_luong_nhan_vien
-        FOREIGN KEY (ma_nhan_vien)
-        REFERENCES nhan_vien(ma_nhan_vien),
-
-    CONSTRAINT uq_luong_nhan_vien_thang_nam
-        UNIQUE (ma_nhan_vien, thang, nam)
-);
+    luong_cung DECIMAL(18,2) NOT NULL,
+    luong_trach_nhiem DECIMAL(18,2) NOT NULL,
+    luong_nang_suat DECIMAL(18,2) NOT NULL,
+    so_phan_viec_khong_tot INT NOT NULL,
+    CONSTRAINT FK_BL_NV FOREIGN KEY (ma_nhan_vien) REFERENCES nhan_vien(ma_nhan_vien),
+    CONSTRAINT UQ_BL_NV_THANG_NAM UNIQUE (ma_nhan_vien, thang, nam)
+) ENGINE=InnoDB;
