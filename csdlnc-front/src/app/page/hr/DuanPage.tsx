@@ -16,7 +16,7 @@ const DuanPage: React.FC = () => {
   const [editingModel, setEditingModel] = useState<DuanModel>(new DuanModel());
   const [listLoaiDuAn, setListLoaiDuAn] = useState<LoaiDuAnModel[]>([]);
   const [showThamGiaModal, setShowThamGiaModal] = useState(false);
-  const [selectedMaDa, setSelectedMaDa] = useState<string>("");
+  const [selectedDa, setSelectedDa] = useState<DuanModel>(new DuanModel());
   const [selectedTrangThai, setSelectedTrangThai] = useState<string>("");
   const [showCongDoanModal, setShowCongDoanModal] = useState(false);
 
@@ -77,14 +77,14 @@ const DuanPage: React.FC = () => {
     setShowForm(true);
   }
 
-  function handleThamGia(maDa: string) {
-    const duan = listData.find((d) => d.maDuAn === maDa);
-    setSelectedMaDa(maDa);
+  function handleThamGia(da: DuanModel) {
+    const duan = listData.find((d) => d.maDuAn === da.maDuAn);
+    setSelectedDa(da);
     setSelectedTrangThai(duan?.trangThai || "");
     setShowThamGiaModal(true);
   }
-  function handleCongDoan(maDa: string) {
-    setSelectedMaDa(maDa);
+  function handleCongDoan(da: DuanModel) {
+    setSelectedDa(da);
     setShowCongDoanModal(true);
   }
   function handleDelete(maDa: string) {
@@ -133,15 +133,16 @@ const DuanPage: React.FC = () => {
                   </th>
                   <th scope="col">Mã DA</th>
                   <th scope="col">Tên DA</th>
-                  <th scope="col">Loại DA</th>
-                  <th scope="col">Số NV Tối Đa</th>
-                  <th scope="col">Mã Phòng QL</th>
-                  <th scope="col">Mã NV Chủ Trì</th>
+                  {/* <th scope="col">Loại DA</th> */}
+                  {/* <th scope="col">Số NV Tối Đa</th> */}
+                  <th scope="col">Phòng QL</th>
+                  {/* <th scope="col">Mã NV Chủ Trì</th> */}
                   <th scope="col">Ngày Bắt Đầu</th>
-                  <th scope="col">Ngày Kết Thúc Dự Kiến</th>
+                  {/* <th scope="col">Ngày Kết Thúc Dự Kiến</th> */}
                   <th scope="col">Ngày Kết Thúc Thực Tế</th>
                   <th scope="col">Trạng Thái</th>
                   <th scope="col">Thành viên</th>
+                  <th scope="col">Công đoạn</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -151,23 +152,19 @@ const DuanPage: React.FC = () => {
                     <td>{index + 1}</td>
                     <td>{item.maDuAn}</td>
                     <td>{item.tenDuAn}</td>
-                    <td>
-                      {listLoaiDuAn.find(
-                        (l) => l.maLoaiDuAn === item.maLoaiDuAn,
-                      )?.tenLoaiDuAn || item.maLoaiDuAn}
-                    </td>
-                    <td>{item?.loaiDuAn?.soNhanVienToiDa}</td>
-                    <td>{item.maPhongQuanLy}</td>
-                    <td>
+                    {/* <td>{item?.loaiDuAn?.tenLoaiDuAn}</td> */}
+                    {/* <td>{item?.loaiDuAn?.soNhanVienToiDa}</td> */}
+                    <td>{item?.phongQuanLy?.tenPhongBan}</td>
+                    {/* <td>
                       {
                         item.thamGiaLst?.find((tg) => tg.vaiTro === "ChuTri")
                           ?.maNv
                       }
-                    </td>
+                    </td> */}
                     <td>{item.ngayBatDau ? item.ngayBatDau : ""}</td>
-                    <td>
+                    {/* <td>
                       {item.ngayKetThucDuKien ? item.ngayKetThucDuKien : ""}
-                    </td>
+                    </td> */}
                     <td>
                       {item.ngayKetThucThucTe ? item.ngayKetThucThucTe : ""}
                     </td>
@@ -175,13 +172,15 @@ const DuanPage: React.FC = () => {
                     <td>
                       <button
                         className="btn btn-sm btn-success"
-                        onClick={() => handleThamGia(item.maDuAn!)}
+                        onClick={() => handleThamGia(item)}
                       >
                         Thành viên
                       </button>
+                    </td>
+                    <td>
                       <button
                         className="btn btn-sm btn-primary ms-2"
-                        onClick={() => handleCongDoan(item.maDuAn!)}
+                        onClick={() => handleCongDoan(item)}
                       >
                         Công đoạn
                       </button>
@@ -241,7 +240,7 @@ const DuanPage: React.FC = () => {
             <div className="modal-content">
               <div className="modal-body">
                 <ThamGiaDuanList
-                  maDa={selectedMaDa}
+                  da={selectedDa}
                   trangThai={selectedTrangThai}
                   onClose={() => setShowThamGiaModal(false)}
                 />
@@ -257,7 +256,7 @@ const DuanPage: React.FC = () => {
             <div className="modal-content">
               <div className="modal-body">
                 <CongDoanList
-                  maDa={selectedMaDa}
+                  da={selectedDa}
                   onClose={() => setShowCongDoanModal(false)}
                 />
               </div>

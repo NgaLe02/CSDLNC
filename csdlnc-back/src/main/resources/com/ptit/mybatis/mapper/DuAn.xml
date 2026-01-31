@@ -6,18 +6,22 @@
 
         <id column="ma_du_an" property="maDuAn"/>
         <result column="ten_du_an" property="tenDuAn"/>
+        <result column="ma_loai_du_an" property="maLoaiDuAn"/>
+        <result column="ma_phong_quan_ly" property="maPhongBan"/>
 
         <result column="ngay_bat_dau" property="ngayBatDau" jdbcType="DATE"/>
         <result column="ngay_ket_thuc_du_kien" property="ngayKetThucDuKien" jdbcType="DATE"/>
         <result column="ngay_ket_thuc_thuc_te" property="ngayKetThucThucTe" jdbcType="DATE"/>
 
         <result column="trang_thai" property="trangThai"/>
+        <result column="luong_trach_nhiem" property="luongTrachNhiem"/>
 
         <!--  LOẠI DỰ ÁN -->
         <association property="loaiDuAn"
                     javaType="com.ptit.csdlnc.model.LoaiDuAn">
             <id column="ma_loai_du_an" property="maLoaiDuAn"/>
             <result column="ten_loai_du_an" property="tenLoaiDuAn"/>
+            <result column="so_nhan_vien_toi_da" property="soNhanVienToiDa"/>
         </association>
 
         <!--  PHÒNG QUẢN LÝ -->
@@ -38,9 +42,11 @@
             da.ngay_ket_thuc_du_kien,
             da.ngay_ket_thuc_thuc_te,
             da.trang_thai,
+            da.luong_trach_nhiem,
 
             lda.ma_loai_du_an,
             lda.ten_loai_du_an,
+            lda.so_nhan_vien_toi_da,
 
             pb.ma_phong_ban,
             pb.ten_phong_ban
@@ -57,9 +63,11 @@
             da.ngay_ket_thuc_du_kien,
             da.ngay_ket_thuc_thuc_te,
             da.trang_thai,
+            da.luong_trach_nhiem,
 
             lda.ma_loai_du_an,
             lda.ten_loai_du_an,
+            lda.so_nhan_vien_toi_da,
 
             pb.ma_phong_ban,
             pb.ten_phong_ban
@@ -70,7 +78,10 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.ptit.csdlnc.model.DuAn">
+    <insert id="insert" parameterType="com.ptit.csdlnc.model.DuAn"
+        useGeneratedKeys="true"
+        keyProperty="maDuAn"
+        keyColumn="ma_du_an">
         INSERT INTO du_an (
             ten_du_an,
             ngay_bat_dau,
@@ -78,7 +89,8 @@
             ngay_ket_thuc_thuc_te,
             trang_thai,
             ma_loai_du_an,
-            ma_phong_quan_ly
+            ma_phong_quan_ly,
+            luong_trach_nhiem
         )
         VALUES (
             #{tenDuAn},
@@ -86,8 +98,9 @@
             #{ngayKetThucDuKien},
             #{ngayKetThucThucTe},
             #{trangThai},
-            #{loaiDuAn.maLoaiDuAn},
-            #{phongQuanLy.maPhongBan}
+            #{maLoaiDuAn},
+            #{maPhongQuanLy},
+            #{luongTrachNhiem}
         )
     </insert>
 
@@ -99,8 +112,9 @@
             ngay_ket_thuc_du_kien = #{ngayKetThucDuKien},
             ngay_ket_thuc_thuc_te = #{ngayKetThucThucTe},
             trang_thai = #{trangThai},
-            ma_loai_du_an = #{loaiDuAn.maLoaiDuAn},
-            ma_phong_quan_ly = #{phongQuanLy.maPhongBan}
+            ma_loai_du_an = #{maLoaiDuAn},
+            ma_phong_quan_ly = #{maPhongQuanLy},
+            luong_trach_nhiem = #{luongTrachNhiem}
         WHERE ma_du_an = #{maDuAn}
     </update>
     

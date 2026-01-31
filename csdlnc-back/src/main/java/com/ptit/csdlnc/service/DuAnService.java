@@ -17,9 +17,8 @@ public class DuAnService {
     @Autowired
     private DuAnDAO duAnDAO;
 
-     @Autowired
+    @Autowired
     private ThamGiaDuAnDAO thamGiaDuAnDAO;
-
 
     public List<DuAn> getAll() {
         return duAnDAO.getAll();
@@ -33,8 +32,14 @@ public class DuAnService {
         return duAnDAO.getAssignedEmployees(maDa, thang, nam);
     }
 
+    @Transactional
     public void insert(DuAn duAn) {
         duAnDAO.insert(duAn);
+        // List<ThamGiaDuAn> lstThamGia = duAn.getThamGiaLst();
+        // for (ThamGiaDuAn item : lstThamGia) {
+        //     item.setMaDa(duAn.getMaDuAn());
+        //     thamGiaDuAnDAO.insert(item);
+        // }
     }
 
     @Transactional

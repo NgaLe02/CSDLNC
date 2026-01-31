@@ -69,6 +69,7 @@ CREATE TABLE du_an (
     trang_thai ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
     ma_loai_du_an bigint NOT NULL,
     ma_phong_quan_ly bigint NOT NULL,
+    luong_trach_nhiem DECIMAL(18,2) NOT NULL,
     CONSTRAINT FK_DA_LDA FOREIGN KEY (ma_loai_du_an) REFERENCES loai_du_an(ma_loai_du_an),
     CONSTRAINT FK_DA_PB FOREIGN KEY (ma_phong_quan_ly) REFERENCES phong_ban(ma_phong_ban),
     CONSTRAINT CK_DA_NGAY_KT
@@ -82,7 +83,6 @@ CREATE TABLE tham_gia_du_an (
     thang INT NOT NULL CHECK (thang BETWEEN 1 AND 12),
     nam INT NOT NULL CHECK (nam > 2000),
     vai_tro ENUM('ChuTri','ThanhVien'),
-    luong_trach_nhiem DECIMAL(18,2) NOT NULL,
     PRIMARY KEY (ma_nhan_vien, ma_du_an, thang, nam),
     CONSTRAINT FK_TGDA_NV FOREIGN KEY (ma_nhan_vien) REFERENCES nhan_vien(ma_nhan_vien),
     CONSTRAINT FK_TGDA_DA FOREIGN KEY (ma_du_an) REFERENCES du_an(ma_du_an)

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DuAn {
 
-    private Long maDuAn;
+    private String maDuAn;
     private String tenDuAn;
     private String maLoaiDuAn;
     private String maPhongQuanLy;
@@ -25,6 +25,7 @@ public class DuAn {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate ngayKetThucThucTe;
     private String trangThai;
+    private String luongTrachNhiem;
 
     private LoaiDuAn loaiDuAn;
     private PhongBan phongQuanLy;

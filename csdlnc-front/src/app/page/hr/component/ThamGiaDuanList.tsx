@@ -4,15 +4,16 @@ import { toast } from "react-toastify";
 import ThamGiaDuanForm from "./ThamGiaDuanForm";
 import { ThamGiaDuanModel } from "../../../model/ThamGiaDuanModel";
 import { ThamGiaDuanService } from "../../../services/ThamGiaDuanService";
+import { DuanModel } from "../../../model/DuanModel";
 
 interface ThamGiaDuanListProps {
-  maDa: string;
+  da: DuanModel;
   onClose: () => void;
   trangThai?: string;
 }
 
 const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
-  maDa,
+  da,
   onClose,
   trangThai,
 }) => {
@@ -24,14 +25,14 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
   );
 
   useEffect(() => {
-    if (maDa) {
+    if (da.maDuAn) {
       getLstThamGiaDuan();
     }
-  }, [maDa]);
+  }, [da]);
 
   const getLstThamGiaDuan = async () => {
     ThamGiaDuanService.getInstance()
-      .getLstThamGiaDuanOfDuAn(maDa)
+      .getLstThamGiaDuanOfDuAn(da.maDuAn!)
       .then((resp) => {
         if (resp.status === HttpStatusCode.Ok) {
           setListData(resp.data);
@@ -43,7 +44,7 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
   };
 
   const handleAdd = () => {
-    setEditingModel(new ThamGiaDuanModel({ maDa }));
+    setEditingModel(new ThamGiaDuanModel({ maDa: da.maDuAn }));
     setType("C");
     setShowForm(true);
   };
@@ -88,7 +89,7 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
         style={{ maxHeight: "70vh", overflowY: "auto" }}
       >
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5>Danh sách thành viên dự án {maDa}</h5>
+          <h5>Danh sách thành viên dự án {da.tenDuAn}</h5>
           <button type="button" className="btn btn-secondary" onClick={onClose}>
             Đóng
           </button>
@@ -109,7 +110,6 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
             <thead>
               <tr>
                 <th>Mã NV</th>
-                <th>Mã DA</th>
                 <th>Vai trò</th>
                 <th>Tháng</th>
                 <th>Năm</th>
@@ -120,7 +120,6 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
               {listData.map((item) => (
                 <tr key={`${item.maNv}-${item.maDa}`}>
                   <td>{item.maNv}</td>
-                  <td>{item.maDa}</td>
                   <td>{item.vaiTro}</td>
                   <td>{item.thang}</td>
                   <td>{item.nam}</td>
@@ -154,8 +153,8 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
               <div className="modal-header">
                 <h5 className="modal-title">
                   {editingModel?.maNv
-                    ? "Sửa tham gia dự án"
-                    : "Thêm tham gia dự án"}
+                    ? "Sửa nhân viên tham gia dự án " + da.tenDuAn
+                    : "Thêm nhân viên tham gia dự án " + da.tenDuAn}
                 </h5>
                 <button
                   type="button"

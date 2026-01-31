@@ -1,5 +1,6 @@
 import { LoaiDuAnModel } from "./LoaiDuAnModel";
 import { NhanVienModel } from "./NhanVienModel";
+import { PhongBanModel } from "./PhongBanModel";
 import { ThamGiaDuanModel } from "./ThamGiaDuanModel";
 
 export class DuanModel {
@@ -11,8 +12,10 @@ export class DuanModel {
   ngayKetThucDuKien?: string;
   ngayKetThucThucTe?: string;
   trangThai?: string;
+  luongTrachNhiem?: string;
 
   loaiDuAn?: LoaiDuAnModel;
+  phongQuanLy?: PhongBanModel;
   dsNvThamGia?: NhanVienModel[];
   thamGiaLst?: ThamGiaDuanModel[];
 

@@ -168,16 +168,17 @@ export default function DuanForm(props: any) {
     }
 
     if (name === "maNvChuTri") {
-      // Thêm trưởng dự án vào danh sách tham gia với vai trò ChuTri
       setThamGiaList((prev) => {
-        // Remove existing ChuTri if any
-        const filtered = prev.filter((tg) => tg.vaiTro !== "ChuTri");
-        // Add new ChuTri
+        // Xoá chủ trì cũ (nếu có)
+        const withoutChuTri = prev.filter((tg) => tg.vaiTro !== "ChuTri");
+
+        // Thêm chủ trì mới
         const newChuTri = new ThamGiaDuanModel({
           maNv: value,
           vaiTro: "ChuTri",
         });
-        return [...filtered, newChuTri];
+
+        return [...withoutChuTri, newChuTri];
       });
     }
   };
@@ -208,6 +209,7 @@ export default function DuanForm(props: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     console.log(thamGiaList);
+    console.log(model);
     e.preventDefault();
     // Format dates to DD-MM-YYYY before sending
     const formattedModel = {
@@ -344,7 +346,75 @@ export default function DuanForm(props: any) {
                 ))}
               </select>
             </div>
-
+            {/* <div className="col-md-6">
+              <label htmlFor="maNvChuTri" className="form-label">
+                Nhân viên chủ trì
+              </label>
+              <select
+                className="form-control"
+                id="maNvChuTri"
+                name="maNvChuTri"
+                value={maNvChuTri ?? ""}
+                onChange={handleSelectChange}
+                required
+              >
+                <option value="">Chọn nhân viên chủ trì</option>
+                {nhanVienList.map((nv) => (
+                  <option key={nv.maNhanVien} value={nv.maNhanVien}>
+                    {nv.hoTen}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {soNvToiDa > 1 && (
+              <div className="row mb-3">
+                <div className="col-md-12">
+                  <label className="form-label">
+                    Nhân Viên Tham Gia (Tối đa {soNvToiDa - 1} người)
+                  </label>
+                  <div
+                    className="border p-3"
+                    style={{ maxHeight: "200px", overflowY: "auto" }}
+                  >
+                    {nhanVienList
+                      .filter((nv) => nv.maNhanVien !== maNvChuTri)
+                      .map((nv) => (
+                        <div key={nv.maNhanVien} className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={`thamgia-${nv.maNhanVien}`}
+                            checked={thamGiaList.some(
+                              (tg) => tg.maNv === nv.maNhanVien,
+                            )}
+                            onChange={(e) =>
+                              handleThamGiaChange(
+                                nv.maNhanVien!,
+                                e.target.checked,
+                              )
+                            }
+                            disabled={
+                              thamGiaList.length >= soNvToiDa - 1 &&
+                              !thamGiaList.some(
+                                (tg) => tg.maNv === nv.maNhanVien,
+                              )
+                            }
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor={`thamgia-${nv.maNhanVien}`}
+                          >
+                            {nv.hoTen}
+                          </label>
+                        </div>
+                      ))}
+                  </div>
+                  <small className="text-muted">
+                    Đã chọn: {thamGiaList.length} / {soNvToiDa - 1}
+                  </small>
+                </div>
+              </div>
+            )} */}
             <div className="col-md-6">
               <label htmlFor="trangThai" className="form-label">
                 Trạng Thái
@@ -354,6 +424,7 @@ export default function DuanForm(props: any) {
                 id="trangThai"
                 name="trangThai"
                 value={model.trangThai ?? ""}
+                required
                 onChange={handleSelectChange}
               >
                 <option value="">Chọn trạng thái</option>
@@ -362,54 +433,24 @@ export default function DuanForm(props: any) {
                 <option value="DaThucHien">Đã thực hiện</option>
               </select>
             </div>
-          </div>
-          {soNvToiDa > 1 && (
-            <div className="row mb-3">
-              <div className="col-md-12">
-                <label className="form-label">
-                  Nhân Viên Tham Gia (Tối đa {soNvToiDa - 1} người)
-                </label>
-                <div
-                  className="border p-3"
-                  style={{ maxHeight: "200px", overflowY: "auto" }}
-                >
-                  {nhanVienList
-                    .filter((nv) => nv.maNhanVien !== maNvChuTri)
-                    .map((nv) => (
-                      <div key={nv.maNhanVien} className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id={`thamgia-${nv.maNhanVien}`}
-                          checked={thamGiaList.some(
-                            (tg) => tg.maNv === nv.maNhanVien,
-                          )}
-                          onChange={(e) =>
-                            handleThamGiaChange(
-                              nv.maNhanVien!,
-                              e.target.checked,
-                            )
-                          }
-                          disabled={
-                            thamGiaList.length >= soNvToiDa - 1 &&
-                            !thamGiaList.some((tg) => tg.maNv === nv.maNhanVien)
-                          }
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor={`thamgia-${nv.maNhanVien}`}
-                        >
-                          {nv.hoTen}
-                        </label>
-                      </div>
-                    ))}
-                </div>
-                <small className="text-muted">
-                  Đã chọn: {thamGiaList.length} / {soNvToiDa - 1}
-                </small>
-              </div>
+
+            <div className="col-md-6">
+              <label htmlFor="luongTrachNhiem" className="form-label">
+                Lương trách nhiệm
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="luongTrachNhiem"
+                name="luongTrachNhiem"
+                value={model.luongTrachNhiem ?? ""}
+                onChange={handleChange}
+                required
+              />
             </div>
-          )}
+            <div className="col-md-6"></div>
+          </div>
+
           <div className="row mb-3">
             <div className="col-md-6">
               <label htmlFor="ngayBatDau" className="form-label">
@@ -421,6 +462,7 @@ export default function DuanForm(props: any) {
                 id="ngayBatDau"
                 name="ngayBatDau"
                 value={model.ngayBatDau ?? ""}
+                required
                 onChange={handleChange}
               />
             </div>
@@ -433,6 +475,7 @@ export default function DuanForm(props: any) {
                 className="form-control"
                 id="ngayKetThucDuKien"
                 name="ngayKetThucDuKien"
+                required
                 value={model.ngayKetThucDuKien ?? ""}
                 onChange={handleChange}
               />

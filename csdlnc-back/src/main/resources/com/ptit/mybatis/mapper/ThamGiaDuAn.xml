@@ -3,38 +3,38 @@
 <mapper namespace="com.ptit.csdlnc.dao.ThamGiaDuAnDAO">
 
     <resultMap id="ThamGiaDuAnResultMap" type="com.ptit.csdlnc.model.ThamGiaDuAn">
-        <id column="ma_nv" property="maNv"/>
-        <id column="ma_da" property="maDa"/>
+        <id column="ma_nhan_vien" property="maNv"/>
+        <id column="ma_du_an" property="maDa"/>
         <id column="thang" property="thang"/>
         <id column="nam" property="nam"/>
         <result column="vai_tro" property="vaiTro"/>
     </resultMap>
 
     <select id="getAll" resultMap="ThamGiaDuAnResultMap">
-        SELECT * FROM thamgia_duan
+        SELECT * FROM tham_gia_du_an
     </select>
 
     <select id="getByMaDA" parameterType="map" resultMap="ThamGiaDuAnResultMap">
-        SELECT * FROM thamgia_duan where ma_da = #{maDa}
+        SELECT * FROM tham_gia_du_an where ma_du_an = #{maDa}
     </select>
 
     <select id="getById" parameterType="map" resultMap="ThamGiaDuAnResultMap">
-        SELECT * FROM thamgia_duan WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
+        SELECT * FROM tham_gia_du_an WHERE ma_nhan_vien = #{maNv} AND ma_du_an = #{maDa} AND thang = #{thang} AND nam = #{nam}
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.ThamGiaDuAn">
-        INSERT INTO thamgia_duan (ma_nv, ma_da, thang, nam, vai_tro)
+        INSERT INTO tham_gia_du_an (ma_nhan_vien, ma_du_an, thang, nam, vai_tro)
         VALUES (#{maNv}, #{maDa}, #{thang}, #{nam}, #{vaiTro})
     </insert>
 
     <update id="update" parameterType="com.ptit.csdlnc.model.ThamGiaDuAn">
-        UPDATE thamgia_duan SET
+        UPDATE tham_gia_du_an SET
         vai_tro = #{vaiTro}
-        WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
+        WHERE ma_nhan_vien = #{maNv} AND ma_du_an = #{maDa} AND thang = #{thang} AND nam = #{nam}
     </update>
 
     <delete id="delete" parameterType="map">
-        DELETE FROM thamgia_duan WHERE ma_nv = #{maNv} AND ma_da = #{maDa} AND thang = #{thang} AND nam = #{nam}
+        DELETE FROM tham_gia_du_an WHERE ma_nhan_vien = #{maNv} AND ma_du_an = #{maDa} AND thang = #{thang} AND nam = #{nam}
     </delete>
 
 </mapper>

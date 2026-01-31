@@ -5,13 +5,14 @@ import CongDoanForm from "./CongDoanForm";
 import { CongDoanModel } from "../../../model/CongDoanModel";
 import { CongDoanService } from "../../../services/CongDoanService";
 import ThucHienCongDoanList from "./ThucHienCongDoanList";
+import { DuanModel } from "../../../model/DuanModel";
 
 interface CongDoanListProps {
-  maDa: string;
+  da: DuanModel;
   onClose: () => void;
 }
 
-const CongDoanList: React.FC<CongDoanListProps> = ({ maDa, onClose }) => {
+const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
   const [listData, setListData] = useState<CongDoanModel[]>([]);
   const [type, setType] = useState<"C" | "U">("C");
   const [showForm, setShowForm] = useState(false);
@@ -21,14 +22,16 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ maDa, onClose }) => {
 
   const getLstCongDoan = useCallback(async () => {
     try {
-      const resp = await CongDoanService.getInstance().getLstCongDoan({ maDa });
+      const resp = await CongDoanService.getInstance().getLstCongDoan({
+        maDa: da.maDuAn,
+      });
       if (resp.status === HttpStatusCode.Ok) {
         setListData(resp.data);
       }
     } catch (error) {
       console.error("Lỗi khi tải danh sách công đoạn:", error);
     }
-  }, [maDa]);
+  }, [da]);
 
   useEffect(() => {
     getLstCongDoan();
@@ -36,7 +39,7 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ maDa, onClose }) => {
 
   const handleAdd = () => {
     setType("C");
-    setEditingModel(new CongDoanModel({ maDa }));
+    setEditingModel(new CongDoanModel({ maDa: da.maDuAn }));
     setShowForm(true);
   };
 
@@ -90,7 +93,7 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ maDa, onClose }) => {
         style={{ maxHeight: "70vh", overflowY: "auto" }}
       >
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5>Danh sách công đoạn dự án {maDa}</h5>
+          <h5>Danh sách công đoạn dự án {da.tenDuAn}</h5>
           <button type="button" className="btn btn-secondary" onClick={onClose}>
             Đóng
           </button>
@@ -168,7 +171,7 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ maDa, onClose }) => {
         <ThucHienCongDoanList
           congDoan={editingModel}
           maCd={selectedMaCd}
-          maDa={maDa}
+          maDa={da.maDuAn!}
           onClose={closeThucHienModal}
         />
       )}
