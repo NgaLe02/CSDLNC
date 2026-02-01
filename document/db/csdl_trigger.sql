@@ -120,25 +120,48 @@ DELIMITER ;
 -- -- Kiểm tra xem nhân viên được phân công công đoạn có nằm trong danh sách tham gia dự án của tháng đó không
 DELIMITER $$
 
-CREATE TRIGGER trg_check_nv_trong_du_an
+CREATE DEFINER = `root`@`localhost`
+TRIGGER trg_check_nv_trong_du_an
 AFTER INSERT ON thuc_hien_cong_doan
 FOR EACH ROW
 BEGIN
+    DECLARE v_thang INT;
+    DECLARE v_nam INT;
+    DECLARE v_msg VARCHAR(255);
+
+    -- Lấy tháng/năm theo ngày bắt đầu công đoạn
+    SELECT
+        MONTH(ngay_bat_dau),
+        YEAR(ngay_bat_dau)
+    INTO v_thang, v_nam
+    FROM cong_doan
+    WHERE ma_du_an = NEW.ma_du_an
+      AND stt_cong_doan = NEW.stt_cong_doan;
+
+    -- Kiểm tra nhân viên có tham gia dự án trong tháng/năm đó không
     IF NOT EXISTS (
         SELECT 1
         FROM tham_gia_du_an tg
-        JOIN cong_doan cd ON cd.ma_du_an = tg.ma_du_an
         WHERE tg.ma_nhan_vien = NEW.ma_nhan_vien
           AND tg.ma_du_an = NEW.ma_du_an
-          AND tg.thang = MONTH(cd.ngay_bat_dau)
-          AND tg.nam = YEAR(cd.ngay_bat_dau)
+          AND tg.thang = v_thang
+          AND tg.nam = v_nam
     ) THEN
+        SET v_msg = CONCAT(
+            'Nhan vien ', NEW.ma_nhan_vien,
+            ' chua tham gia du an ',
+            NEW.ma_du_an,
+            ' trong thang ', v_thang,
+            '/', v_nam
+        );
+
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Lỗi: Nhân viên chưa tham gia dự án trong tháng/năm tương ứng';
+        SET MESSAGE_TEXT = v_msg;
     END IF;
 END$$
 
 DELIMITER ;
+
 # không cho thêm công đoạn có thời gian bé hơn thời gian bắt đầu của dự án
 DELIMITER $$
 
@@ -179,6 +202,67 @@ BEGIN
     IF NEW.ngay_bat_dau < ngay_bat_dau_du_an THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Thời gian bắt đầu công đoạn không được nhỏ hơn thời gian bắt đầu dự án';
+    END IF;
+END$$
+
+DELIMITER ;
+
+-- tạo mã phòng ban
+DELIMITER $$
+
+CREATE TRIGGER trg_phong_ban_auto_ma
+BEFORE INSERT ON phong_ban
+FOR EACH ROW
+BEGIN
+    DECLARE max_num INT;
+
+    -- Lấy số lớn nhất hiện có sau PB
+    SELECT
+        IFNULL(MAX(CAST(SUBSTRING(ma_phong_ban, 3) AS UNSIGNED)), 0)
+    INTO max_num
+    FROM phong_ban;
+
+    -- Gán mã mới dạng PB001, PB002...
+    SET NEW.ma_phong_ban = CONCAT(
+        'PB',
+        LPAD(max_num + 1, 3, '0')
+    );
+END$$
+
+DELIMITER ;
+
+
+# Check nhân viên có thuộc phòng ban quản lý dự án
+DELIMITER $$
+
+CREATE TRIGGER trg_check_nv_phong_ban_du_an
+BEFORE INSERT ON tham_gia_du_an
+FOR EACH ROW
+BEGIN
+    DECLARE v_ma_phong_du_an varchar(15);
+    DECLARE v_ma_phong_nv varchar(15);
+
+    -- Lấy phòng ban quản lý của dự án
+    SELECT ma_phong_quan_ly
+    INTO v_ma_phong_du_an
+    FROM du_an
+    WHERE ma_du_an = NEW.ma_du_an;
+
+    -- Lấy phòng ban HIỆN TẠI của nhân viên
+    SELECT ma_phong_ban
+    INTO v_ma_phong_nv
+    FROM chuc_vu
+    WHERE ma_nhan_vien = NEW.ma_nhan_vien
+    ORDER BY ngay_ap_dung DESC
+    LIMIT 1;
+
+    -- Nếu không cùng phòng ban → chặn
+    IF v_ma_phong_du_an IS NULL
+       OR v_ma_phong_nv IS NULL
+       OR v_ma_phong_du_an <> v_ma_phong_nv
+    THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Nhan vien khong thuoc phong ban quan ly du an';
     END IF;
 END$$
 

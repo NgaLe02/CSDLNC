@@ -13,7 +13,7 @@ CREATE TABLE bac_luong (
 
 -- 2. Phòng ban
 CREATE TABLE phong_ban (
-    ma_phong_ban bigint auto_increment PRIMARY KEY,
+    ma_phong_ban VARCHAR(15) PRIMARY KEY,
     ten_phong_ban VARCHAR(100) NOT NULL,
     ngay_thanh_lap DATE,
     loai_phong VARCHAR(50) NOT NULL
@@ -33,7 +33,7 @@ CREATE TABLE nhan_vien (
 -- 4. Chức vụ
 CREATE TABLE chuc_vu (
     ma_nhan_vien VARCHAR(15),
-    ma_phong_ban bigint,
+    ma_phong_ban VARCHAR(15),
     ten_chuc_vu ENUM('TruongPhong','PhoPhong','NhanVien'),
     ngay_ap_dung DATE NOT NULL,
     PRIMARY KEY (ma_nhan_vien, ma_phong_ban, ngay_ap_dung),
@@ -68,7 +68,7 @@ CREATE TABLE du_an (
     ngay_ket_thuc_thuc_te DATE,
     trang_thai ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
     ma_loai_du_an bigint NOT NULL,
-    ma_phong_quan_ly bigint NOT NULL,
+    ma_phong_quan_ly VARCHAR(15) NOT NULL,
     luong_trach_nhiem DECIMAL(18,2) NOT NULL,
     CONSTRAINT FK_DA_LDA FOREIGN KEY (ma_loai_du_an) REFERENCES loai_du_an(ma_loai_du_an),
     CONSTRAINT FK_DA_PB FOREIGN KEY (ma_phong_quan_ly) REFERENCES phong_ban(ma_phong_ban),
