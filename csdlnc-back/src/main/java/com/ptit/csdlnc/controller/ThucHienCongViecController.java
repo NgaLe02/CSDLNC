@@ -1,6 +1,7 @@
 package com.ptit.csdlnc.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,8 @@ public class ThucHienCongViecController {
     private ThucHienCongViecService thucHienCongViecService;
 
     @GetMapping
-    public ResponseEntity<List<ThucHienCongViec>> getAll() {
-        List<ThucHienCongViec> list = thucHienCongViecService.getAll();
+    public ResponseEntity<List<ThucHienCongViec>> getLstThucHienCongViec(@RequestParam String maCongViec) {
+        List<ThucHienCongViec> list = thucHienCongViecService.getLstThucHienCongViec(maCongViec);
         return ResponseEntity.ok(list);
     }
 
@@ -34,6 +35,14 @@ public class ThucHienCongViecController {
     public ResponseEntity<ThucHienCongViec> getById(@RequestParam String maNv, @RequestParam String maCv, @RequestParam Integer thang, @RequestParam Integer nam) {
         ThucHienCongViec thucHienCongViec = thucHienCongViecService.getById(maNv, maCv, thang, nam);
         return ResponseEntity.ok(thucHienCongViec);
+    }
+
+    @PostMapping("/insert-list")
+    public ResponseEntity<Void> insertListNvThamGiaDuan(@RequestBody Map<String, Object> congViec) {
+        String maCv = congViec.get("maCongViec").toString();
+        List<String> lstNhanVien = (List<String>) congViec.get("lstNhanVien");
+        thucHienCongViecService.insertListNvThamGiaDuan(maCv, lstNhanVien);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping
@@ -49,8 +58,8 @@ public class ThucHienCongViecController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestParam String maNv, @RequestParam String maCv, @RequestParam Integer thang, @RequestParam Integer nam) {
-        thucHienCongViecService.delete(maNv, maCv, thang, nam);
+    public ResponseEntity<Void> delete(@RequestParam String maNv, @RequestParam String maCv) {
+        thucHienCongViecService.delete(maNv, maCv);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,11 +1,13 @@
 package com.ptit.csdlnc.service;
 
-import com.ptit.csdlnc.dao.ThucHienCongViecDAO;
-import com.ptit.csdlnc.model.ThucHienCongViec;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.ptit.csdlnc.dao.ThucHienCongViecDAO;
+import com.ptit.csdlnc.model.ThucHienCongViec;
 
 @Service
 public class ThucHienCongViecService {
@@ -13,8 +15,8 @@ public class ThucHienCongViecService {
     @Autowired
     private ThucHienCongViecDAO thucHienCongViecDAO;
 
-    public List<ThucHienCongViec> getAll() {
-        return thucHienCongViecDAO.getAll();
+    public List<ThucHienCongViec> getLstThucHienCongViec(String maCv) {
+        return thucHienCongViecDAO.getLstThucHienCongViec(maCv);
     }
 
     public ThucHienCongViec getById(String maNv, String maCv, Integer thang, Integer nam) {
@@ -29,7 +31,17 @@ public class ThucHienCongViecService {
         thucHienCongViecDAO.update(thucHienCongViec);
     }
 
-    public void delete(String maNv, String maCv, Integer thang, Integer nam) {
-        thucHienCongViecDAO.delete(maNv, maCv, thang, nam);
+    public void delete(String maNv, String maCv) {
+        thucHienCongViecDAO.delete(maNv, maCv);
+    }
+
+    @Transactional
+    public void insertListNvThamGiaDuan(String maCv, List<String> lstNhanVien) {
+        ThucHienCongViec model = new ThucHienCongViec();
+        model.setMaCv(maCv);
+        for (String maNhanVien : lstNhanVien) {
+            model.setMaNv(maNhanVien);
+            thucHienCongViecDAO.insert(model);
+        }
     }
 }

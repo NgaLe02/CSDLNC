@@ -131,30 +131,10 @@ function SideBarLeft() {
                   className="dropdown-item"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/system/thuc-hien-cong-viec");
-                  }}
-                >
-                  Thực hiện công việc
-                </a>
-                <a
-                  href="#"
-                  className="dropdown-item"
-                  onClick={(e) => {
-                    e.preventDefault();
                     navigate("/system/bang-luong");
                   }}
                 >
                   Bảng lương
-                </a>
-                <a
-                  href="#"
-                  className="dropdown-item"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/system/chi-tiet-phat");
-                  }}
-                >
-                  Chi tiết phạt
                 </a>
               </div>
             </div>

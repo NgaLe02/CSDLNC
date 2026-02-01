@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.csdlnc.model.CongViec;
+import com.ptit.csdlnc.model.NhanVien;
 import com.ptit.csdlnc.service.CongViecService;
 
 @RestController
@@ -53,4 +55,17 @@ public class CongViecController {
         congViecService.delete(maCv);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/nhanvien/tham-gia")
+    public ResponseEntity<List<NhanVien>> getNhanVienThamGiaCv(@RequestParam String maCongViec) {
+        List<NhanVien> list = congViecService.getNhanVienThamGiaCv(maCongViec);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/nhanvien/chua-tham-gia")
+    public ResponseEntity<List<NhanVien>> getNhanVienChuaThamGiaCv(@RequestParam String maCongViec) {
+        List<NhanVien> list = congViecService.getNhanVienChuaThamCv(maCongViec);
+        return ResponseEntity.ok(list);
+    }
+
 }

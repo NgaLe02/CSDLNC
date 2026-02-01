@@ -25,6 +25,28 @@ export class CongViecService {
     });
   }
 
+  public getNhanVienThamGiaCongViec(maCv: string) {
+    const url = ApiUrlUtil.buildQueryString(
+      process.env.REACT_APP_API_URL +
+        "/congviec/nhanvien/tham-gia?maCongViec=" +
+        maCv,
+    );
+    return axios.get(url, {
+      headers: HeadersUtil.getHeaders(),
+    });
+  }
+
+  public getNhanVienChuaThamGiaCongViec(maCv: string) {
+    const url = ApiUrlUtil.buildQueryString(
+      process.env.REACT_APP_API_URL +
+        "/congviec/nhanvien/chua-tham-gia?maCongViec=" +
+        maCv,
+    );
+    return axios.get(url, {
+      headers: HeadersUtil.getHeaders(),
+    });
+  }
+
   public insertCongViec(model: CongViecModel) {
     const url = ApiUrlUtil.buildQueryString(
       process.env.REACT_APP_API_URL + "/congviec",

@@ -4,11 +4,16 @@ import { toast } from "react-toastify";
 import { CongViecModel } from "../../model/CongViecModel";
 import CongViecForm from "./component/CongViecForm";
 import { CongViecService } from "../../services/CongViecService";
+import ThamGiaCongViecList from "./component/ThamGiaCongViecList";
 
 const CongViecPage: React.FC = () => {
   const [listData, setListData] = useState<CongViecModel[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingModel, setEditingModel] = useState<CongViecModel | null>(null);
+  const [selectedCv, setSelectedCv] = useState<CongViecModel>(
+    new CongViecModel(),
+  );
+  const [showThamGiaModal, setShowThamGiaModal] = useState(false);
 
   useEffect(() => {
     getLstCongViec();
@@ -66,6 +71,11 @@ const CongViecPage: React.FC = () => {
     }
   };
 
+  function handlePhanCong(cv: CongViecModel) {
+    setSelectedCv(cv);
+    setShowThamGiaModal(true);
+  }
+
   return (
     <div className="container-fluid pt-4 px-4">
       <div className="row g-4">
@@ -100,6 +110,12 @@ const CongViecPage: React.FC = () => {
                       <td>{item?.loaiCongViec?.tenLoaiCongViec}</td>
                       <td>{item?.loaiCongViec?.mucLuongNangSuat}</td>
                       <td>
+                        <button
+                          className="btn btn-sm btn-primary me-2"
+                          onClick={() => handlePhanCong(item)}
+                        >
+                          Phân công
+                        </button>
                         <button
                           type="button"
                           className="btn btn-sm btn-warning me-2"
@@ -150,7 +166,24 @@ const CongViecPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {showThamGiaModal && (
+        <div className="modal show d-block" tabIndex={-1}>
+          <div className="modal-dialog modal-xl">
+            <div className="modal-content">
+              <div className="modal-body">
+                <ThamGiaCongViecList
+                  cv={selectedCv}
+                  onClose={() => setShowThamGiaModal(false)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showForm && <div className="modal-backdrop fade show"></div>}
+      {showThamGiaModal && <div className="modal-backdrop fade show"></div>}
     </div>
   );
 };

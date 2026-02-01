@@ -15,13 +15,23 @@ export class ThucHienCongViecService {
     return ThucHienCongViecService._thucHienCongViecService;
   }
 
-  public getLstThucHienCongViec(request: any) {
-    const params = ParamUtil.toRequestParams(request);
+  public getLstThucHienCongViec(maCv: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/thuchiencongviec",
-      params,
+      process.env.REACT_APP_API_URL + "/thuchiencongviec?maCongViec=" + maCv,
     );
     return axios.get(url, {
+      headers: HeadersUtil.getHeaders(),
+    });
+  }
+
+  public insertListNvThucHienCongViec(model: {
+    maCongViec: string;
+    lstNhanVien: string[];
+  }) {
+    const url = ApiUrlUtil.buildQueryString(
+      process.env.REACT_APP_API_URL + "/thuchiencongviec/insert-list",
+    );
+    return axios.post(url, model, {
       headers: HeadersUtil.getHeaders(),
     });
   }
@@ -46,7 +56,8 @@ export class ThucHienCongViecService {
 
   public deleteThucHienCongViec(maNv: string, maCv: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + `/thuchiencongviec/${maNv}/${maCv}`,
+      process.env.REACT_APP_API_URL +
+        `/thuchiencongviec/delete?maNv=${maNv}&maCv=${maCv}`,
     );
     return axios.delete(url, {
       headers: HeadersUtil.getHeaders(),

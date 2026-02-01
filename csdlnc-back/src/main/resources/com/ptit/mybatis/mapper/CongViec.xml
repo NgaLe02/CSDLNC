@@ -112,4 +112,30 @@
         WHERE ma_cong_viec = #{maCongViec}
     </delete>
 
+    <resultMap id="NhanVienResultMap" type="com.ptit.csdlnc.model.NhanVien">
+        <id column="ma_nhan_vien" property="maNhanVien"/>
+        <result column="ho_ten" property="hoTen"/>
+        <result column="ngay_sinh" property="ngaySinh" jdbcType="DATE"/>
+        <result column="gioi_tinh" property="gioiTinh"/>
+    </resultMap>
+
+    <select id="getNhanVienThamGiaCv" resultMap="NhanVienResultMap">
+        SELECT nv.*
+        FROM nhan_vien nv
+        JOIN thuc_hien_cong_viec thcv
+            ON nv.ma_nhan_vien = thcv.ma_nhan_vien
+        WHERE thcv.ma_cong_viec = #{maCongViec}
+    </select>
+
+    <select id="getNhanVienChuaThamCv" resultMap="NhanVienResultMap">
+        SELECT nv.*
+        FROM nhan_vien nv
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM thuc_hien_cong_viec thcv
+            WHERE thcv.ma_nhan_vien = nv.ma_nhan_vien
+            AND thcv.ma_cong_viec = #{maCongViec}
+        )
+    </select>
+
 </mapper>
