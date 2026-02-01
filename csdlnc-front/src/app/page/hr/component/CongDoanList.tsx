@@ -91,7 +91,7 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
   };
 
   return (
-    <div className="col-sm-12 col-xl-12">
+    <div className="col-sm-12 col-xl-12" style={{ maxHeight: "600px" }}>
       <div
         className="bg-light rounded p-4"
         style={{ maxHeight: "70vh", overflowY: "auto" }}
@@ -139,22 +139,27 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
                     >
                       Sửa
                     </button> */}
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-danger me-2"
-                      onClick={() =>
-                        handleDelete(item.maDuAn!, item.sttCongDoan!)
-                      }
-                    >
-                      Xóa
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-info"
-                      onClick={() => handleThucHien(item)}
-                    >
-                      Người thực hiện
-                    </button>
+                    {item.trangThaiTienDo != "DaThucHien" &&
+                      item.trangThaiTienDo != "DangThucHien" && (
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-danger me-2"
+                          onClick={() =>
+                            handleDelete(item.maDuAn!, item.sttCongDoan!)
+                          }
+                        >
+                          Xóa
+                        </button>
+                      )}
+                    {item.trangThaiTienDo != "DaThucHien" && (
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-info"
+                        onClick={() => handleThucHien(item)}
+                      >
+                        Người thực hiện
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

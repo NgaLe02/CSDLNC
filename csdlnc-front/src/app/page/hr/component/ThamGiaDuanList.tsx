@@ -23,6 +23,14 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
   const [editingModel, setEditingModel] = useState<ThamGiaDuanModel | null>(
     null,
   );
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1; // JS: tháng bắt đầu từ 0
+  const currentYear = now.getFullYear();
+
+  const isFutureOrCurrent = (thang: number, nam: number) => {
+    return nam > currentYear || (nam === currentYear && thang >= currentMonth);
+  };
+
   useEffect(() => {
     if (da.maDuAn) {
       getLstThamGiaDuan();
@@ -137,20 +145,22 @@ const ThamGiaDuanList: React.FC<ThamGiaDuanListProps> = ({
                     >
                       Sửa
                     </button> */}
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-danger"
-                      onClick={() =>
-                        handleDelete(
-                          item.maNv!,
-                          item.maDa!,
-                          item.thang!,
-                          item.nam!,
-                        )
-                      }
-                    >
-                      Xóa
-                    </button>
+                    {isFutureOrCurrent(item.thang!, item.nam!) && (
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-danger"
+                        onClick={() =>
+                          handleDelete(
+                            item.maNv!,
+                            item.maDa!,
+                            item.thang!,
+                            item.nam!,
+                          )
+                        }
+                      >
+                        Xóa
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

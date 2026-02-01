@@ -192,12 +192,15 @@ const DuanPage: React.FC = () => {
                       >
                         Sửa
                       </button>
-                      <button
-                        className="btn btn-sm btn-danger ms-2"
-                        onClick={() => handleDelete(item.maDuAn!)}
-                      >
-                        Xóa
-                      </button>
+                      {item.trangThai != "DaThucHien" &&
+                        item.trangThai != "DangThucHien" && (
+                          <button
+                            className="btn btn-sm btn-danger ms-2"
+                            onClick={() => handleDelete(item.maDuAn!)}
+                          >
+                            Xóa
+                          </button>
+                        )}
                     </td>
                   </tr>
                 ))}

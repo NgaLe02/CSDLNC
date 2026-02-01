@@ -97,8 +97,13 @@ const CongViecPage: React.FC = () => {
                   <tr>
                     <th scope="col">Mã CV</th>
                     <th scope="col">Tên Công Việc</th>
-                    <th scope="col">Loại Công Việc</th>
+                    {/* <th scope="col">Loại Công Việc</th> */}
                     <th scope="col">Mức Lương Năng Suất</th>
+                    {/* <th>Ngày bắt đầu</th> */}
+                    {/* <th>Ngày hoàn thành dự kiến</th> */}
+                    {/* <th>Ngày hoàn thành thực tế</th> */}
+                    <th>Kết quả</th>
+                    <th>Trạng thái tiến độ</th>
                     <th scope="col">Actions</th>
                   </tr>
                 </thead>
@@ -107,29 +112,42 @@ const CongViecPage: React.FC = () => {
                     <tr key={index}>
                       <td>{item.maCongViec}</td>
                       <td>{item.tenCongViec}</td>
-                      <td>{item?.loaiCongViec?.tenLoaiCongViec}</td>
+                      {/* <td>{item?.loaiCongViec?.tenLoaiCongViec}</td> */}
                       <td>{item?.loaiCongViec?.mucLuongNangSuat}</td>
+                      {/* <td>{item.ngayBatDau}</td> */}
+                      {/* <td>{item.ngayHoanThanhDuKien}</td> */}
+                      {/* <td>{item.ngayHoanThanhThucTe}</td> */}
+                      <td>{item.ketQua}</td>
+                      <td>{item.trangThaiTienDo}</td>{" "}
                       <td>
-                        <button
-                          className="btn btn-sm btn-primary me-2"
-                          onClick={() => handlePhanCong(item)}
-                        >
-                          Phân công
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-warning me-2"
-                          onClick={() => handleEdit(item)}
-                        >
-                          Sửa
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-danger"
-                          onClick={() => handleDelete(item.maCongViec!)}
-                        >
-                          Xóa
-                        </button>
+                        {item.trangThaiTienDo != "DaThucHien" && (
+                          <button
+                            className="btn btn-sm btn-primary me-2"
+                            onClick={() => handlePhanCong(item)}
+                          >
+                            Phân công
+                          </button>
+                        )}
+
+                        {item.trangThaiTienDo != "DaThucHien" &&
+                          item.trangThaiTienDo != "DangThucHien" && (
+                            <>
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-warning me-2"
+                                onClick={() => handleEdit(item)}
+                              >
+                                Sửa
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-danger"
+                                onClick={() => handleDelete(item.maCongViec!)}
+                              >
+                                Xóa
+                              </button>
+                            </>
+                          )}
                       </td>
                     </tr>
                   ))}

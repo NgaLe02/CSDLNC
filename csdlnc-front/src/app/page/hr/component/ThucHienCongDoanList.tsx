@@ -83,7 +83,7 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
   };
 
   return (
-    <div className="col-sm-12 col-xl-12">
+    <div className="col-sm-12 col-xl-12" style={{ maxHeight: "100px" }}>
       <div
         className="bg-light rounded p-4"
         style={{ maxHeight: "70vh", overflowY: "auto" }}
@@ -116,13 +116,13 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
                   <td>{item.sttCongDoan}</td>
                   <td>{item.vaiTro}</td>
                   <td>
-                    <button
+                    {/* <button
                       type="button"
                       className="btn btn-sm btn-warning me-2"
                       onClick={() => handleEdit(item)}
                     >
                       Sửa
-                    </button>
+                    </button> */}
                     <button
                       type="button"
                       className="btn btn-sm btn-danger"
