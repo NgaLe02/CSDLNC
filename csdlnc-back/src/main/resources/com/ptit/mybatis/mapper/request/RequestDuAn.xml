@@ -5,31 +5,30 @@
    <select id="getLstDuAn"
         parameterType="map"
         resultType="map">
+        SELECT da.*
+        FROM du_an da
+        <where>
 
-    SELECT da.*
-    FROM du_an da
-    <where>
+            <!-- Lọc theo tên dự án -->
+            <if test="tenDuAn != null and tenDuAn != ''">
+                AND da.ten_du_an LIKE CONCAT('%', #{tenDuAn}, '%')
+            </if>
 
-        <!-- Lọc theo tên dự án -->
-        <if test="tenDuAn != null and tenDuAn != ''">
-            AND da.ten_du_an LIKE CONCAT('%', #{tenDuAn}, '%')
-        </if>
-
-        <!-- Lọc theo tháng + năm -->
-        <if test="thang != null and nam != null">
-            AND
-            LAST_DAY(
+            <!-- Lọc theo tháng + năm -->
+            <if test="thang != null and nam != null">
+                AND
+                LAST_DAY(
+                    STR_TO_DATE(CONCAT(#{nam}, '-', #{thang}, '-01'), '%Y-%m-%d')
+                ) &gt;= da.ngay_bat_dau
+                AND
                 STR_TO_DATE(CONCAT(#{nam}, '-', #{thang}, '-01'), '%Y-%m-%d')
-            ) &gt;= da.ngay_bat_dau
-            AND
-            STR_TO_DATE(CONCAT(#{nam}, '-', #{thang}, '-01'), '%Y-%m-%d')
-            &lt;= IFNULL(da.ngay_ket_thuc_thuc_te, '9999-12-31')
-        </if>
+                &lt;= IFNULL(da.ngay_ket_thuc_thuc_te, '9999-12-31')
+            </if>
 
-    </where>
+        </where>
 
-    ORDER BY da.ngay_bat_dau DESC
-</select>
+        ORDER BY da.ngay_bat_dau DESC
+    </select>
 
 
     <select id="getCountLstDuAn"
