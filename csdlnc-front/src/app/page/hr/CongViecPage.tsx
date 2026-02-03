@@ -120,17 +120,18 @@ const CongViecPage: React.FC = () => {
                       <td>{item.ketQua}</td>
                       <td>{item.trangThaiTienDo}</td>{" "}
                       <td>
-                        {item.trangThaiTienDo != "Đã hoàn thành" && (
-                          <button
-                            className="btn btn-sm btn-primary me-2"
-                            onClick={() => handlePhanCong(item)}
-                          >
-                            Phân công
-                          </button>
-                        )}
+                        {item.trangThaiTienDo != "Đúng hạn" &&
+                          item.trangThaiTienDo != "Trễ hạn" && (
+                            <button
+                              className="btn btn-sm btn-primary me-2"
+                              onClick={() => handlePhanCong(item)}
+                            >
+                              Phân công
+                            </button>
+                          )}
 
-                        {item.trangThaiTienDo != "Đã hoàn thành" &&
-                          item.trangThaiTienDo != "Đang thực hiện" && (
+                        {item.trangThaiTienDo != "Đúng hạn" &&
+                          item.trangThaiTienDo != "Trễ hạn" && (
                             <>
                               <button
                                 type="button"
@@ -139,6 +140,13 @@ const CongViecPage: React.FC = () => {
                               >
                                 Sửa
                               </button>
+                            </>
+                          )}
+
+                        {item.trangThaiTienDo != "Đúng hạn" &&
+                          item.trangThaiTienDo != "Trễ hạn" &&
+                          item.trangThaiTienDo != "Đang thực hiện" && (
+                            <>
                               <button
                                 type="button"
                                 className="btn btn-sm btn-danger"

@@ -192,8 +192,9 @@ const DuanPage: React.FC = () => {
                       >
                         Sửa
                       </button>
-                      {item.trangThai != "DaThucHien" &&
-                        item.trangThai != "DangThucHien" && (
+                      {item.trangThai != "Đúng hạn" &&
+                        item.trangThai != "Trễ hạn" &&
+                        item.trangThai != "Đang thực hiện" && (
                           <button
                             className="btn btn-sm btn-danger ms-2"
                             onClick={() => handleDelete(item.maDuAn!)}

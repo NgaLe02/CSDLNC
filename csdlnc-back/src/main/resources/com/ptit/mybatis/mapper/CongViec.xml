@@ -39,12 +39,20 @@
             cv.ngay_hoan_thanh_thuc_te,
 
             cv.ket_qua,
-
             CASE
-                WHEN cv.ngay_hoan_thanh_thuc_te IS NOT NULL THEN 'Đã hoàn thành'
                 WHEN CURDATE() &lt; cv.ngay_bat_dau THEN 'Chưa thực hiện'
+
+                WHEN cv.ngay_hoan_thanh_thuc_te IS NOT NULL 
+                    AND cv.ngay_hoan_thanh_thuc_te &lt;= cv.ngay_hoan_thanh_du_kien 
+                    THEN 'Đúng hạn'
+
+                WHEN cv.ngay_hoan_thanh_thuc_te IS NOT NULL 
+                    AND cv.ngay_hoan_thanh_thuc_te &gt; cv.ngay_hoan_thanh_du_kien 
+                    THEN 'Trễ hạn'
+
                 ELSE 'Đang thực hiện'
             END AS trang_thai_tien_do,
+
 
             lcv.ma_loai_cv,
             lcv.ten_loai_cong_viec,
@@ -69,10 +77,19 @@
             cv.ket_qua,
 
             CASE
-                WHEN cv.ngay_hoan_thanh_thuc_te IS NOT NULL THEN 'Đã hoàn thành'
                 WHEN CURDATE() &lt; cv.ngay_bat_dau THEN 'Chưa thực hiện'
+
+                WHEN cv.ngay_hoan_thanh_thuc_te IS NOT NULL 
+                    AND cv.ngay_hoan_thanh_thuc_te &lt;= cv.ngay_hoan_thanh_du_kien 
+                    THEN 'Đúng hạn'
+
+                WHEN cv.ngay_hoan_thanh_thuc_te IS NOT NULL 
+                    AND cv.ngay_hoan_thanh_thuc_te &gt; cv.ngay_hoan_thanh_du_kien 
+                    THEN 'Trễ hạn'
+
                 ELSE 'Đang thực hiện'
             END AS trang_thai_tien_do,
+
 
             lcv.ma_loai_cv,
             lcv.ten_loai_cong_viec,

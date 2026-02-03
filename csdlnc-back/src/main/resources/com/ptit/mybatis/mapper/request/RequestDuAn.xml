@@ -59,9 +59,24 @@
 
     </select>
     <select id="getCongDoanDuAn" parameterType="String" resultType="map">
-        SELECT *
-        FROM cong_doan
-        WHERE ma_du_an =  #{maDuAn}
-        ORDER BY thu_tu
+        SELECT 
+            cd.*,
+            CASE
+                WHEN CURDATE() &lt; cd.ngay_bat_dau THEN 'Chưa thực hiện'
+
+                WHEN cd.ngay_hoan_thanh_thuc_te IS NOT NULL 
+                    AND cd.ngay_hoan_thanh_thuc_te &lt;= cd.ngay_hoan_thanh_du_kien 
+                    THEN 'Đúng hạn'
+
+                WHEN cd.ngay_hoan_thanh_thuc_te IS NOT NULL 
+                    AND cd.ngay_hoan_thanh_thuc_te &gt; cd.ngay_hoan_thanh_du_kien 
+                    THEN 'Trễ hạn'
+
+                ELSE 'Đang thực hiện'
+            END AS trang_thai_tien_do
+            
+        FROM cong_doan cd
+        WHERE cd.ma_du_an =  #{maDuAn}
+        ORDER BY cd.thu_tu
     </select>
 </mapper>

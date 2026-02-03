@@ -42,9 +42,16 @@
             da.ngay_ket_thuc_du_kien,
             da.ngay_ket_thuc_thuc_te,
             CASE
-                WHEN da.ngay_ket_thuc_thuc_te IS NOT NULL THEN 'Đã hoàn thành'
                 WHEN CURDATE() &lt; da.ngay_bat_dau THEN 'Chưa thực hiện'
-                WHEN CURDATE() &gt; da.ngay_ket_thuc_du_kien THEN 'Trễ tiến độ'
+
+                WHEN da.ngay_ket_thuc_thuc_te IS NOT NULL 
+                    AND da.ngay_ket_thuc_thuc_te &lt;= da.ngay_ket_thuc_du_kien 
+                    THEN 'Đúng hạn'
+
+                WHEN da.ngay_ket_thuc_thuc_te IS NOT NULL 
+                    AND da.ngay_ket_thuc_thuc_te &gt; da.ngay_ket_thuc_du_kien 
+                    THEN 'Trễ hạn'
+
                 ELSE 'Đang thực hiện'
             END AS trang_thai,
             da.luong_trach_nhiem,
@@ -69,9 +76,16 @@
             da.ngay_ket_thuc_du_kien,
             da.ngay_ket_thuc_thuc_te,
             CASE
-                WHEN da.ngay_ket_thuc_thuc_te IS NOT NULL THEN 'Đã hoàn thành'
                 WHEN CURDATE() &lt; da.ngay_bat_dau THEN 'Chưa thực hiện'
-                WHEN CURDATE() &gt; da.ngay_ket_thuc_du_kien THEN 'Trễ tiến độ'
+
+                WHEN da.ngay_ket_thuc_thuc_te IS NOT NULL 
+                    AND da.ngay_ket_thuc_thuc_te &lt;= da.ngay_ket_thuc_du_kien 
+                    THEN 'Đúng hạn'
+
+                WHEN da.ngay_ket_thuc_thuc_te IS NOT NULL 
+                    AND da.ngay_ket_thuc_thuc_te &gt; da.ngay_ket_thuc_du_kien 
+                    THEN 'Trễ hạn'
+
                 ELSE 'Đang thực hiện'
             END AS trang_thai,
             da.luong_trach_nhiem,
