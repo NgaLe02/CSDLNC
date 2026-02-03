@@ -4,33 +4,31 @@ import { toast } from "react-toastify";
 import PaginationCommon from "../../common/PaginationCommon";
 import dayjs from "dayjs";
 import { RequestService } from "../../services/RequestService";
+import CongDoanList from "./component/CongDoanLst";
 
-export default function Request04() {
+export default function DuAn() {
   const [modelSearch, setModelSearch] = useState<any>({
     limit: 10,
     page: 1,
     time: new Date().getTime(),
-    fromDate: "2025-08-01",
-    toDate: "2025-09-01",
+    thang: undefined,
+    nam: undefined,
+    tenDuAn: "",
   });
   const [listData, setListData] = useState<any[]>([]);
   const totalElement = useRef(0);
 
   useEffect(() => {
-    getTypeCarRevenue();
+    getLstDuAn();
   }, [modelSearch.time]);
 
-  function getTypeCarRevenue() {
+  function getLstDuAn() {
     RequestService.getInstance()
-      .getTypeCarRevenue(modelSearch)
+      .getLstDuAn(modelSearch)
       .then((response) => {
         if (response.status === HttpStatusCode.Ok) {
-          if (response.data.status) {
-            const data = response.data.responseData.data;
-            setListData(data);
-          } else {
-            toast.error(response.data.message);
-          }
+          const data = response.data.list;
+          setListData(data);
         } else {
           toast.error(response.data.message);
         }
@@ -55,6 +53,14 @@ export default function Request04() {
     });
   };
 
+  const [showForm, setShowForm] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<any>();
+
+  const viewCongDoan = (item: any) => {
+    setSelectedModel(item);
+    setShowForm(true);
+  };
+
   return (
     <>
       <div className="container-fluid pt-4 px-4">
@@ -63,13 +69,13 @@ export default function Request04() {
             {/* Tìm theo họ tên / số điện thoại */}
             <div className="col-md-4">
               <label className="form-label" htmlFor="keyword">
-                Loại xe
+                Tên dự án
               </label>
               <input
                 type="search"
                 className="form-control"
-                placeholder="Tên loại xe"
-                name="keyword"
+                placeholder="Tên dự án"
+                name="tenDuAn"
                 onChange={(e) => handleChangeSearch(e)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -92,23 +98,17 @@ export default function Request04() {
                 type="month"
                 className="form-control"
                 value={
-                  modelSearch.fromDate
-                    ? modelSearch.fromDate.slice(0, 7) // chỉ lấy "YYYY-MM"
+                  modelSearch.thang && modelSearch.nam
+                    ? `${modelSearch.nam}-${String(modelSearch.thang).padStart(2, "0")}`
                     : ""
                 }
-                name="month"
                 onChange={(e) => {
-                  const value = e.target.value; // ví dụ: "2025-09"
-                  const [year, month] = value.split("-");
-                  const fromDate = `${year}-${month}-01`;
-                  const toDate = new Date(Number(year), Number(month), 0) // ngày cuối tháng
-                    .toISOString()
-                    .split("T")[0];
-
+                  const [year, month] = e.target.value.split("-");
                   setModelSearch({
                     ...modelSearch,
-                    fromDate,
-                    toDate,
+                    thang: Number(month),
+                    nam: Number(year),
+                    time: new Date().getTime(),
                   });
                 }}
               />
@@ -136,7 +136,7 @@ export default function Request04() {
       <div className="container-fluid pt-4 px-4">
         <div className="bg-light text-center rounded p-4">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h6 className="mb-0">Doanh thu loại xe</h6>
+            <h6 className="mb-0">Danh mục dự án</h6>
           </div>
           <div className="table-responsive">
             <table className="table text-start align-middle table-bordered table-hover mb-0">
@@ -145,18 +145,33 @@ export default function Request04() {
                   <th scope="col" style={{ width: "5%" }}>
                     STT
                   </th>
-                  <th scope="col">Loại xe</th>
-                  <th scope="col">Doanh thu (VNĐ)</th>
-                  <th scope="col">Số chuyến</th>
+                  <th scope="col">Mã dự án</th>
+                  <th scope="col">Tên dự án</th>
+                  <th scope="col">Ngày bắt đầu</th>
+                  <th scope="col">Ngày hoàn thành</th>
+                  <th scope="col">Kết quả</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
                 {listData.map((item: any, index: number) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    <td>{item.tenLoaiXe}</td>
-                    <td>{item.doanhThu?.toLocaleString("vi-VN")} </td>
-                    <td>{item.tongSoChuyen}</td>
+                    <td>{item?.ma_du_an}</td>
+                    <td>{item?.ten_du_an}</td>
+                    <td>{item?.ngay_bat_dau} </td>
+                    <td>{item?.ngay_ket_thuc_thuc_te} </td>
+                    <td>{item?.ket_qua}</td>
+                    <td>{item?.trang_thai}</td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-info ms-2"
+                        onClick={() => viewCongDoan(item)}
+                      >
+                        Công đoạn
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -173,6 +188,22 @@ export default function Request04() {
           </div>
         </div>
       </div>
+
+      {showForm && (
+        <div className="modal show d-block" tabIndex={-1}>
+          <div className="modal-dialog modal-xl">
+            <div className="modal-content">
+              <div className="modal-body">
+                <CongDoanList
+                  da={selectedModel}
+                  onClose={() => setShowForm(false)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showForm && <div className="modal-backdrop fade show"></div>}
     </>
   );
 }

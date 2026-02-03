@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ptit.csdlnc.dao.request.RequestDuAnDAO">
+
+   <select id="getLstDuAn"
+        parameterType="map"
+        resultType="map">
+
+    SELECT da.*
+    FROM du_an da
+    <where>
+
+        <!-- Lọc theo tên dự án -->
+        <if test="tenDuAn != null and tenDuAn != ''">
+            AND da.ten_du_an LIKE CONCAT('%', #{tenDuAn}, '%')
+        </if>
+
+        <!-- Lọc theo tháng + năm -->
+        <if test="thang != null and nam != null">
+            AND
+            LAST_DAY(
+                STR_TO_DATE(CONCAT(#{nam}, '-', #{thang}, '-01'), '%Y-%m-%d')
+            ) &gt;= da.ngay_bat_dau
+            AND
+            STR_TO_DATE(CONCAT(#{nam}, '-', #{thang}, '-01'), '%Y-%m-%d')
+            &lt;= IFNULL(da.ngay_ket_thuc_thuc_te, '9999-12-31')
+        </if>
+
+    </where>
+
+    ORDER BY da.ngay_bat_dau DESC
+</select>
+
+
+    <select id="getCountLstDuAn"
+        parameterType="map"
+        resultType="int">
+
+        SELECT count(*)
+        FROM du_an da
+        <where>
+
+            <!-- Lọc theo tên dự án -->
+            <if test="tenDuAn != null and tenDuAn != ''">
+                AND da.ten_du_an LIKE CONCAT('%', #{tenDuAn}, '%')
+            </if>
+
+            <!-- Lọc theo tháng + năm -->
+            <if test="thang != null and nam != null">
+                AND
+                LAST_DAY(
+                    STR_TO_DATE(CONCAT(#{nam}, '-', #{thang}, '-01'), '%Y-%m-%d')
+                ) &gt;= da.ngay_bat_dau
+                AND
+                STR_TO_DATE(CONCAT(#{nam}, '-', #{thang}, '-01'), '%Y-%m-%d')
+                &lt;= IFNULL(da.ngay_ket_thuc_thuc_te, '9999-12-31')
+            </if>
+
+        </where>
+
+    </select>
+    <select id="getCongDoanDuAn" parameterType="String" resultType="map">
+        SELECT *
+        FROM cong_doan
+        WHERE ma_du_an =  #{maDuAn}
+        ORDER BY thu_tu
+    </select>
+</mapper>

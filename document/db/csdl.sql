@@ -70,10 +70,13 @@ CREATE TABLE du_an (
     ma_loai_du_an bigint NOT NULL,
     ma_phong_quan_ly VARCHAR(15) NOT NULL,
     luong_trach_nhiem DECIMAL(18,2) NOT NULL,
+    ket_qua VARCHAR(10),
     CONSTRAINT FK_DA_LDA FOREIGN KEY (ma_loai_du_an) REFERENCES loai_du_an(ma_loai_du_an),
     CONSTRAINT FK_DA_PB FOREIGN KEY (ma_phong_quan_ly) REFERENCES phong_ban(ma_phong_ban),
     CONSTRAINT CK_DA_NGAY_KT
-        CHECK (ngay_ket_thuc_thuc_te IS NULL OR ngay_ket_thuc_thuc_te >= ngay_bat_dau)
+        CHECK (ngay_ket_thuc_thuc_te IS NULL OR ngay_ket_thuc_thuc_te >= ngay_bat_dau),
+    CONSTRAINT CK_DA_KQ_VALUE
+        CHECK (ket_qua IN ('KEM','TOT'))
 ) ENGINE=InnoDB;
 
 -- 8. Tham gia dự án

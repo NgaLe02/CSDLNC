@@ -156,7 +156,7 @@ function SideBarLeft() {
                     navigate("/request/re-01");
                   }}
                 >
-                  Lương tháng lái xe
+                  Lương nhân viên
                 </a>
                 <a
                   href="#"
@@ -166,47 +166,7 @@ function SideBarLeft() {
                     navigate("/request/re-02");
                   }}
                 >
-                  Doanh thu của xe
-                </a>
-                <a
-                  href="#"
-                  className="dropdown-item"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/request/re-03");
-                  }}
-                >
-                  Doanh thu tuyến đường
-                </a>
-                <a
-                  href="#"
-                  className="dropdown-item"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/request/re-04");
-                  }}
-                >
-                  Doanh thu loại xe
-                </a>
-                <a
-                  href="#"
-                  className="dropdown-item"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/request/re-05");
-                  }}
-                >
-                  Ngày bảo dưỡng, đăng kiểm
-                </a>
-                <a
-                  href="#"
-                  className="dropdown-item"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/request/re-06");
-                  }}
-                >
-                  Quá hạn bảo dưỡng
+                  Dự án
                 </a>
               </div>
             </div>

@@ -13,66 +13,37 @@ export class RequestService {
     return RequestService._requestService;
   }
 
-  public getSalary(request: any) {
-    const params = ParamUtil.toRequestParams(request);
+  public getLstDuAn(model: { tenDuAn: string; thang: number; nam: number }) {
+    const params = ParamUtil.toRequestParams(model);
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/request/employee/getSalary",
-      params
+      process.env.REACT_APP_API_URL + "/request/du-an",
+      params,
     );
     return axios.get(url, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public getCarRevenue(request: any) {
-    const params = ParamUtil.toRequestParams(request);
+  public getCongDoanDuAn(maDuAn: string) {
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/request/car/getRevenue",
-      params
+      process.env.REACT_APP_API_URL +
+        "/request/du-an/cong-doan?maDuAn=" +
+        maDuAn,
     );
     return axios.get(url, {
       headers: HeadersUtil.getHeaders(),
     });
   }
 
-  public getRouteRevenue(request: any) {
-    const params = ParamUtil.toRequestParams(request);
+  public getLuongNhanVien(model: {
+    tenDuAn: string;
+    thang: number;
+    nam: number;
+  }) {
+    const params = ParamUtil.toRequestParams(model);
     const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/request/route/getRevenue",
-      params
-    );
-    return axios.get(url, {
-      headers: HeadersUtil.getHeaders(),
-    });
-  }
-
-  public getTypeCarRevenue(request: any) {
-    const params = ParamUtil.toRequestParams(request);
-    const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/request/typeCar/getRevenue",
-      params
-    );
-    return axios.get(url, {
-      headers: HeadersUtil.getHeaders(),
-    });
-  }
-
-  public getTimeBaoDuong(request: any) {
-    const params = ParamUtil.toRequestParams(request);
-    const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/request/baoduong/getTimeBaoDuong",
-      params
-    );
-    return axios.get(url, {
-      headers: HeadersUtil.getHeaders(),
-    });
-  }
-
-  public getTimeBaoDuongQuaHan(request: any) {
-    const params = ParamUtil.toRequestParams(request);
-    const url = ApiUrlUtil.buildQueryString(
-      process.env.REACT_APP_API_URL + "/request/baoduong/getTimeBaoDuongQuaHan",
-      params
+      process.env.REACT_APP_API_URL + "/request/luong-nhan-vien",
+      params,
     );
     return axios.get(url, {
       headers: HeadersUtil.getHeaders(),
