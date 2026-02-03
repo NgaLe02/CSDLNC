@@ -179,10 +179,22 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
       )}
 
       {showThucHienModal && editingModel && (
-        <ThucHienCongDoanList
-          congDoan={editingModel}
-          onClose={closeThucHienModal}
-        />
+        <div
+          className="modal show d-block"
+          tabIndex={-1}
+          style={{ zIndex: 1060 }}
+        >
+          <div className="modal-dialog modal-xl modal-dialog-centered">
+            <div className="modal-content shadow-lg border-primary">
+              <div className="modal-body p-0">
+                <ThucHienCongDoanList
+                  congDoan={editingModel}
+                  onClose={() => setShowThucHienModal(false)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

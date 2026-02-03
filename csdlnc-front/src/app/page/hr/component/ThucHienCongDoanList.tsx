@@ -83,7 +83,7 @@ const ThucHienCongDoanList: React.FC<ThucHienCongDoanListProps> = ({
   };
 
   return (
-    <div className="col-sm-12 col-xl-12" style={{ maxHeight: "100px" }}>
+    <div className="col-sm-12 col-xl-12" style={{ maxHeight: "800px" }}>
       <div
         className="bg-light rounded p-4"
         style={{ maxHeight: "70vh", overflowY: "auto" }}
