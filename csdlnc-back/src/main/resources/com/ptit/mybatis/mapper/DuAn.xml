@@ -41,7 +41,12 @@
             da.ngay_bat_dau,
             da.ngay_ket_thuc_du_kien,
             da.ngay_ket_thuc_thuc_te,
-            da.trang_thai,
+            CASE
+                WHEN da.ngay_ket_thuc_thuc_te IS NOT NULL THEN 'Đã hoàn thành'
+                WHEN CURDATE() &lt; da.ngay_bat_dau THEN 'Chưa thực hiện'
+                WHEN CURDATE() &gt; da.ngay_ket_thuc_du_kien THEN 'Trễ tiến độ'
+                ELSE 'Đang thực hiện'
+            END AS trang_thai,
             da.luong_trach_nhiem,
             da.ma_phong_quan_ly,
 
@@ -63,7 +68,12 @@
             da.ngay_bat_dau,
             da.ngay_ket_thuc_du_kien,
             da.ngay_ket_thuc_thuc_te,
-            da.trang_thai,
+            CASE
+                WHEN da.ngay_ket_thuc_thuc_te IS NOT NULL THEN 'Đã hoàn thành'
+                WHEN CURDATE() &lt; da.ngay_bat_dau THEN 'Chưa thực hiện'
+                WHEN CURDATE() &gt; da.ngay_ket_thuc_du_kien THEN 'Trễ tiến độ'
+                ELSE 'Đang thực hiện'
+            END AS trang_thai,
             da.luong_trach_nhiem,
 
             lda.ma_loai_du_an,
@@ -88,7 +98,6 @@
             ngay_bat_dau,
             ngay_ket_thuc_du_kien,
             ngay_ket_thuc_thuc_te,
-            trang_thai,
             ma_loai_du_an,
             ma_phong_quan_ly,
             luong_trach_nhiem
@@ -98,7 +107,6 @@
             #{ngayBatDau},
             #{ngayKetThucDuKien},
             #{ngayKetThucThucTe},
-            #{trangThai},
             #{maLoaiDuAn},
             #{maPhongQuanLy},
             #{luongTrachNhiem}
@@ -112,7 +120,6 @@
             ngay_bat_dau = #{ngayBatDau},
             ngay_ket_thuc_du_kien = #{ngayKetThucDuKien},
             ngay_ket_thuc_thuc_te = #{ngayKetThucThucTe},
-            trang_thai = #{trangThai},
             ma_loai_du_an = #{maLoaiDuAn},
             ma_phong_quan_ly = #{maPhongQuanLy},
             luong_trach_nhiem = #{luongTrachNhiem}

@@ -22,17 +22,29 @@
     </select>
 
     <select id="getByMaDuAn" parameterType="String" resultMap="CongDoanResultMap">
-        SELECT *
-        FROM cong_doan
-        WHERE ma_du_an =  #{maDuAn}
-        ORDER BY thu_tu
+        SELECT 
+            cd.*,
+            CASE
+                WHEN cd.ngay_hoan_thanh_thuc_te IS NOT NULL THEN 'Đã hoàn thành'
+                WHEN CURDATE() &lt; cd.ngay_bat_dau THEN 'Chưa thực hiện'
+                ELSE 'Đang thực hiện'
+            END AS trang_thai_tien_do
+        FROM cong_doan cd
+        WHERE cd.ma_du_an =  #{maDuAn}
+        ORDER BY cd.thu_tu
     </select>
 
     <select id="getById" parameterType="map" resultMap="CongDoanResultMap">
-        SELECT *
-        FROM cong_doan
-        WHERE stt_cong_doan = #{sttCongDoan}
-        AND ma_du_an = #{maDuAn}
+        SELECT 
+            cd.*,
+            CASE
+                WHEN cd.ngay_hoan_thanh_thuc_te IS NOT NULL THEN 'Đã hoàn thành'
+                WHEN CURDATE() &lt; cd.ngay_bat_dau THEN 'Chưa thực hiện'
+                ELSE 'Đang thực hiện'
+            END AS trang_thai_tien_do
+        FROM cong_doan cd
+        WHERE cd.stt_cong_doan = #{sttCongDoan}
+        AND cd.ma_du_an = #{maDuAn}
     </select>
 
     <insert id="insert" parameterType="com.ptit.csdlnc.model.CongDoan">
@@ -44,8 +56,7 @@
             ngay_bat_dau,
             ngay_hoan_thanh_du_kien,
             ngay_hoan_thanh_thuc_te,
-            ket_qua,
-            trang_thai_tien_do
+            ket_qua
         )
         VALUES (
             #{sttCongDoan},
@@ -55,8 +66,7 @@
             #{ngayBatDau},
             #{ngayHoanThanhDuKien},
             #{ngayHoanThanhThucTe},
-            #{ketQua},
-            #{trangThaiTienDo}
+            #{ketQua}
         )
     </insert>
 
@@ -68,8 +78,7 @@
             ngay_bat_dau = #{ngayBatDau},
             ngay_hoan_thanh_du_kien = #{ngayHoanThanhDuKien},
             ngay_hoan_thanh_thuc_te = #{ngayHoanThanhThucTe},
-            ket_qua = #{ketQua},
-            trang_thai_tien_do = #{trangThaiTienDo}
+            ket_qua = #{ketQua}
         WHERE stt_cong_doan = #{sttCongDoan}
         AND ma_du_an = #{maDuAn}
     </update>

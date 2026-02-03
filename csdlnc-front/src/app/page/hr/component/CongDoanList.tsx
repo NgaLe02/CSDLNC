@@ -139,8 +139,8 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
                     >
                       Sửa
                     </button> */}
-                    {item.trangThaiTienDo != "DaThucHien" &&
-                      item.trangThaiTienDo != "DangThucHien" && (
+                    {item.trangThaiTienDo != "Đã hoàn thành" &&
+                      item.trangThaiTienDo != "Đang thực hiện" && (
                         <button
                           type="button"
                           className="btn btn-sm btn-danger me-2"
@@ -151,7 +151,7 @@ const CongDoanList: React.FC<CongDoanListProps> = ({ da, onClose }) => {
                           Xóa
                         </button>
                       )}
-                    {item.trangThaiTienDo != "DaThucHien" && (
+                    {item.trangThaiTienDo != "Đã hoàn thành" && (
                       <button
                         type="button"
                         className="btn btn-sm btn-info"

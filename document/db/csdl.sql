@@ -66,7 +66,6 @@ CREATE TABLE du_an (
     ngay_bat_dau DATE NOT NULL,
     ngay_ket_thuc_du_kien DATE NOT NULL,
     ngay_ket_thuc_thuc_te DATE,
-    trang_thai ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
     ma_loai_du_an bigint NOT NULL,
     ma_phong_quan_ly VARCHAR(15) NOT NULL,
     luong_trach_nhiem DECIMAL(18,2) NOT NULL,
@@ -101,7 +100,6 @@ CREATE TABLE cong_doan (
     ngay_hoan_thanh_du_kien DATE NOT NULL,
     ngay_hoan_thanh_thuc_te DATE,
     ket_qua VARCHAR(10),
-    trang_thai_tien_do ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
     PRIMARY KEY (stt_cong_doan, ma_du_an),
     CONSTRAINT FK_CD_DA FOREIGN KEY (ma_du_an) REFERENCES du_an(ma_du_an),
     CONSTRAINT CK_CD_NGAY_KT
@@ -141,7 +139,6 @@ CREATE TABLE cong_viec (
     ngay_hoan_thanh_du_kien DATE NOT NULL,
     ngay_hoan_thanh_thuc_te DATE,
     ket_qua VARCHAR(10),
-    trang_thai_tien_do ENUM('ChuaThucHien','DangThucHien','DaThucHien'),
     CONSTRAINT FK_CV_LCV FOREIGN KEY (ma_loai_cv) REFERENCES loai_cong_viec(ma_loai_cv),
     CONSTRAINT CK_CV_NGAY_KT
         CHECK (ngay_hoan_thanh_thuc_te IS NULL OR ngay_hoan_thanh_thuc_te >= ngay_bat_dau),

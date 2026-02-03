@@ -120,7 +120,7 @@ const CongViecPage: React.FC = () => {
                       <td>{item.ketQua}</td>
                       <td>{item.trangThaiTienDo}</td>{" "}
                       <td>
-                        {item.trangThaiTienDo != "DaThucHien" && (
+                        {item.trangThaiTienDo != "Đã hoàn thành" && (
                           <button
                             className="btn btn-sm btn-primary me-2"
                             onClick={() => handlePhanCong(item)}
@@ -129,8 +129,8 @@ const CongViecPage: React.FC = () => {
                           </button>
                         )}
 
-                        {item.trangThaiTienDo != "DaThucHien" &&
-                          item.trangThaiTienDo != "DangThucHien" && (
+                        {item.trangThaiTienDo != "Đã hoàn thành" &&
+                          item.trangThaiTienDo != "Đang thực hiện" && (
                             <>
                               <button
                                 type="button"
