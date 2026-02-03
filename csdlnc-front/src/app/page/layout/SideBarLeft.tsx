@@ -126,7 +126,7 @@ function SideBarLeft() {
                 >
                   Công việc
                 </a>
-                <a
+                {/* <a
                   href="#"
                   className="dropdown-item"
                   onClick={(e) => {
@@ -135,7 +135,7 @@ function SideBarLeft() {
                   }}
                 >
                   Bảng lương
-                </a>
+                </a> */}
               </div>
             </div>
 

@@ -92,8 +92,8 @@ const LoaiCongViecPage: React.FC = () => {
               {listData.map((item, index) => (
                 <tr key={index}>
                   <td>{item.maLoaiCv}</td>
-                  <td>{item.tenLoaiCongViec}</td>
-                  <td>{item.mucLuongNangSuat}</td>
+                  <td>{item?.tenLoaiCongViec}</td>
+                  <td>{item?.mucLuongNangSuat?.toLocaleString("vi-VN")}</td>
                   <td>
                     <button
                       type="button"

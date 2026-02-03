@@ -113,7 +113,11 @@ const CongViecPage: React.FC = () => {
                       <td>{item.maCongViec}</td>
                       <td>{item.tenCongViec}</td>
                       {/* <td>{item?.loaiCongViec?.tenLoaiCongViec}</td> */}
-                      <td>{item?.loaiCongViec?.mucLuongNangSuat}</td>
+                      <td>
+                        {item?.loaiCongViec?.mucLuongNangSuat?.toLocaleString(
+                          "vi-VN",
+                        )}
+                      </td>
                       {/* <td>{item.ngayBatDau}</td> */}
                       {/* <td>{item.ngayHoanThanhDuKien}</td> */}
                       {/* <td>{item.ngayHoanThanhThucTe}</td> */}

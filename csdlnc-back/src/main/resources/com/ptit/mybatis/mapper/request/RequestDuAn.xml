@@ -5,7 +5,21 @@
    <select id="getLstDuAn"
         parameterType="map"
         resultType="map">
-        SELECT da.*
+        SELECT 
+            da.*,
+            CASE
+                WHEN CURDATE() &lt; da.ngay_bat_dau THEN 'Chưa thực hiện'
+
+                WHEN da.ngay_ket_thuc_thuc_te IS NOT NULL 
+                    AND da.ngay_ket_thuc_thuc_te &lt;= da.ngay_ket_thuc_du_kien 
+                    THEN 'Đúng hạn'
+
+                WHEN da.ngay_ket_thuc_thuc_te IS NOT NULL 
+                    AND da.ngay_ket_thuc_thuc_te &gt; da.ngay_ket_thuc_du_kien 
+                    THEN 'Trễ hạn'
+
+                ELSE 'Đang thực hiện'
+            END AS trang_thai
         FROM du_an da
         <where>
 

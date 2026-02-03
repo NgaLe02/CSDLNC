@@ -69,7 +69,7 @@ const BacLuongPage: React.FC = () => {
                 <tr key={index}>
                   <td>{item.maBacLuong}</td>
                   <td>{item.tenBacLuong}</td>
-                  <td>{item.mucLuongCoBan?.toLocaleString()}</td>
+                  <td>{item.mucLuongCoBan?.toLocaleString("vi-VN")}</td>
                   <td>
                     <button
                       className="btn btn-sm btn-warning me-2"
