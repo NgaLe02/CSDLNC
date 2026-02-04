@@ -25,7 +25,7 @@ function SideBarLeft() {
         <nav className="navbar bg-light navbar-light">
           <a href="index.html" className="navbar-brand mx-4 mb-3">
             <h3 className="text-primary">
-              <i className="fa fa-hashtag me-2"></i>NHÓM 1
+              <i className="fa fa-hashtag me-2"></i>BTL CSDLNC
             </h3>
           </a>
           <div className="d-flex align-items-center ms-4 mb-4">
@@ -39,7 +39,7 @@ function SideBarLeft() {
               <div className="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
             </div>
             <div className="ms-3">
-              <h6 className="mb-0">Nhóm 1</h6>
+              {/* <h6 className="mb-0">Nhóm 1</h6> */}
               <span>Admin</span>
             </div>
           </div>
