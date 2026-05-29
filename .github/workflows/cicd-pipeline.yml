@@ -32,6 +32,7 @@ jobs:
 
     - name: Run Automated Tests with Maven
       run: mvn clean test
+      working-directory: backend
 
   push-to-registry:
     needs: build-and-test 
