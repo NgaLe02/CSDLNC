@@ -1,0 +1,11 @@
+FROM maven:3.8.8-amazoncorretto-17 AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvc dependency:go-offline -B
+COPY src ./src
+RUN mvc package -DskipTests
+FROM amazoncorretto:17-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
