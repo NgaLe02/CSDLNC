@@ -26,6 +26,7 @@ import com.ptit.csdlnc.util.AjaxResult;
 @RestController
 @RequestMapping("api/assigment")
 @CrossOrigin(origins = "*")
+//comment to test auto deploy
 public class AssigmentController {
 	@Autowired
 	private AssigmentService assigmentService;
