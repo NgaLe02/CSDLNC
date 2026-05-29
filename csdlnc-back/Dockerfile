@@ -1,7 +1,7 @@
 FROM maven:3.8.8-amazoncorretto-17 AS build
 WORKDIR /app
 COPY pom.xml .
-RUN mvc dependency:go-offline -B
+RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn package -DskipTests
 FROM amazoncorretto:17-alpine
