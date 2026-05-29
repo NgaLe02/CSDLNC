@@ -3,7 +3,7 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvc dependency:go-offline -B
 COPY src ./src
-RUN mvc package -DskipTests
+RUN mvn package -DskipTests
 FROM amazoncorretto:17-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
